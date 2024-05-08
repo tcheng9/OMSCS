@@ -1,0 +1,76 @@
+{
+  "agent_xpos": 1.2941681397784541,
+  "agent_x_min_max": [
+    0.25,
+    0.75
+  ],
+  "agent_jump_distance": 0.15,
+  "arena_x_bounds": [
+    0,
+    4
+  ],
+  "arena_y_bounds": [
+    0,
+    2
+  ],
+  "asteroids": [
+    {
+      "c_pos_x": 0.07055633328298239,
+      "c_vel_x": 0.0066424943168159846,
+      "c_accel_x": 0.0,
+      "c_pos_y": 0.4145034580753524,
+      "c_vel_y": 0.002340990411641622,
+      "c_accel_y": -0.0,
+      "t_created": 0,
+      "id": 1
+    }
+
+  ],
+  "in_bounds": {
+    "x_bounds": [
+      0,
+      2
+    ],
+    "y_bounds": [
+      0,
+      2
+    ]
+  },
+  "asteroid_match_range": 0.005,
+  "noise_sigma_x": 0.0,
+  "noise_sigma_y": 0.0,
+  "time_limit": 400,
+  "_args": {
+    "outfile": "case1.json",
+    "asteroid_properties": null,
+    "agent_x_min_max": [
+      0.25,
+      0.75
+    ],
+    "agent_jump_distance": 0.15,
+    "arena_x_bounds": [
+      0,
+      4
+    ],
+    "arena_y_bounds": [
+      0,
+      2
+    ],
+    "asteroid_speed_x_max": 0.01,
+    "asteroid_speed_x_min": 0.005,
+    "asteroid_speed_y_max": 0.004,
+    "asteroid_speed_y_min": 0.002,
+    "asteroid_accel_x_min": 0.0,
+    "asteroid_accel_x_max": 0.0,
+    "asteroid_accel_y_min": 0.0,
+    "asteroid_accel_y_max": 0.0,
+    "asteroid_match_range": 0.005,
+    "noise_sigma_x": 0.0,
+    "noise_sigma_y": 0.0,
+    "num_asteroids_per_time": -1,
+    "num_asteroids_start": 2,
+    "observation_noise_seed": 5,
+    "generation_seed": 410,
+    "time_limit": 400
+  }
+}

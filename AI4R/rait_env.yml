@@ -1,0 +1,11 @@
+name: rait_env
+channels:
+- conda-forge
+- defaults
+dependencies:
+- python=3.10
+- matplotlib
+- pip
+- pip:
+  - pygame
+  - rait/

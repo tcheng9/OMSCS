@@ -1,0 +1,131 @@
+final exam quesitons
+
+Jesse R Mckinney
+20h
+Question:
+
+Write our the basic pseudocode for Uniform-Cost Search.
+
+
+----------------------------------------------------------------------
+
+Answer:
+
+---------------------------------------------------------------------
+
+Create Closed List to hold explored nodes
+
+Create Open List to hold know, yet unexplored nodes
+
+Create Goal and set to bool False
+
+Create Resign and set to bool False
+
+Create Cost to hold # of times through the while loop (# of expansions done), and initialize to 0
+
+
+Start @ Start Point
+
+While not @ Goal and not Resign
+
+   Add current node to closed list
+
+   If you have more open nodes continue, else Resign to True and break
+
+   If current cell is the location of the goal, set Goal to True and break 
+
+   Else:
+
+          +1 cost value
+
+         Search open list for smallest cost value
+
+         Expand that node by searching all unexplored, valid neighbors dependent on allowed movement directions
+
+         Add all expanded nodes to open list while writing the current cost value into each node expanded this round
+
+         
+
+
+Proof:
+
+See Search video # 9 
+
+    
+
+If you read this question, make up a question on any topic in class on your own and post it here for all to benefit from. 
+
+
+Reply
+
+Jesse R Mckinney
+21h
+Question:
+
+Between Breath-First Search and Uniform-Cost Search, what search method is best for each scenario?
+
+A) When there is no cost assigned to movement
+
+B) When movements have different costs (for example when moving right costs 10, but moving left, or forward costs 1
+
+C) When costs exist, but all movement options cost the same
+
+
+
+------------------------------------------------
+
+Answer:
+
+------------------------------------------------
+
+A) Breath-First Search 
+
+B) Uniform-Cost Search
+
+C) Breath-First Search
+
+
+
+Proof:
+
+A) See Search Videos 3,7,8
+
+B) See Search Videos, 4,5
+
+C) See Search Videos 3,7,8
+
+
+If you read this question, make up a question on any topic in class on your own and post it here for all to benefit from. 
+
+
+Reply
+
+Jesse R Mckinney
+1d
+Question:
+
+You are reconstructing a log from a crashed alien "Jbot" class probe that DOES NOT SUFFER FROM NOISE. Assuming this is the only data recoverable, please report the values A,B,C,D,E. 
+
+
+
+ -----------------------------------------------------------------
+
+Answer: Note, the solution will appear below. Stop scrolling now if you are not ready to see it!
+
+ -----------------------------------------------------------------
+
+A) 8
+
+B) 6
+
+C) 11
+
+D) 3
+
+E) 1
+
+
+Proof: Note, this could be typed out mathematical work, links to relevant videos, anything that shows how you got to your answer. 
+Intro to Graph Slam: https://gatech.instructure.com/courses/364682/pages/12-graph-slam?module_item_id=3773770
+
+Bonus Question: Create a Omega and Xi Matrix for the above example. How many spaces are blank in Omega when fully populated? 

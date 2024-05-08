@@ -1,0 +1,7 @@
+When you say running over time you mean in local test cases, in GS, or when you are optimizing it locally?
+
+Some strategies that could potentially help with Twiddle running over time:
+
+Smart initialization: Twiddle's job is to minimize (or maximize) a given function, so stating close to a local minima might help it converge faster. How do I find local minima? Try some random initial values and see which one is giving a lower error, and try those with the algorithm. Another strategy here could be run a massive for loop but with big step sizes, and see what set of values are giving you lower error, and then use these with Twiddle for further optimization.
+
+Parallel evaluation: see if you can evaluate all parameters at the same time.

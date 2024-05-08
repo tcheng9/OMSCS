@@ -1,0 +1,3 @@
+Some strategies that could potentially help with Twiddle running over time:
+
+Smart initialization: Twiddle's job is to minimize (or maximize) a given function, so stating close
