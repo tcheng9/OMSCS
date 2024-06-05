@@ -1,0 +1,65 @@
+@startuml
+
+FileReader "1" -- "1" LawnmowerSystem
+LawnmowerSystem "1"-- "1..*" Lawnmower
+Lawnmower "1..*"-- "1..*" Grass
+Lawnmower "1..*"-- "1..*" Crater
+Grass "1..*"-- "1" LawnmowerSystem
+Crater "1..*"--"1" LawnmowerSystem
+class FileReader{
+'    This should only read the file and output it
+    -fileName
+    +readFile()
+    +outputCommand()
+
+}
+
+class LawnmowerSystem{
+'This should handle the environment
+    -lawnmowerCount
+    -map: Map
+
+
+
+}
+
+class Lawnmower{
+'This should handle a single lawnmower
+    -xPosition
+    -yPosition
+    -orientation
+
+    +changeOrientation()
+    +changeXPosition()
+    +changeYPosition()
+    +Scanner(): ArrayList<grass, crater, empty/cut grass>
+}
+
+class Map{
+'This might need to be handled in the lawnmower system class???
+    - GrassPositions: ArrayList<Grass>
+    -CraterPositions: ArrayList<Crater>
+}
+
+class Grass{
+    -xPosition
+    -yPosition
+
+    +changeXPosition()
+    +changeYPosition()
+
+ }
+
+
+
+class Crater{
+    -xPosition
+    -yPosition
+
+
+
+}
+
+
+
+@enduml
