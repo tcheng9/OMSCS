@@ -1,0 +1,60 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Lawn{
+'Properties
+-width: int
+-length: int
+-grid: Grid
+'Methods
++updateGrid(input: grid)
+}
+
+class Grid{
+-status:
+
++isCrater():void
++isGrass(): void
++isLawnmower
++updateCell(): void
+
+
+}
+
+class Lawnmower{
+-currentX : int
+-currentY: int
+
++updatePosition(int x, int y): void
++move(int amountOfMoves, str: direction): void
++scan(): ArrayList<squares>
++turnOff(): void
++crashStatus(): boolean
+}
+
+class File{
+
++readFile(): void
++outputAction(): int
+}
+
+class System{
+-numberOfLawnmowers
+-lawn: Lawn
+-lawnmowers: Lawnmowers
++setGridSize() ????
+}
+
+class Decision{
+
++calcDecision()
+}
+
+class Statistics(){
++countOfCraters(): int
++countOfUncutGrass(): int
++countofCutGrass(): int
+
+}
+
+@enduml
