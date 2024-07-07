@@ -1,0 +1,109 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+
+class FileManager{
+    -filename: String
+
+    +readNextLine()
+
+}
+
+class Simulation{
+    -lawnMowers: List<LawnMower>
+    -lawn:LawnMower
+    -lawnMowerLocations: Map <Lawnmower, Location>
+
+    -computeSimulationStatus()
+    -endSimulation()
+    +loadSimulation(filename: String)
+    -runSimulation()
+    +scan(LawnMower): Array[SquareStatus]
+    +updateLawnMowerLocation(lawnMOwer, Location)
+
+}
+
+class LawnMower{
+    -direction
+    -lawn: Lawn
+    -relativeLocation: Location
+    -mowerRunning: Boolean
+
+    +nextTurn(): int
+    -move(numberOfSquares:int, newDirection: Direction)
+
+}
+
+
+class Lawn{
+    -map: Array[Square]
+    /height: int
+    /width: int
+
+    +addSquare(Location, Direction, Square): Location
+    +updateSquare(Location, Square)
+    +getAllUncutSquares(): Map<Location, Square>)
+    +getAllUnknownSquares(): Map<Location, Square>
+    +getAllAdjacentSquares(Location location): Map<Location, Square>
+    +getSquare(Location): Square
+}
+
+class Square{
+    status: SquareStatus
+    lastUpdated: TimeStamp
+}
+
+
+class Timestamp{
+    +dateTime: long
+    +getCurrentTIme()
+}
+
+enum Direction{
+    E
+    N
+    NE
+    W
+    <<other directions>>
+}
+
+enum SquareStatus{
+    Grass
+    Grass_cut
+    Crater
+    Fence_or_off_lawn
+
+
+}
+
+
+class Location{
+    -x: int
+    -y: int
+    +setLocation(x: int, y:int)
+}
+
+
+Lawn *-- Square
+LawnMower *-- Lawn
+LawnMower *-- Simulation
+Simulation *-- Lawn
+
+
+LawnMower .. Simulation
+
+Simulation --> FileManager
+
+Location -- LawnMower
+Location -- Simulation
+
+
+Lawn --> SquareStatus
+SquareStatus --> Lawn
+
+
+Square -- Timestamp
+Direction -- Lawn
+Simulation -- Direction
+
+@enduml

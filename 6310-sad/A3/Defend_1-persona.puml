@@ -1,0 +1,218 @@
+'https://plantuml.com/sequence-diagram
+
+@startuml
+autonumber
+title CS6310 Summer 2024 Group 4 - Sequence Diagram - Scenario Attack After Defense (UML Version 2.5)
+
+skinparam {
+    titlefontsize 20
+}
+actor User
+activate User
+
+User -> PokemonMaster: Run system
+
+activate PokemonMaster
+loop command != "stop"
+PokemonMaster -> User: getNextCommand()
+'User -> PokemonMaster: string command
+
+User --> PokemonMaster: processUserCommand(string command)
+note over PokemonMaster
+    command = battle,PokemonY,PokemonX
+end note
+alt command starts with "battle"
+PokemonMaster -> Battle: initialize(String p1, String p2, Int s)
+activate Battle
+'NOTE: create pokemonY (includes setting seed and reference to Battle class which created it)
+Battle -> PokemonY: initialize(String serializedPokemon, Int battleSeed)
+activate PokemonY
+note over PokemonY
+    These operations will call the Attack/Defense
+    constructors for each skill parsed from serializedPokemon data
+end note
+PokemonY -> PokemonY: initializeAttackSkills()
+PokemonY -> PokemonY: initializeDefenseSkills()
+PokemonY --> Battle: Pokemon instance
+
+'NOTE: create pokemonX (includes setting seed and reference to Battle class which created it)
+Battle -> PokemonX: initialize(String serializedPokemon, Int battleSeed)
+activate PokemonX
+note over PokemonX
+    These operations will call the Attack/Defense
+    constructors for each skill parsed from serializedPokemon data
+end note
+PokemonX -> PokemonX: initializeAttackSkills()
+PokemonX -> PokemonX: initializeDefenseSkills()
+PokemonX --> Battle: Pokemon instance
+
+'TODO - Update class diagram with this
+Battle -> PokemonY: setOpponent(Pokemon PokemonX)
+Battle -> PokemonX: setOpponent(Pokemon PokemonY)
+
+Battle -> PokemonY: startBattle()
+
+'TODO - update class diagram, no need to pass parameters since we have an implicit 1st param of self
+alt hp/max_hp >= 0.7
+PokemonY -> PokemonY: prepareForBattle()
+note over PokemonY
+    Evaluate to False for this attack scenario in all conditions
+end note
+else 0.3<= hp/max_hp < 0.7
+PokemonY -> PokemonY: prepareForBattle()
+else else
+PokemonY -> PokemonY: prepareForBattle()
+end
+
+'NOTE: this would set pokemonY prior defense attribute to this defense
+' if an attack was selected, it would be cleared out
+PokemonY -> PokemonY: chooseDefense()
+
+PokemonY -> PokemonY: checkRandomWeatherChange()
+PokemonY -> PokemonY: setWeather()
+PokemonY -> PokemonY: queueUpWeatherChange(string Weather)
+
+note over PokemonY
+    returns Defense instance
+end note
+PokemonY -> Defense: getDamageReduction()
+
+
+alt weather == 'rain' and type == 'water'
+note over Defense
+    damageReduction * 1.5
+end note
+Defense --> PokemonY: int damageReduction * 1.5
+
+else weather == 'rain' and type == 'fire'
+note over Defense
+    damageReduction * 0.5
+end note
+Defense --> PokemonY: int damageReduction * 0.5
+
+else weather == 'sun' and type == 'sun'
+note over Defense
+    damageReduction * 1.5
+end note
+Defense --> PokemonY: int damageReduction * 1.5
+
+else weather == 'sun' and type == 'water'
+note over Defense
+    damageReduction * 0.5
+end note
+Defense --> PokemonY: int damageReduction * 0.5
+
+else weather == 'none'
+note over Defense
+    damageReduction * 1.0
+end note
+Defense --> PokemonY: int damageReduction * 1.0
+end alt
+Defense --> PokemonY: Int damageReduction
+PokemonY -> PokemonY: setPriorDamageReduction(Int damageReduction)
+
+note over PokemonY
+    Call opponent.receiveAttack to notify of turn change
+end note
+PokemonY -> PokemonX: receiveAttack(Int damage)
+
+'PokemonX -> PokemonX: CalculateDamage(Int damage, Int priorDefense)
+
+note over PokemonX
+    Pokemon X hp = hp - 0
+    Fainted check evaluates to False, no damage taken
+end note
+PokemonX -> PokemonX: checkFainted()
+
+alt hp/max_hp >= 0.7
+PokemonX -> PokemonX: prepareForBattle()
+note over PokemonX
+    Evaluate to True for this attack scenario in all conditions
+end note
+else 0.3<= hp/max_hp < 0.7
+PokemonX -> PokemonX: prepareForBattle()
+else else
+PokemonX -> PokemonX: prepareForBattle()
+end
+
+PokemonX -> PokemonX: chooseAttack()
+PokemonX -> PokemonX:checkRandomWeatherChange()
+PokemonX -> PokemonX: setWeather()
+
+note over PokemonX
+    returns Attack instance
+end note
+PokemonX -> PokemonX: setPriorDamageReduction(Int damageReduction)
+note over PokemonX
+    damageReduction = 0
+end note
+PokemonX -> Attack: getDamage()
+alt weather == 'rain' and type == 'water'
+note over Attack
+    damage * 1.5
+end note
+Attack --> PokemonX: int damage value * 1.5
+
+else weather == 'rain' and type == 'fire'
+note over Attack
+    damage * 0.5
+end note
+Attack --> PokemonX: int damage value * 0.5
+
+else weather == 'sun' and type == 'sun'
+note over Attack
+    damage * 1.5
+end note
+Attack --> PokemonX: int damage value * 1.5
+
+else weather == 'sun' and type == 'water'
+note over Attack
+    damage * 0.5
+end note
+Attack --> PokemonX: int damage value * 0.5
+
+else weather == 'none'
+note over Attack
+    damage * 1.0
+end note
+Attack --> PokemonX: int damage value ) 1.0
+
+end alt
+
+
+'PokemonX uses it's opponent Pokemon reference to PokemonY to call the recieve attack and switch control to PokemonY
+'No prior defense, deduct full damage
+note over PokemonX
+    Call opponent.receiveAttack to notify of turn change
+end note
+PokemonX -> PokemonY: receiveAttack(Int damage)
+note over PokemonY
+    PokemonY hp = min(hp, hp - (damage - priorDefense))
+end note
+'PokemonY -> PokemonY: CalculateDamage(Int damage, Int priorDefense)
+
+alt hp <= 0
+PokemonY -> PokemonY: checkFainted()
+note over PokemonY
+    Evaluates to True
+end note
+'Pokemon uses it's battle reference attribute to call the battle's function to notify about the loss
+PokemonY --> Battle: registerWinLoss(Pokemon winner, Pokemon loser)
+else hp > 0
+PokemonY -> PokemonY: checkFainted()
+note over PokemonY
+    Evaluates to False
+end note
+end
+else command starts with setseed
+note over PokemonMaster
+    Not required for assignment 1
+end note
+else command starts with removeseed
+note over PokemonMaster
+    Not required for assignment 1
+end note
+end loop
+end
+
+@enduml
