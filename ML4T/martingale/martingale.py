@@ -61,27 +61,32 @@ def get_spin_result(win_prob):
 
     return result
 
-def roulette(win_prob):
+def roulette():
+    win_prob = 18/38
     #win prob is 18/38
     episode_winnings = 0
-    count = 0
+    bets = 0
     record = []
-    while count < 1000:
+
+    while bets < 1000:
         won = False
         bet_amount = 1
-        while not won:
-            wager = bet_amount
+        while not won and bets < 1000:
+            bets += 1
             won = get_spin_result(win_prob)
             if won == True:
-                episode_winnings += wager
-                record.append(1)
+                episode_winnings += bet_amount
+                record.append(episode_winnings)
             else:
-                episode_winnings -= wager
+                episode_winnings -= bet_amount
                 bet_amount *= 2
-                record.append(-1)
-        count += 1
-    print(record)
-    return episode_winnings
+                record.append(episode_winnings)
+
+
+    # print(bets)
+    # print(record)
+    # print(record)
+    return [episode_winnings, record]
 def test_code():  		  	   		 	   		  		  		    	 		 		   		 		  
     """  		  	   		 	   		  		  		    	 		 		   		 		  
     Method to test your code  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -106,12 +111,21 @@ def test_code():
     #         else:
     #             episode_winnings -= wager
     #             bet_amount *= 2
-    # winnings = roulette(0.01)
-    # print('\n', 'winnings are', winnings)
-    plt.plot([1,2,3,4])
-    plt.plot([10,11,12,13])
-    plt.ylabel('y val')
+    all_records = []
+    for i in range(10):
+        winnings, record = roulette()
+        plt.plot(record)
+        print('\n', 'winnings are', winnings)
+    plt.xlim(0, 300)
+    plt.ylim(-256, 100)
     plt.show()
+    #################################################3
+    #Plotting
+    #######################################################
+    # plt.plot([1,2,3,4])
+    # plt.plot([10,11,12,13])
+    # plt.ylabel('y val')
+    # plt.show()
     # print('episode winnings at end is', episode_winnings)
 
 
