@@ -263,11 +263,12 @@ def test_code():
         bets = 0
 
 
-        while episode_winnings < 80 and episode_winnings >= -256 and bets < 1000:
+        while episode_winnings <= 80 and episode_winnings >= -256 and bets < 1000:
             won = False
             bet_amount = 1
             while not won:
                 bets += 1
+                print(bet_amount)
                 won = get_spin_result(win_prob)
                 if won == True:
                     # print('you won', bet_amount)
@@ -276,7 +277,10 @@ def test_code():
                     #you lost so now double your bet amount, unless bet_amount is greater than money u have
                     episode_winnings -= bet_amount
                     bet_amount *= 2
-
+                    m = episode_winnings
+                    n = bet_amount
+                    if m < n:
+                        bet_amount = m
                 total_results[i][bets] = episode_winnings
 
     print(total_results[0,0:40])
