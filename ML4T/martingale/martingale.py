@@ -61,8 +61,8 @@ def get_spin_result(win_prob):
 
     return result
 
-def roulette():
-    win_prob = 18/38
+def roulette(win_prob):
+
     #win prob is 18/38
     episode_winnings = 0
     bets = 0
@@ -86,36 +86,49 @@ def roulette():
     # print(bets)
     # print(record)
     # print(record)
-    return [episode_winnings, record]
+    return episode_winnings
 def test_code():  		  	   		 	   		  		  		    	 		 		   		 		  
     """  		  	   		 	   		  		  		    	 		 		   		 		  
     Method to test your code  		  	   		 	   		  		  		    	 		 		   		 		  
     """  		  	   		 	   		  		  		    	 		 		   		 		  
+    total_results = np.zeros((10,1001))
+
 
     win_prob = 18/38  # set appropriately to the probability of a win
     np.random.seed(gtid())  # do this only once
 
     '''
-    my code here
+    Experiment 1
     '''
     episode_winnings = 0
     count = 0
-    # while episode_winnings < 80:
-    #     won = False
-    #     bet_amount = 1
-    #     while not won:
-    #         wager = bet_amount
-    #         won = get_spin_result(win_prob)
-    #         if won == True:
-    #             episode_winnings += wager
-    #         else:
-    #             episode_winnings -= wager
-    #             bet_amount *= 2
+
     all_records = []
     for i in range(10):
-        winnings, record = roulette()
-        plt.plot(record)
-        print('\n', 'winnings are', winnings)
+
+        episode_winnings = 0
+        bets = 0
+
+
+        while bets < 1000:
+            won = False
+            bet_amount = 1
+            while not won and bets < 1000:
+                bets += 1
+                won = get_spin_result(win_prob)
+                if won == True:
+                    episode_winnings += bet_amount
+                else:
+                    episode_winnings -= bet_amount
+                    bet_amount *= 2
+                total_results[i][bets] = episode_winnings
+
+    for i in range(10):
+        plt.plot(total_results[i,:])
+
+
+    print('\n', 'total results are', total_results)
+
     plt.xlim(0, 300)
     plt.ylim(-256, 100)
     plt.show()
@@ -129,6 +142,10 @@ def test_code():
     # print('episode winnings at end is', episode_winnings)
 
 
+
+    '''
+    Experiment 2
+    '''
 
     # print(get_spin_result(win_prob))  # test the roulette spin
     # add your code here to implement the experiments  		  	   		 	   		  		  		    	 		 		   		 		  
