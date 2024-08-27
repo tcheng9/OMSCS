@@ -97,46 +97,52 @@ def test_code():
     win_prob = 18/38  # set appropriately to the probability of a win
     np.random.seed(gtid())  # do this only once
 
+
+
     '''
     Experiment 1
     '''
-    # total_results = np.zeros((10, 1001))
-    # episode_winnings = 0
-    # count = 0
-    #
-    #
-    # for i in range(1):
-    #
-    #     episode_winnings = 0
-    #     bets = 0
-    #
-    #
-    #     while episode_winnings < 80:
-    #         won = False
-    #         bet_amount = 1
-    #         while not won:
-    #             bets += 1
-    #             won = get_spin_result(win_prob)
-    #             if won == True:
-    #                 # print('you won', bet_amount)
-    #                 episode_winnings += bet_amount
-    #             else:
-    #                 episode_winnings -= bet_amount
-    #                 bet_amount *= 2
-    #             total_results[i][bets] = episode_winnings
-    #
-    #
-    #
-    # for i in range(10):
-    #     plt.plot(total_results[i,:])
-    #
-    #
-    # # print('\n', 'total results are', total_results)
-    #
-    # plt.xlim(0, 300)
-    # plt.ylim(-256, 100)
-    # plt.show()
-    #
+    total_results = np.zeros((10, 1001))
+    episode_winnings = 0
+    count = 0
+
+
+    for i in range(1):
+
+        episode_winnings = 0
+        bets = 0
+
+
+        while episode_winnings < 80:
+            won = False
+            bet_amount = 1
+            while not won:
+                bets += 1
+                won = get_spin_result(win_prob)
+                if won == True:
+                    # print('you won', bet_amount)
+                    episode_winnings += bet_amount
+                else:
+                    episode_winnings -= bet_amount
+                    bet_amount *= 2
+                total_results[i][bets] = episode_winnings
+
+        ##forward fill algo
+        for j in range(bets+1, 1000):
+            total_results[i, j] = total_results[i, j-1]
+            print(total_results[i, j-1])
+
+
+    for i in range(10):
+        plt.plot(total_results[i,:])
+
+
+    # print('\n', 'total results are', total_results)
+
+    plt.xlim(0, 300)
+    plt.ylim(-256, 100)
+    plt.show()
+
 
 
 
@@ -144,39 +150,39 @@ def test_code():
     Experiment 2
     '''
     #
-    # total_results = np.zeros((1000, 1001))
-    # mean_per_round = np.zeros((1, 1001))
-    # std_per_round_pos = np.zeros((1,1001))
-    # std_per_round_neg = np.zeros((1, 1001))
-    # mean_plus_std = np.zeros((1,1001))
-    # episode_winnings = 0
-    # count = 0
-    #
-    # for i in range(1000):
-    #
-    #     episode_winnings = 0
-    #     bets = 0
-    #
-    #     while bets < 1000:
-    #         won = False
-    #         bet_amount = 1
-    #         while not won and bets < 1000:
-    #             bets += 1
-    #             won = get_spin_result(win_prob)
-    #             if won == True:
-    #                 episode_winnings += bet_amount
-    #             else:
-    #                 episode_winnings -= bet_amount
-    #                 bet_amount *= 2
-    #             total_results[i][bets] = episode_winnings
-    # # print('\n', total_results)
-    # #calculating the mean per round
-    # print(total_results[:, 1].mean())
-    # for i in range(1, 1001):
-    #     # means_per_round[0, i] = total_results[:, i].mean()
-    #     mean_per_round[0, i] = np.mean(total_results[:, i])
-    #     std_per_round_pos[0, i] = mean_per_round[0, i] + np.std(total_results[:,i])
-    #     std_per_round_neg[0, i] = mean_per_round[0, i] - np.std(total_results[:, i])
+    total_results = np.zeros((1000, 1001))
+    mean_per_round = np.zeros((1, 1001))
+    std_per_round_pos = np.zeros((1,1001))
+    std_per_round_neg = np.zeros((1, 1001))
+    mean_plus_std = np.zeros((1,1001))
+    episode_winnings = 0
+    count = 0
+
+    for i in range(1000):
+
+        episode_winnings = 0
+        bets = 0
+
+        while bets < 1000:
+            won = False
+            bet_amount = 1
+            while not won and bets < 1000:
+                bets += 1
+                won = get_spin_result(win_prob)
+                if won == True:
+                    episode_winnings += bet_amount
+                else:
+                    episode_winnings -= bet_amount
+                    bet_amount *= 2
+                total_results[i][bets] = episode_winnings
+    # print('\n', total_results)
+    #calculating the mean per round
+    print(total_results[:, 1].mean())
+    for i in range(1, 1001):
+        # means_per_round[0, i] = total_results[:, i].mean()
+        mean_per_round[0, i] = np.mean(total_results[:, i])
+        std_per_round_pos[0, i] = mean_per_round[0, i] + np.std(total_results[:,i])
+        std_per_round_neg[0, i] = mean_per_round[0, i] - np.std(total_results[:, i])
     #
     #
     #
@@ -252,49 +258,150 @@ def test_code():
     '''
     Experiment 4
     '''
-    total_results = np.zeros((10, 1001))
+    total_results = np.zeros((1000, 1001))
+
+    mean_per_round = np.zeros((1, 1001))
+
+    std_per_round_pos = np.zeros((1, 1001))
+    std_per_round_neg = np.zeros((1, 1001))
     episode_winnings = 0
     count = 0
     bankroll = 256
 
-    for i in range(1):
+
+    for i in range(1000):
 
         episode_winnings = 0
         bets = 0
 
+
+        while episode_winnings < 80 and episode_winnings > -256 and bets < 1000:
+            won = False
+            bet_amount = 1
+            while not won:
+                bets += 1
+                # print(bet_amount)
+                won = get_spin_result(win_prob)
+                if won == True:
+                    # print('you won', bet_amount)
+                    episode_winnings += bet_amount
+                    bankroll += bet_amount
+                else:
+                    #you lost so now double your bet amount, unless bet_amount is greater than money u have
+                    episode_winnings -= bet_amount
+                    bet_amount *= 2
+
+                    if episode_winnings + 256 < bet_amount:
+                        bet_amount = episode_winnings+256
+                total_results[i][bets] = episode_winnings
+
+    for i in range(1, 1001):
+        mean_per_round[0, i] = total_results[:, i].mean()
+        std_per_round_pos[0, i] = mean_per_round[0, i] + np.std(total_results[:, i])
+        std_per_round_neg[0, i] = mean_per_round[0, i] - np.std(total_results[:, i])
+
+    print(np.mean(total_results[:, i]))
+    print(np.std(total_results[:,i]))
+
+    # print(std_per_round)
+    # print(std_per_round * -1)
+
+    # print(median_per_round[0, 0:10])
+    plt.plot(mean_per_round[0, :])
+    plt.plot(std_per_round_pos[0, :])
+    plt.plot(std_per_round_neg[0, :])
+    plt.xlim(0, 300)
+    plt.ylim(-256, 100)
+    # print(my_path + '/images/' + 'figure4.png')
+
+
+
+    # plt.savefig('figure4.1.png')
+    # plt.savefig(my_path + '/images/' + 'figure4.png')
+    plt.show()
+
+
+
+
+    # for i in range(1000):
+    #     plt.plot(total_results[i,:])
+
+
+    # print('\n', 'total results are', total_results)
+
+    # plt.xlim(0, 300)
+    # plt.ylim(-256, 100)
+    # plt.show()
+
+
+    '''
+    Experiment 5
+    '''
+    '''
+        Experiment 4
+        '''
+    total_results = np.zeros((1000, 1001))
+
+    median_per_round = np.zeros((1, 1001))
+
+    std_per_round_pos = np.zeros((1, 1001))
+    std_per_round_neg = np.zeros((1, 1001))
+    episode_winnings = 0
+    count = 0
+    bankroll = 256
+
+    for i in range(1000):
+
+        episode_winnings = 0
+        bets = 0
 
         while episode_winnings <= 80 and episode_winnings >= -256 and bets < 1000:
             won = False
             bet_amount = 1
             while not won:
                 bets += 1
-                print(bet_amount)
+                # print(bet_amount)
                 won = get_spin_result(win_prob)
                 if won == True:
                     # print('you won', bet_amount)
                     episode_winnings += bet_amount
+                    bankroll += bet_amount
                 else:
-                    #you lost so now double your bet amount, unless bet_amount is greater than money u have
+                    # you lost so now double your bet amount, unless bet_amount is greater than money u have
                     episode_winnings -= bet_amount
                     bet_amount *= 2
-                    m = episode_winnings
-                    n = bet_amount
-                    if m < n:
-                        bet_amount = m
+
+                    if bankroll < bet_amount:
+                        bet_amount = bankroll
                 total_results[i][bets] = episode_winnings
 
-    print(total_results[0,0:40])
+    for i in range(1, 1001):
+        median_per_round[0, i] = total_results[:, i].mean()
+        std_per_round_pos[0, i] = mean_per_round[0, i] + np.std(total_results[:, i])
+        std_per_round_neg[0, i] = mean_per_round[0, i] - np.std(total_results[:, i])
 
-    for i in range(10):
-        plt.plot(total_results[i,:])
+    print(np.median(total_results[:, i]))
+    print(np.std(total_results[:, i]))
 
+    # print(std_per_round)
+    # print(std_per_round * -1)
 
-    # print('\n', 'total results are', total_results)
-
+    # print(median_per_round[0, 0:10])
+    plt.plot(median_per_round[0, :])
+    plt.plot(std_per_round_pos[0, :])
+    plt.plot(std_per_round_neg[0, :])
     plt.xlim(0, 300)
     plt.ylim(-256, 100)
     plt.show()
 
+    # for i in range(1000):
+    #     plt.plot(total_results[i,:])
+
+    # print('\n', 'total results are', total_results)
+
+    # plt.xlim(0, 300)
+    # plt.ylim(-256, 100)
+    # plt.show()
   		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
 if __name__ == "__main__":  		  	   		 	   		  		  		    	 		 		   		 		  
