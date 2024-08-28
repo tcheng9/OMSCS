@@ -133,8 +133,8 @@ def test_code():
 
 
 
-    for i in range(10):
-        plt.plot(total_results[i,:])
+    # for i in range(10):
+    #     plt.plot(total_results[i,:])
 
 
     #
@@ -251,8 +251,10 @@ def test_code():
     #     std_per_round_neg[0, i] = median_per_round[0, i] - np.std(total_results[:, i])
 
     median_per_round = np.median(total_results, axis = 0)
-    print(median_per_round)
-
+    # print(median_per_round.shape)
+    print(median_per_round.shape)
+    median_per_round = np.transpose(median_per_round)
+    print(median_per_round.shape)
 
     plt.plot(median_per_round)
     plt.title('figure 3')
