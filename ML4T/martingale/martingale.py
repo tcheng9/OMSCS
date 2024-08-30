@@ -37,7 +37,9 @@ def author():
     """  		  	   		 	   		  		  		    	 		 		   		 		  
     return "tcheng99"  # replace tb34 with your Georgia Tech username.
   		  	   		 	   		  		  		    	 		 		   		 		  
-  		  	   		 	   		  		  		    	 		 		   		 		  
+def study_group():
+    return "tcheng99"
+
 def gtid():  		  	   		 	   		  		  		    	 		 		   		 		  
     """  		  	   		 	   		  		  		    	 		 		   		 		  
     :return: The GT ID of the student  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -102,37 +104,37 @@ def test_code():
     '''
     Experiment 1
     '''
-    total_results = np.zeros((10, 1001))
-    episode_winnings = 0
-    count = 0
-
-
-    for i in range(10):
-
-        episode_winnings = 0
-        bets = 0
-
-
-        while episode_winnings < 80 and bets < 1000:
-            won = False
-            bet_amount = 1
-            while not won:
-                bets += 1
-                won = get_spin_result(win_prob)
-                if won == True:
-                    # print('you won', bet_amount)
-                    episode_winnings += bet_amount
-                else:
-                    episode_winnings -= bet_amount
-                    bet_amount *= 2
-                total_results[i][bets] = episode_winnings
-
-        ##forward fill algo
-        for j in range(bets+1, 1000):
-            total_results[i, j] = total_results[i, j-1]
-
-
-
+    # total_results = np.zeros((10, 1001))
+    # episode_winnings = 0
+    # count = 0
+    #
+    #
+    # for i in range(10):
+    #
+    #     episode_winnings = 0
+    #     bets = 0
+    #
+    #
+    #     while episode_winnings < 80 and bets < 1000:
+    #         won = False
+    #         bet_amount = 1
+    #         while not won:
+    #             bets += 1
+    #             won = get_spin_result(win_prob)
+    #             if won == True:
+    #                 # print('you won', bet_amount)
+    #                 episode_winnings += bet_amount
+    #             else:
+    #                 episode_winnings -= bet_amount
+    #                 bet_amount *= 2
+    #             total_results[i][bets] = episode_winnings
+    #
+    #     ##forward fill algo
+    #     for j in range(bets+1, 1000):
+    #         total_results[i, j] = total_results[i, j-1]
+    #
+    #
+    #
     # for i in range(0,10):
     #     plt.plot(total_results[i,:], label = 'line' + str(i))
     # plt.legend()
@@ -141,8 +143,8 @@ def test_code():
     # plt.ylabel('Earnings')
     # plt.xlim(0, 300)
     # plt.ylim(-256, 100)
-    #
-    # plt.show()
+    # #
+    # plt.savefig('Figure 1.png')
 
 
 
@@ -150,7 +152,7 @@ def test_code():
     '''
     Figure 2
     '''
-    #
+
     # total_results = np.zeros((1000, 1001))
     # mean_per_round = np.zeros((1, 1001))
     # std_per_round_pos = np.zeros((1,1001))
@@ -180,105 +182,40 @@ def test_code():
     # ##forward fill algo
     #     for j in range(bets + 1, 1001):
     #         total_results[i, j] = total_results[i, j - 1]
-    #         # print(total_results[i, j - 1])
-    #
-    # #calculating the mean per round
-    # # print(total_results[:, 1].mean())
-    # # for i in range(1, 1001):
-    # #     # means_per_round[0, i] = total_results[:, i].mean()
-    # #     mean_per_round[0, i] = np.mean(total_results[:, i])
-    # #     std_per_round_pos[0, i] = mean_per_round[0, i] + np.std(total_results[:,i])
-    # #     std_per_round_neg[0, i] = mean_per_round[0, i] - np.std(total_results[:, i])
-    #
-    # #calc mean
+            # print(total_results[i, j - 1])
+
+
+    #Figure 2 - calc mean
     # mean_per_round = np.mean(total_results, axis = 0)
     # std_per_round = np.std(total_results, axis = 0)
     # std_per_round_pos = mean_per_round + std_per_round
     # std_per_round_neg = mean_per_round - std_per_round
-
-
-    #calc std
-
-    # std_per_round = np.std(total_results, )
-
-
-    # print(total_results[:,1000])
-    # print(np.std(total_results[:,i]))
     #
-    # print(std_per_round)
-    # print(std_per_round * -1)
-
-
-    # print(mean_per_round[0, 0:10])
-    # plt.plot(mean_per_round)
-    # plt.plot(std_per_round_pos)
-    # plt.plot(std_per_round_neg)
-    # # plt.plot(std_per_round_pos[0, :])
-    # # plt.plot(std_per_round_neg[0, :])
-    # plt.title('figure 2')
+    # plt.plot(mean_per_round, label = "mean per bet iteration")
+    # plt.plot(std_per_round_pos, label = "positive st. deviation")
+    # plt.plot(std_per_round_neg, label = "negative st. deviation")
+    # plt.title('Figure 2')
     # plt.xlim(0, 300)
     # plt.ylim(-256, 100)
+    # plt.legend()
+    # plt.savefig('Figure 2')
     # plt.show()
+    #
+    # #Figure 3
+    # median_per_round = np.median(total_results, axis=0)
+    # plt.plot(median_per_round, label="median per iteration")
+    # plt.plot(std_per_round_pos, label="positive st. deviation")
+    # plt.plot(std_per_round_neg, label="negative st. deviation")
+    # plt.title('Figure 3')
+    # plt.legend()
+    # plt.xlim(0, 300)
+    # plt.ylim(-256, 100)
+    # plt.savefig('Figure 3')
 
     '''
     Experiment 3
     '''
 
-    # total_results = np.zeros((1000, 1001))
-    # median_per_round = np.zeros((1, 1001))
-    # std_per_round_pos = np.zeros((1, 1001))
-    # std_per_round_neg = np.zeros((1, 1001))
-    #
-    # episode_winnings = 0
-    # count = 0
-    #
-    # for i in range(1000):
-    #
-    #     episode_winnings = 0
-    #     bets = 0
-    #
-    #     while episode_winnings < 80 and bets < 1000:
-    #         won = False
-    #         bet_amount = 1
-    #         while not won and bets < 1000:
-    #             bets += 1
-    #             won = get_spin_result(win_prob)
-    #             if won == True:
-    #                 episode_winnings += bet_amount
-    #             else:
-    #                 episode_winnings -= bet_amount
-    #                 bet_amount *= 2
-    #             total_results[i][bets] = episode_winnings
-    #         ##forward fill algo
-    #         for j in range(bets + 1, 1000):
-    #             total_results[i, j] = total_results[i, j - 1]
-    #
-    # # print('\n', total_results)
-    #
-    #
-    # # calculating the mean per round
-    #
-    #
-    #
-    # median_per_round = np.median(total_results, axis = 0)
-    # # print(median_per_round.shape)
-    #
-    #
-    #
-    #
-    # std_per_round = np.std(total_results, axis=0)
-    # std_per_round_pos = median_per_round + std_per_round
-    # std_per_round_neg = median_per_round - std_per_round
-    #
-    # plt.plot(median_per_round)
-    # plt.plot(std_per_round_pos)
-    # plt.plot(std_per_round_neg)
-    # plt.title('figure 3')
-    # # plt.plot(std_per_round_pos[0, :])
-    # # plt.plot(std_per_round_neg[0, :])
-    # plt.xlim(0, 300)
-    # plt.ylim(-256, 100)
-    # plt.show()
 
 
     '''
@@ -325,34 +262,47 @@ def test_code():
                 total_results[i, j] = total_results[i, j - 1]
                 # print(total_results[i, j - 1])
 
+    # print(sum(np.any(total_results[:, 1000] == 80)))
 
     mean_per_round = np.mean(total_results, axis = 0)
     std_per_round = np.std(total_results, axis = 0)
     std_per_round_pos = mean_per_round + std_per_round
     std_per_round_neg = mean_per_round - std_per_round
 
-    plt.title('figure 4')
-    plt.plot(mean_per_round)
-    plt.plot(std_per_round_pos)
-    plt.plot(std_per_round_neg)
+    plt.title('Figure 4')
+    plt.plot(mean_per_round, label = 'mean')
+    plt.plot(std_per_round_pos, label = "positive st. deviation")
+    plt.plot(std_per_round_neg, label = "negative standard deviation")
+    plt.legend()
     plt.xlim(0, 1000)
     plt.ylim(-256, 100)
-
+    plt.savefig('Figure4.png')
     plt.show()
 
+
+    # print(total_results[:, 990:1000])
+    # arr = [:, 999:1000]
+    # print(arr.shape)
+    # print(np.mean(total_results[:, 999:1000], axis = 1))
+    # print(np.median(total_results[:, 999:1000], axis = 1))
+
+    #figure 5
     median_per_round = np.median(total_results, axis=0)
     std_per_round = np.std(total_results, axis=0)
     std_per_round_pos = median_per_round + std_per_round
     std_per_round_neg = median_per_round - std_per_round
+
     # plt.figure('figure 5')
-    plt.plot(median_per_round)
-    plt.plot(std_per_round_pos)
-    plt.plot(std_per_round_neg)
-    plt.figure('figure 5')
+    plt.plot(median_per_round, label = 'median')
+    plt.plot(std_per_round_pos, label = 'positive st. deviation')
+    plt.plot(std_per_round_neg, label = 'negative st. deviation')
+    plt.title('Figure 5')
+    plt.legend()
     plt.xlim(0, 300)
     plt.ylim(-256, 100)
-    plt.show()
 
+    plt.savefig('Figure 5.png')
+    plt.show()
 
 
 
@@ -364,56 +314,56 @@ def test_code():
     Experiment 5
     '''
 
-    total_results = np.zeros((1000, 1001))
-
-    median_per_round = np.zeros((1, 1001))
-
-    std_per_round_pos = np.zeros((1, 1001))
-    std_per_round_neg = np.zeros((1, 1001))
-    episode_winnings = 0
-    count = 0
-    bankroll = 256
-
-    for i in range(1000):
-
-        episode_winnings = 0
-        bets = 0
-
-        while episode_winnings < 80 and episode_winnings > -256 and bets < 1000:
-            won = False
-            bet_amount = 1
-            while not won:
-                bets += 1
-                # print(bet_amount)
-                won = get_spin_result(win_prob)
-                if won == True:
-                    # print('you won', bet_amount)
-                    episode_winnings += bet_amount
-                    bankroll += bet_amount
-                else:
-                    # you lost so now double your bet amount, unless bet_amount is greater than money u have
-                    episode_winnings -= bet_amount
-                    bet_amount *= 2
-
-                if episode_winnings + 256 < bet_amount:
-                    bet_amount = episode_winnings+256
-                total_results[i][bets] = episode_winnings
-
-            ##forward fill algo
-            for j in range(bets + 1, 1000):
-                total_results[i, j] = total_results[i, j - 1]
-
-    median_per_round = np.median(total_results, axis = 0)
-    std_per_round = np.std(total_results, axis = 0)
-    std_per_round_pos = median_per_round + std_per_round
-    std_per_round_neg = median_per_round - std_per_round
-    # plt.figure('figure 5')
-    # plt.plot(median_per_round)
-    # plt.plot(std_per_round_pos)
-    # plt.plot(std_per_round_neg)
-    # plt.xlim(0, 300)
-    # plt.ylim(-256, 100)
-    # plt.show()
+    # total_results = np.zeros((1000, 1001))
+    #
+    # median_per_round = np.zeros((1, 1001))
+    #
+    # std_per_round_pos = np.zeros((1, 1001))
+    # std_per_round_neg = np.zeros((1, 1001))
+    # episode_winnings = 0
+    # count = 0
+    # bankroll = 256
+    #
+    # for i in range(1000):
+    #
+    #     episode_winnings = 0
+    #     bets = 0
+    #
+    #     while episode_winnings < 80 and episode_winnings > -256 and bets < 1000:
+    #         won = False
+    #         bet_amount = 1
+    #         while not won:
+    #             bets += 1
+    #             # print(bet_amount)
+    #             won = get_spin_result(win_prob)
+    #             if won == True:
+    #                 # print('you won', bet_amount)
+    #                 episode_winnings += bet_amount
+    #                 bankroll += bet_amount
+    #             else:
+    #                 # you lost so now double your bet amount, unless bet_amount is greater than money u have
+    #                 episode_winnings -= bet_amount
+    #                 bet_amount *= 2
+    #
+    #             if episode_winnings + 256 < bet_amount:
+    #                 bet_amount = episode_winnings+256
+    #             total_results[i][bets] = episode_winnings
+    #
+    #         ##forward fill algo
+    #         for j in range(bets + 1, 1000):
+    #             total_results[i, j] = total_results[i, j - 1]
+    #
+    # median_per_round = np.median(total_results, axis = 0)
+    # std_per_round = np.std(total_results, axis = 0)
+    # std_per_round_pos = median_per_round + std_per_round
+    # std_per_round_neg = median_per_round - std_per_round
+    # # plt.figure('figure 5')
+    # # plt.plot(median_per_round)
+    # # plt.plot(std_per_round_pos)
+    # # plt.plot(std_per_round_neg)
+    # # plt.xlim(0, 300)
+    # # plt.ylim(-256, 100)
+    # # plt.show()
 
 
 
