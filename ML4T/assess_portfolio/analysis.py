@@ -58,16 +58,67 @@ def assess_portfolio(
   		  	   		 	   		  		  		    	 		 		   		 		  
     # Get daily portfolio value  		  	   		 	   		  		  		    	 		 		   		 		  
     port_val = prices_SPY  # add code here to compute daily portfolio values  		  	   		 	   		  		  		    	 		 		   		 		  
-  		  	   		 	   		  		  		    	 		 		   		 		  
+
+
+
+
+
     # Get portfolio statistics (note: std_daily_ret = volatility)  		  	   		 	   		  		  		    	 		 		   		 		  
     cr, adr, sddr, sr = [  		  	   		 	   		  		  		    	 		 		   		 		  
         0.25,  		  	   		 	   		  		  		    	 		 		   		 		  
         0.001,  		  	   		 	   		  		  		    	 		 		   		 		  
-        0.0005,  		  	   		 	   		  		  		    	 		 		   		 		  
+        0.0005,
         2.1,  		  	   		 	   		  		  		    	 		 		   		 		  
-    ]  # add code here to compute stats  		  	   		 	   		  		  		    	 		 		   		 		  
-  		  	   		 	   		  		  		    	 		 		   		 		  
-    # Compare daily portfolio value with SPY using a normalized plot  		  	   		 	   		  		  		    	 		 		   		 		  
+    ]  # add code here to compute stats
+
+    '''
+    idk i'ma start my code here
+    '''
+
+    '''
+    1. Daily Returns
+    '''
+
+    daily_returns_SPY = prices_SPY.copy()
+    daily_returns_SPY[1:] = (daily_returns_SPY[1:]/daily_returns_SPY[:-1].values) - 1
+    daily_returns_SPY[0] = 0
+
+
+    '''
+    2. Cumulative returns
+    '''
+    # print(prices_SPY)
+
+
+    cr_SPY = prices_SPY.copy()
+
+    cr_SPY[1:] = (prices_SPY[1:] / prices_SPY[0]) - 1
+    cr_SPY[0] = 0
+
+    '''
+    3. Normalized returns
+    '''
+
+
+    '''
+    4. average daily return
+    '''
+    print(daily_returns_SPY.mean())
+
+
+    '''
+    5. st. devi of daily rturns
+    '''
+    print(daily_returns_SPY.std())
+
+    '''
+    6. Sharpe ratio
+    '''
+
+    sr = daily_returns_SPY.mean() / daily_returns_SPY.std()
+
+    print('sharpe ratio is', sr)
+    # Compare daily portfolio value with SPY using a normalized plot
     if gen_plot:  		  	   		 	   		  		  		    	 		 		   		 		  
         # add code to plot here  		  	   		 	   		  		  		    	 		 		   		 		  
         df_temp = pd.concat(  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -110,15 +161,15 @@ def test_code():
     )  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
     # Print statistics  		  	   		 	   		  		  		    	 		 		   		 		  
-    print(f"Start Date: {start_date}")  		  	   		 	   		  		  		    	 		 		   		 		  
-    print(f"End Date: {end_date}")  		  	   		 	   		  		  		    	 		 		   		 		  
-    print(f"Symbols: {symbols}")  		  	   		 	   		  		  		    	 		 		   		 		  
-    print(f"Allocations: {allocations}")  		  	   		 	   		  		  		    	 		 		   		 		  
-    print(f"Sharpe Ratio: {sr}")  		  	   		 	   		  		  		    	 		 		   		 		  
-    print(f"Volatility (stdev of daily returns): {sddr}")  		  	   		 	   		  		  		    	 		 		   		 		  
-    print(f"Average Daily Return: {adr}")  		  	   		 	   		  		  		    	 		 		   		 		  
-    print(f"Cumulative Return: {cr}")  		  	   		 	   		  		  		    	 		 		   		 		  
-  		  	   		 	   		  		  		    	 		 		   		 		  
+    # print(f"Start Date: {start_date}")
+    # print(f"End Date: {end_date}")
+    # print(f"Symbols: {symbols}")
+    # print(f"Allocations: {allocations}")
+    # print(f"Sharpe Ratio: {sr}")
+    # print(f"Volatility (stdev of daily returns): {sddr}")
+    # print(f"Average Daily Return: {adr}")
+    # print(f"Cumulative Return: {cr}")
+  	#
   		  	   		 	   		  		  		    	 		 		   		 		  
 if __name__ == "__main__":  		  	   		 	   		  		  		    	 		 		   		 		  
     test_code()  		  	   		 	   		  		  		    	 		 		   		 		  
