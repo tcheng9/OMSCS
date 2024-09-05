@@ -8,7 +8,7 @@ All Rights Reserved
 import datetime as dt  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
 import numpy as np  		  	   		 	   		  		  		    	 		 		   		 		  
-  		  	   		 	   		  		  		    	 		 		   		 		  
+import matplotlib.pyplot as plt
 import pandas as pd  		  	   		 	   		  		  		    	 		 		   		 		  
 from util import get_data, plot_data  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
@@ -23,7 +23,7 @@ def assess_portfolio(
     sv=1000000,  		  	   		 	   		  		  		    	 		 		   		 		  
     rfr=0.0,  		  	   		 	   		  		  		    	 		 		   		 		  
     sf=252.0,  		  	   		 	   		  		  		    	 		 		   		 		  
-    gen_plot=False,  		  	   		 	   		  		  		    	 		 		   		 		  
+    gen_plot=False,
 ):  		  	   		 	   		  		  		    	 		 		   		 		  
     """  		  	   		 	   		  		  		    	 		 		   		 		  
     Estimate a set of test points given the model we built.  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -48,113 +48,99 @@ def assess_portfolio(
     :return: A tuple containing the cumulative return, average daily returns,  		  	   		 	   		  		  		    	 		 		   		 		  
         standard deviation of daily returns, Sharpe ratio and end value  		  	   		 	   		  		  		    	 		 		   		 		  
     :rtype: tuple  		  	   		 	   		  		  		    	 		 		   		 		  
-    """  		  	   		 	   		  		  		    	 		 		   		 		  
-  		  	   		 	   		  		  		    	 		 		   		 		  
-    # Read in adjusted closing prices for given symbols, date range  		  	   		 	   		  		  		    	 		 		   		 		  
-    dates = pd.date_range(sd, ed)  		  	   		 	   		  		  		    	 		 		   		 		  
-    prices_all = get_data(syms, dates)  # automatically adds SPY  		  	   		 	   		  		  		    	 		 		   		 		  
-    prices = prices_all[syms]  # only portfolio symbols  		  	   		 	   		  		  		    	 		 		   		 		  
-    prices_SPY = prices_all["SPY"]  # only SPY, for comparison later  		  	   		 	   		  		  		    	 		 		   		 		  
+    """
 
-    # Get daily portfolio value  		  	   		 	   		  		  		    	 		 		   		 		  
-    port_val = prices_SPY  # add code here to compute daily portfolio values
+    '''
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    ERASE PRINT SETTINGS LATER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    '''
+    print('\n')
+    pd.options.display.float_format = '{:.0f}'.format
+
+
+
+    # Read in adjusted closing prices for given symbols, date range
+    dates = pd.date_range(sd, ed)
+    prices_all = get_data(syms, dates)  # automatically adds SPY
+    prices = prices_all[syms]  # only portfolio symbols
+    # prices = list(prices_all.columns.values)
+    prices_SPY = prices_all["SPY"]  # only SPY, for comparison later
+
+    # Get daily portfolio value
+
     # Get portfolio statistics (note: std_daily_ret = volatility)
 
     '''
+    -----------CALCULATING DAILY PORTFOLIO VALUE----------
+    '''
+    # print(prices_all)
+    normed = prices/prices.iloc[0].values
+    alloced = normed * allocs
+    pos_vals = alloced * sv
+    port_val = pos_vals.sum(axis = 1) #daily portfolio value
+    cr = (port_val.iloc[-1] / port_val.iloc[0]) - 1
+
+    '''
+    -------------GETTING PORTFOLIO STATISTICS----------
     Steps:
     1. Geet data for specific stores
     2. Get daily portfolio values
     3. Get portfolio statistics
     '''
     #Step 1: Daily returns
-    print('\n')
+
     # print(prices_all.head(5))
-    # prices_all.iloc[1:5] - prices_all.iloc[2:6]
-    daily_returns_all = prices_all.copy()
-    daily_returns_all.iloc[1:] = (prices_all.iloc[1:]/prices_all.iloc[:-1].values) -1
-    daily_returns_all.iloc[0] = 0
+
+
+    daily_returns = daily_returns[1:]
+    # daily_returns_all.iloc[1:] = (port_val.iloc[1:]/port_val.iloc[:-1].values) -1
+    # daily_returns_all.iloc[0] = 0
     # print(daily_returns_all.head(5))
     # print('----')
     # cr_SPY[1:] = (prices_SPY[1:] / prices_SPY[0]) - 1
 
     #2. cumulative returns
-    cr_all = prices_all.copy()
-    cr= (prices_all.iloc[-1] / prices_SPY.iloc[0]) - 1
-    # cr_all.iloc[0] = 0
-    # cr = cr_all
 
-    #3. Normed returned
+  cr= (port_val.iloc[-1] / port_val.iloc[0]) - 1
+
+    '''
+    Testing a daily returns in 1-04 vid 9
+    '''
+    daily_returns_two = port_val.copy()
+    daily_returns_two = (daily_returns_two[1:] / daily_returns_two[:-1].values) - 1
+    print(daily_returns_two)
+
 
     #4. mean
-    adr = cr_all.mean()
-
+    adr = daily_returns.mean()
+    print(adr)
     #5. standard deviation
-    sddr = cr_all.std()
-
+    sddr = daily_returns.std()
+    print(sddr)
     #6. Sharpe Ratio
-    sr = (adr/sddr)
+    sr = sqrt(sf) * (daily_returns.mean() - rfr)/sddr)
 
-    '''
-    Code for computing stats
-    '''
-
-
-    #
-    # '''
-    # 1. Daily Returns
-    # '''
-    #
-    # daily_returns_SPY = prices_SPY.copy()
-    # daily_returns_SPY[1:] = (daily_returns_SPY[1:]/daily_returns_SPY[:-1].values) - 1
-    # daily_returns_SPY[0] = 0
-    #
-    #
-    # '''
-    # 2. Cumulative returns
-    # '''
-    # # print(prices_SPY)
-    #
-    #
-    # cr_SPY = prices_SPY.copy()
-    #
-    # cr_SPY[1:] = (prices_SPY[1:] / prices_SPY[0]) - 1
-    # cr_SPY[0] = 0
-    #
-    # '''
-    # 3. Normalized returns
-    # '''
-    #
-    #
-    # '''
-    # 4. average daily return
-    # '''
-    # print(daily_returns_SPY.mean())
-    #
-    #
-    # '''
-    # 5. st. devi of daily rturns
-    # '''
-    # print(daily_returns_SPY.std())
-    #
-    # '''
-    # 6. Sharpe ratio
-    # '''
-    #
-    # sr = daily_returns_SPY.mean() / daily_returns_SPY.std()
-    #
-    # print('sharpe ratio is', sr)
     # Compare daily portfolio value with SPY using a normalized plot
     if gen_plot:  		  	   		 	   		  		  		    	 		 		   		 		  
         # add code to plot here  		  	   		 	   		  		  		    	 		 		   		 		  
         df_temp = pd.concat(  		  	   		 	   		  		  		    	 		 		   		 		  
-            [port_val, prices_SPY], keys=["Portfolio", "SPY"], axis=1  		  	   		 	   		  		  		    	 		 		   		 		  
-        )  		  	   		 	   		  		  		    	 		 		   		 		  
-        pass  		  	   		 	   		  		  		    	 		 		   		 		  
+            [port_val, prices_SPY], keys=["Portfolio", "SPY"], axis=1
+        )
+        # plt.plot(df_temp)
+        # plt.show()
+        pass
   		  	   		 	   		  		  		    	 		 		   		 		  
     # Add code here to properly compute end value  		  	   		 	   		  		  		    	 		 		   		 		  
 
-    ev = sv
-    return cr, adr, sddr, sr, ev  		  	   		 	   		  		  		    	 		 		   		 		  
+    ev = port_val[-1]
+    return cr, adr, sddr, sr, ev
   		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
 def test_code():  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -182,18 +168,18 @@ def test_code():
         syms=symbols,  		  	   		 	   		  		  		    	 		 		   		 		  
         allocs=allocations,  		  	   		 	   		  		  		    	 		 		   		 		  
         sv=start_val,  		  	   		 	   		  		  		    	 		 		   		 		  
-        gen_plot=False,  		  	   		 	   		  		  		    	 		 		   		 		  
+        gen_plot=False,
     )  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
     # Print statistics  		  	   		 	   		  		  		    	 		 		   		 		  
-    print(f"Start Date: {start_date}")
-    print(f"End Date: {end_date}")
-    print(f"Symbols: {symbols}")
-    print(f"Allocations: {allocations}")
-    print(f"Sharpe Ratio: {sr}")
-    print(f"Volatility (stdev of daily returns): {sddr}")
-    print(f"Average Daily Return: {adr}")
-    print(f"Cumulative Return: {cr}")
+    # print(f"Start Date: {start_date}")
+    # print(f"End Date: {end_date}")
+    # print(f"Symbols: {symbols}")
+    # print(f"Allocations: {allocations}")
+    # print(f"Sharpe Ratio: {sr}")
+    # print(f"Volatility (stdev of daily returns): {sddr}")
+    # print(f"Average Daily Return: {adr}")
+    # print(f"Cumulative Return: {cr}")
   	#
   		  	   		 	   		  		  		    	 		 		   		 		  
 if __name__ == "__main__":  		  	   		 	   		  		  		    	 		 		   		 		  
