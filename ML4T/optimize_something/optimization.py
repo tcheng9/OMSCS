@@ -35,6 +35,7 @@ import matplotlib.pyplot as plt
 import pandas as pd  		  	   		 	   		  		  		    	 		 		   		 		  
 from util import get_data, plot_data
 import math
+import scipy.optimize as spo
 
 def author():
     """
@@ -96,11 +97,11 @@ def calc_sr(
     print('cr is', cr)
     print('adr is', adr)
     print('sddr is', sddr)
-    print('sr is', sr)
+    print('sr is', sr * -1)
     print('ev is', ev)
 
 
-    return cr, adr, sddr, sr, ev
+    return cr, adr, sddr, sr * - 1, ev
 
 # This is the function that will be tested by the autograder
 # The student must update this code to properly implement the functionality  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -149,6 +150,7 @@ def optimize_portfolio(
     '''
     calc_sr(sd, ed, syms, allocs, 1000000, 0.0, 252.0)
 
+    best_result= spo.minimize(calc_sr(sd, ed, syms, allocs, 1000000, 0.0, 252.0), allocs, method = "SLSQP", options = {'disp': True})
 
     cr, adr, sddr, sr = [
         0.25,
