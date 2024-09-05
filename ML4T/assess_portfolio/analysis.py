@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd  		  	   		 	   		  		  		    	 		 		   		 		  
 from util import get_data, plot_data  		  	   		 	   		  		  		    	 		 		   		 		  
-  		  	   		 	   		  		  		    	 		 		   		 		  
+import math
   		  	   		 	   		  		  		    	 		 		   		 		  
 # This is the function that will be tested by the autograder  		  	   		 	   		  		  		    	 		 		   		 		  
 # The student must update this code to properly implement the functionality  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -62,7 +62,7 @@ def assess_portfolio(
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     '''
     print('\n')
-    pd.options.display.float_format = '{:.0f}'.format
+    # pd.options.display.float_format = '{:.0f}'.format
 
 
 
@@ -94,38 +94,27 @@ def assess_portfolio(
     2. Get daily portfolio values
     3. Get portfolio statistics
     '''
-    #Step 1: Daily returns
+    # Daily returns if using prices of stocks
+    # daily_returns_all = prices_all.copy()
+    # daily_returns_all.iloc[1:] = (daily_returns_all.iloc[1:]/daily_returns_all.iloc[:-1].values) -1
+    # # daily_returns_all.iloc[0] = 0
+    # daily_returns_all = daily_returns_all[1:]
+    # print(daily_returns_all)
 
-    # print(prices_all.head(5))
-
-
-    daily_returns = daily_returns[1:]
-    # daily_returns_all.iloc[1:] = (port_val.iloc[1:]/port_val.iloc[:-1].values) -1
+    #daily returns if using port_val
+    daily_returns_all = port_val.copy()
+    daily_returns_all.iloc[1:] = (daily_returns_all.iloc[1:] / daily_returns_all.iloc[:-1].values) - 1
     # daily_returns_all.iloc[0] = 0
-    # print(daily_returns_all.head(5))
-    # print('----')
-    # cr_SPY[1:] = (prices_SPY[1:] / prices_SPY[0]) - 1
-
-    #2. cumulative returns
-
-  cr= (port_val.iloc[-1] / port_val.iloc[0]) - 1
-
-    '''
-    Testing a daily returns in 1-04 vid 9
-    '''
-    daily_returns_two = port_val.copy()
-    daily_returns_two = (daily_returns_two[1:] / daily_returns_two[:-1].values) - 1
-    print(daily_returns_two)
-
-
+    daily_returns_all = daily_returns_all[1:]
     #4. mean
-    adr = daily_returns.mean()
-    print(adr)
+    adr = daily_returns_all.mean()
+
     #5. standard deviation
-    sddr = daily_returns.std()
-    print(sddr)
+    sddr = daily_returns_all.std()
+
     #6. Sharpe Ratio
-    sr = sqrt(sf) * (daily_returns.mean() - rfr)/sddr)
+    # sr = math.sqrt(sf)*(daily_returns_all.mean() - rfr/sddr)
+    sr = math.sqrt(sf) * (adr-rfr)/sddr
 
     # Compare daily portfolio value with SPY using a normalized plot
     if gen_plot:  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -138,7 +127,11 @@ def assess_portfolio(
         pass
   		  	   		 	   		  		  		    	 		 		   		 		  
     # Add code here to properly compute end value  		  	   		 	   		  		  		    	 		 		   		 		  
-
+    # cr = 10
+    # adr = 110
+    # sddr = 110
+    # sr = 110
+    # ev = 110
     ev = port_val[-1]
     return cr, adr, sddr, sr, ev
   		  	   		 	   		  		  		    	 		 		   		 		  
@@ -172,14 +165,14 @@ def test_code():
     )  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
     # Print statistics  		  	   		 	   		  		  		    	 		 		   		 		  
-    # print(f"Start Date: {start_date}")
-    # print(f"End Date: {end_date}")
-    # print(f"Symbols: {symbols}")
-    # print(f"Allocations: {allocations}")
-    # print(f"Sharpe Ratio: {sr}")
-    # print(f"Volatility (stdev of daily returns): {sddr}")
-    # print(f"Average Daily Return: {adr}")
-    # print(f"Cumulative Return: {cr}")
+    print(f"Start Date: {start_date}")
+    print(f"End Date: {end_date}")
+    print(f"Symbols: {symbols}")
+    print(f"Allocations: {allocations}")
+    print(f"Sharpe Ratio: {sr}")
+    print(f"Volatility (stdev of daily returns): {sddr}")
+    print(f"Average Daily Return: {adr}")
+    print(f"Cumulative Return: {cr}")
   	#
   		  	   		 	   		  		  		    	 		 		   		 		  
 if __name__ == "__main__":  		  	   		 	   		  		  		    	 		 		   		 		  
