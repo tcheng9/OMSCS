@@ -14,7 +14,7 @@ IncorrectOutput: One or more stats were incorrect.
   Wrong values:
     cum_ret: 0.25 (expected: 0.255646784534)
     avg_daily_ret: 0.001 (expected: 0.000957366234238)
-    sharpe_ratio: 2.1 (expected: 1.51819243641)
+    sharpe_ratio: 0.04769897941647968 (expected: 1.51819243641)
 
 Test #1: failed 
 Test case description: Wiki example 2
@@ -28,7 +28,7 @@ IncorrectOutput: One or more stats were incorrect.
   Wrong values:
     cum_ret: 0.25 (expected: 0.198105963655)
     avg_daily_ret: 0.001 (expected: 0.000763106152672)
-    sharpe_ratio: 2.1 (expected: 1.30798398744)
+    sharpe_ratio: 0.04769897941647968 (expected: 1.30798398744)
 
 Test #2: failed 
 Test case description: Wiki example 3: Six month range
@@ -42,7 +42,7 @@ IncorrectOutput: One or more stats were incorrect.
   Wrong values:
     cum_ret: 0.25 (expected: 0.205113938792)
     avg_daily_ret: 0.001 (expected: 0.00129586924366)
-    sharpe_ratio: 2.1 (expected: 2.21259766672)
+    sharpe_ratio: 0.11321205243467053 (expected: 2.21259766672)
 
 Test #3: failed 
 Test case description: Normalization check
@@ -56,7 +56,7 @@ IncorrectOutput: One or more stats were incorrect.
   Wrong values:
     cum_ret: 0.25 (expected: -0.110888530433)
     avg_daily_ret: 0.001 (expected: -6.50814806831e-05)
-    sharpe_ratio: 2.1 (expected: -0.0704694718385)
+    sharpe_ratio: 0.04151112300489557 (expected: -0.0704694718385)
 
 Test #4: failed 
 Test case description: One month range
@@ -70,7 +70,7 @@ IncorrectOutput: One or more stats were incorrect.
   Wrong values:
     cum_ret: 0.25 (expected: -0.0758725033871)
     avg_daily_ret: 0.001 (expected: -0.00411578300489)
-    sharpe_ratio: 2.1 (expected: -2.84503813366)
+    sharpe_ratio: -0.29302940652092974 (expected: -2.84503813366)
 
 Test #5: failed 
 Test case description: Low Sharpe ratio
@@ -84,7 +84,7 @@ IncorrectOutput: One or more stats were incorrect.
   Wrong values:
     cum_ret: 0.25 (expected: -0.686004563165)
     avg_daily_ret: 0.001 (expected: -0.00405018240566)
-    sharpe_ratio: 2.1 (expected: -1.93664660013)
+    sharpe_ratio: 0.009572034544694973 (expected: -1.93664660013)
 
 Test #6: failed 
 Test case description: All your eggs in one basket
@@ -98,7 +98,7 @@ IncorrectOutput: One or more stats were incorrect.
   Wrong values:
     cum_ret: 0.25 (expected: -0.191620333598)
     avg_daily_ret: 0.001 (expected: -0.000718040989619)
-    sharpe_ratio: 2.1 (expected: -0.71237182415)
+    sharpe_ratio: 0.04769897941647968 (expected: -0.71237182415)
 
 Test #7: failed 
 Test case description: Two year range
@@ -112,6 +112,6 @@ IncorrectOutput: One or more stats were incorrect.
   Wrong values:
     cum_ret: 0.25 (expected: 0.43732715979)
     avg_daily_ret: 0.001 (expected: 0.00076948918955)
-    sharpe_ratio: 2.1 (expected: 1.26449481371)
+    sharpe_ratio: 0.04497415395230563 (expected: 1.26449481371)
 
 </pre>
