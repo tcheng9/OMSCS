@@ -55,69 +55,94 @@ def assess_portfolio(
     prices_all = get_data(syms, dates)  # automatically adds SPY  		  	   		 	   		  		  		    	 		 		   		 		  
     prices = prices_all[syms]  # only portfolio symbols  		  	   		 	   		  		  		    	 		 		   		 		  
     prices_SPY = prices_all["SPY"]  # only SPY, for comparison later  		  	   		 	   		  		  		    	 		 		   		 		  
-  		  	   		 	   		  		  		    	 		 		   		 		  
+
     # Get daily portfolio value  		  	   		 	   		  		  		    	 		 		   		 		  
-    port_val = prices_SPY  # add code here to compute daily portfolio values  		  	   		 	   		  		  		    	 		 		   		 		  
-
-
-
-
-
-    # Get portfolio statistics (note: std_daily_ret = volatility)  		  	   		 	   		  		  		    	 		 		   		 		  
-    cr, adr, sddr, sr = [  		  	   		 	   		  		  		    	 		 		   		 		  
-        0.25,  		  	   		 	   		  		  		    	 		 		   		 		  
-        0.001,  		  	   		 	   		  		  		    	 		 		   		 		  
-        0.0005,
-        2.1,  		  	   		 	   		  		  		    	 		 		   		 		  
-    ]  # add code here to compute stats
+    port_val = prices_SPY  # add code here to compute daily portfolio values
+    # Get portfolio statistics (note: std_daily_ret = volatility)
 
     '''
-    idk i'ma start my code here
+    Steps:
+    1. Geet data for specific stores
+    2. Get daily portfolio values
+    3. Get portfolio statistics
     '''
+    #Step 1: Daily returns
+    print('\n')
+    # print(prices_all.head(5))
+    # prices_all.iloc[1:5] - prices_all.iloc[2:6]
+    daily_returns_all = prices_all.copy()
+    daily_returns_all.iloc[1:] = (prices_all.iloc[1:]/prices_all.iloc[:-1].values) -1
+    daily_returns_all.iloc[0] = 0
+    # print(daily_returns_all.head(5))
+    # print('----')
+    # cr_SPY[1:] = (prices_SPY[1:] / prices_SPY[0]) - 1
 
-    '''
-    1. Daily Returns
-    '''
+    #2. cumulative returns
+    cr_all = prices_all.copy()
+    cr= (prices_all.iloc[-1] / prices_SPY.iloc[0]) - 1
+    # cr_all.iloc[0] = 0
+    # cr = cr_all
 
-    daily_returns_SPY = prices_SPY.copy()
-    daily_returns_SPY[1:] = (daily_returns_SPY[1:]/daily_returns_SPY[:-1].values) - 1
-    daily_returns_SPY[0] = 0
+    #3. Normed returned
 
+    #4. mean
+    adr = cr_all.mean()
 
-    '''
-    2. Cumulative returns
-    '''
-    # print(prices_SPY)
+    #5. standard deviation
+    sddr = cr_all.std()
 
-
-    cr_SPY = prices_SPY.copy()
-
-    cr_SPY[1:] = (prices_SPY[1:] / prices_SPY[0]) - 1
-    cr_SPY[0] = 0
-
-    '''
-    3. Normalized returns
-    '''
-
-
-    '''
-    4. average daily return
-    '''
-    print(daily_returns_SPY.mean())
-
-
-    '''
-    5. st. devi of daily rturns
-    '''
-    print(daily_returns_SPY.std())
+    #6. Sharpe Ratio
+    sr = (adr/sddr)
 
     '''
-    6. Sharpe ratio
+    Code for computing stats
     '''
 
-    sr = daily_returns_SPY.mean() / daily_returns_SPY.std()
 
-    print('sharpe ratio is', sr)
+    #
+    # '''
+    # 1. Daily Returns
+    # '''
+    #
+    # daily_returns_SPY = prices_SPY.copy()
+    # daily_returns_SPY[1:] = (daily_returns_SPY[1:]/daily_returns_SPY[:-1].values) - 1
+    # daily_returns_SPY[0] = 0
+    #
+    #
+    # '''
+    # 2. Cumulative returns
+    # '''
+    # # print(prices_SPY)
+    #
+    #
+    # cr_SPY = prices_SPY.copy()
+    #
+    # cr_SPY[1:] = (prices_SPY[1:] / prices_SPY[0]) - 1
+    # cr_SPY[0] = 0
+    #
+    # '''
+    # 3. Normalized returns
+    # '''
+    #
+    #
+    # '''
+    # 4. average daily return
+    # '''
+    # print(daily_returns_SPY.mean())
+    #
+    #
+    # '''
+    # 5. st. devi of daily rturns
+    # '''
+    # print(daily_returns_SPY.std())
+    #
+    # '''
+    # 6. Sharpe ratio
+    # '''
+    #
+    # sr = daily_returns_SPY.mean() / daily_returns_SPY.std()
+    #
+    # print('sharpe ratio is', sr)
     # Compare daily portfolio value with SPY using a normalized plot
     if gen_plot:  		  	   		 	   		  		  		    	 		 		   		 		  
         # add code to plot here  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -127,8 +152,8 @@ def assess_portfolio(
         pass  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
     # Add code here to properly compute end value  		  	   		 	   		  		  		    	 		 		   		 		  
-    ev = sv  		  	   		 	   		  		  		    	 		 		   		 		  
-  		  	   		 	   		  		  		    	 		 		   		 		  
+
+    ev = sv
     return cr, adr, sddr, sr, ev  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
@@ -161,14 +186,14 @@ def test_code():
     )  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
     # Print statistics  		  	   		 	   		  		  		    	 		 		   		 		  
-    # print(f"Start Date: {start_date}")
-    # print(f"End Date: {end_date}")
-    # print(f"Symbols: {symbols}")
-    # print(f"Allocations: {allocations}")
-    # print(f"Sharpe Ratio: {sr}")
-    # print(f"Volatility (stdev of daily returns): {sddr}")
-    # print(f"Average Daily Return: {adr}")
-    # print(f"Cumulative Return: {cr}")
+    print(f"Start Date: {start_date}")
+    print(f"End Date: {end_date}")
+    print(f"Symbols: {symbols}")
+    print(f"Allocations: {allocations}")
+    print(f"Sharpe Ratio: {sr}")
+    print(f"Volatility (stdev of daily returns): {sddr}")
+    print(f"Average Daily Return: {adr}")
+    print(f"Cumulative Return: {cr}")
   	#
   		  	   		 	   		  		  		    	 		 		   		 		  
 if __name__ == "__main__":  		  	   		 	   		  		  		    	 		 		   		 		  
