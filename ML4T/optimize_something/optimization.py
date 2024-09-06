@@ -47,22 +47,37 @@ def author():
 
 def study_group():
     return "tcheng99"
-
+# spo.minimize(calc_sr, allocs, args = ((dt.datetime(2008, 1, 1),
+#  dt.datetime(2009, 1, 1),
+# ["GOOG", "AAPL", "GLD", "XOM"],
+# 1000000,
+# 0.0,
+# 252.0)))
+#
+# (dt.datetime(2008, 1, 1),
+#  dt.datetime(2009, 1, 1),
+# ["GOOG", "AAPL", "GLD", "XOM"],
+# 1000000,
+# 0.0,
+# 252.0)
 def calc_sr(
-    sd,
-    ed,
-    syms,
-    allocs,
+    allocs = [0.2, 0.2, 0.2, 0.2, 0.2],
+    sd=dt.datetime(2008, 1, 1),
+    ed=dt.datetime(2009, 1, 1),
+    syms=["GOOG", "AAPL", "GLD", "XOM"],
     sv=1000000,
     rfr=0.0,
     sf=252.0,
 ):
     #STEP 1: GETTING ALL DATA
     # Read in adjusted closing prices for given symbols, date range
+
+    allocs = [1/len(syms)] * len(syms)
     dates = pd.date_range(sd, ed)
     prices_all = get_data(syms, dates)  # automatically adds SPY
     prices = prices_all[syms]  # only portfolio symbols
     prices_SPY = prices_all["SPY"]  # only SPY, for comparison later
+
 
     '''
     -----------CALCULATING DAILY PORTFOLIO VALUE----------
@@ -94,14 +109,19 @@ def calc_sr(
     ev = port_val[-1]
 
 
-    print('cr is', cr)
-    print('adr is', adr)
-    print('sddr is', sddr)
-    print('sr is', sr * -1)
-    print('ev is', ev)
+    # print('cr is', cr)
+    # print('adr is', adr)
+    # print('sddr is', sddr)
+    # print('sr is', sr * -1)
+    # print('ev is', ev)
 
 
     return cr, adr, sddr, sr * - 1, ev
+
+def calc_sr_simple(adr, sddr):
+
+    sr = math.sqrt(252) * (adr - 0) / sddr
+    return sr
 
 # This is the function that will be tested by the autograder
 # The student must update this code to properly implement the functionality  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -133,25 +153,58 @@ def optimize_portfolio(
     :rtype: tuple  		  	   		 	   		  		  		    	 		 		   		 		  
     """  		  	   		 	   		  		  		    	 		 		   		 		  
     print('\n')
+    sv = 1000000
     # Read in adjusted closing prices for given symbols, date range
     dates = pd.date_range(sd, ed)
     prices_all = get_data(syms, dates)  # automatically adds SPY
     prices = prices_all[syms]  # only portfolio symbols
     prices_SPY = prices_all["SPY"]  # only SPY, for comparison later
 
-    # find the allocations for the optimal portfolio  		  	   		 	   		  		  		    	 		 		   		 		  
-    # note that the values here ARE NOT meant to be correct for a test case  		  	   		 	   		  		  		    	 		 		   		 		  
-    allocs = np.asarray(  		  	   		 	   		  		  		    	 		 		   		 		  
-        [0.2, 0.2, 0.2,0.2,0.2,]
-    )  # add code here to find the allocations
+    allocs = np.asarray([1 / len(syms)] * len(syms))
 
     '''
-    THIS IS WHERE YOU HAVE CODE FOR FINDING OPTIMAL SHARPE RATIO
+    -----------CALCULATING DAILY PORTFOLIO VALUE----------
     '''
-    calc_sr(sd, ed, syms, allocs, 1000000, 0.0, 252.0)
+    # print(prices_all)
+    normed = prices / prices.iloc[0].values
+    alloced = normed * allocs
+    pos_vals = alloced * sv
+    port_val = pos_vals.sum(axis=1)  # daily portfolio value
+    cr = (port_val.iloc[-1] / port_val.iloc[0]) - 1
 
-    best_result= spo.minimize(calc_sr(sd, ed, syms, allocs, 1000000, 0.0, 252.0), allocs, method = "SLSQP", options = {'disp': True})
+    '''
+    ----------GETTING PORTFOLIO STATISTICS ------------------
+    '''
+    # daily returns if using port_val
+    daily_returns_all = port_val.copy()
+    daily_returns_all.iloc[1:] = (daily_returns_all.iloc[1:] / daily_returns_all.iloc[:-1].values) - 1
+    # daily_returns_all.iloc[0] = 0
+    daily_returns_all = daily_returns_all[1:]
+    # 4. mean
+    adr = daily_returns_all.mean()
 
+    # 5. standard deviation
+    sddr = daily_returns_all.std()
+
+    sf = 252
+    rfr = 0
+    # 6. Sharpe Ratio
+    # sr = math.sqrt(sf)*(daily_returns_all.mean() - rfr/sddr)
+    sr = math.sqrt(sf) * (adr - rfr) / sddr
+    ev = port_val[-1]
+
+    guess = [adr, sddr]
+
+    # best_result= spo.minimize(calc_sr_simple, 10, args = 10,  method = "SLSQP", options = {'disp': True})
+    best_result = spo.minimize(calc_sr, allocs, args = ((dt.datetime(2008, 1, 1),
+                     dt.datetime(2009, 1, 1),
+                    ["GOOG", "AAPL", "GLD", "XOM"],
+                    1000000,
+                    0.0,
+                    252.0)))
+
+    print('best result is')
+    print(best_result)
     cr, adr, sddr, sr = [
         0.25,
         0.001,
