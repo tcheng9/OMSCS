@@ -248,7 +248,7 @@ def optimize_portfolio(
     allocs = [.2/len(syms)] * len(syms)
     init_bounds = (0, 1)
     bds = ((init_bounds,) * len(allocs))
-    print(bds)
+    # print(bds)
     constraint1 = {'type': 'eq', 'fun': lambda inputs: 1-np.sum(allocs) }
     # bds = (0,1) * len(allocs)
     best_result = spo.minimize(calc_sr, allocs, args=(sd, ed, syms, 1000000, 0, 252),
@@ -281,6 +281,14 @@ def optimize_portfolio(
     # adr = 1
     # sddr = 1
     # sr = 1
+    # print('best allocs is', best_allocs)
+    # print('best cr is', cr)
+    # print('best adr', adr)
+    # print('best sddr', sddr)
+    # print('best sr', sr)
+
+
+
     return best_allocs, cr, adr, sddr, sr
   		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  

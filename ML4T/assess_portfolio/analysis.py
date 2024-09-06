@@ -87,7 +87,8 @@ def assess_portfolio(
     port_val = pos_vals.sum(axis = 1) #daily portfolio value
     return_port_val = port_val.copy()
     cr = (port_val.iloc[-1] / port_val.iloc[0]) - 1
-
+    prices_SPY.iloc[1:] = (prices_SPY.iloc[1:]/prices_SPY.iloc[:-1].values)-1
+    prices_SPY.iloc[0] = 0
     '''
     -------------GETTING PORTFOLIO STATISTICS----------
     Steps:
@@ -121,10 +122,10 @@ def assess_portfolio(
     if gen_plot:  		  	   		 	   		  		  		    	 		 		   		 		  
         # add code to plot here  		  	   		 	   		  		  		    	 		 		   		 		  
         df_temp = pd.concat(  		  	   		 	   		  		  		    	 		 		   		 		  
-            [port_val, prices_SPY], keys=["Portfolio", "SPY"], axis=1
+            [daily_returns_all, prices_SPY], keys=["Portfolio", "SPY"], axis=1
         )
-        # plt.plot(df_temp)
-        # plt.show()
+        plt.plot(df_temp)
+        plt.show()
         pass
   		  	   		 	   		  		  		    	 		 		   		 		  
     # Add code here to properly compute end value  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -162,7 +163,7 @@ def test_code():
         syms=symbols,  		  	   		 	   		  		  		    	 		 		   		 		  
         allocs=allocations,  		  	   		 	   		  		  		    	 		 		   		 		  
         sv=start_val,  		  	   		 	   		  		  		    	 		 		   		 		  
-        gen_plot=False,
+        gen_plot=True,
     )  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
     # Print statistics  		  	   		 	   		  		  		    	 		 		   		 		  
