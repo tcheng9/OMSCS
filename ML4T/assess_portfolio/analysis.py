@@ -85,6 +85,7 @@ def assess_portfolio(
     alloced = normed * allocs
     pos_vals = alloced * sv
     port_val = pos_vals.sum(axis = 1) #daily portfolio value
+    return_port_val = port_val.copy()
     cr = (port_val.iloc[-1] / port_val.iloc[0]) - 1
 
     '''
