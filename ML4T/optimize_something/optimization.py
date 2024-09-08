@@ -239,6 +239,8 @@ def optimize_portfolio(
     # port_val = prices_SPY
 
 
+    # normed_SPY = prices_SPY / prices_SPY.iloc[0].values
+    # normed
 
 
     # Get daily portfolio value
@@ -264,14 +266,48 @@ def optimize_portfolio(
     # print('here')
     cr, adr, sddr, sr, ev, port_val = assess_portfolio(sd, ed, syms, best_allocs, 1000000, 0, 252, False)
 
+
+
+    '''
+    Trying to get graph right
+    '''
+    '''
+       -----------CALCULATING DAILY PORTFOLIO VALUE----------
+       '''
+    # print(prices_all)
+    sv = 1000000
+    normed = prices / prices.iloc[0].values
+    alloced = normed * best_allocs
+    pos_vals = alloced * sv
+    port_val = pos_vals.sum(axis=1)  # daily portfolio value
+
+    # Read in adjusted closing prices for given symbols, date range
+    dates = pd.date_range(sd, ed)
+    prices_all = get_data(syms, dates)  # automatically adds SPY
+    prices = prices_all[syms]  # only portfolio symbols
+    prices_SPY = prices_all["SPY"]  # only SPY, for comparison later
+    # port_val = prices_SPY
+
+    ########## SPY
+    prices_SPY = prices_SPY[1:]/prices_SPY[0]
+    # print(prices_SPY)
+
+    #portfolio value
+    print(port_val)
+    port_val = port_val[1:]/port_val[0]
     # print(cr, adr, sddr, sr,ev)
     # Compare daily portfolio value with SPY using a normalized plot  		  	   		 	   		  		  		    	 		 		   		 		  
     if gen_plot:
         # add code to plot here
-        df_temp = pd.concat(
-            [port_val, prices_SPY], keys=["Portfolio", "SPY"], axis=1
-        )
-        df_temp.plot()
+        # df_temp = pd.concat(
+        #     [port_val, prices_SPY], keys=["Portfolio", "SPY"], axis=1
+        # )
+        # df_temp.plot()
+        plt.plot(port_val, label="portfolio")
+        plt.plot(prices_SPY, label = "SPY")
+
+        # print(cr)
+        plt.legend()
         plt.show()
         pass
 
@@ -297,9 +333,9 @@ def test_code():
     This function WILL NOT be called by the auto grader.  		  	   		 	   		  		  		    	 		 		   		 		  
     """  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
-    start_date = dt.datetime(2009, 1, 1)  		  	   		 	   		  		  		    	 		 		   		 		  
-    end_date = dt.datetime(2010, 1, 1)  		  	   		 	   		  		  		    	 		 		   		 		  
-    symbols = ["GOOG", "AAPL", "GLD", "XOM", "IBM"]  		  	   		 	   		  		  		    	 		 		   		 		  
+    start_date = dt.datetime(2008, 6, 1)
+    end_date = dt.datetime(2009,6, 1)
+    symbols = ['IBM', 'X', 'GLD', 'JPM']
   		  	   		 	   		  		  		    	 		 		   		 		  
     # Assess the portfolio  		  	   		 	   		  		  		    	 		 		   		 		  
     allocations, cr, adr, sddr, sr = optimize_portfolio(  		  	   		 	   		  		  		    	 		 		   		 		  
