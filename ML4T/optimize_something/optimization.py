@@ -47,21 +47,6 @@ def author():
 
 def study_group():
     return "tcheng99"
-# spo.minimize(calc_sr, allocs, args = ((dt.datetime(2008, 1, 1),
-#  dt.datetime(2009, 1, 1),
-# ["GOOG", "AAPL", "GLD", "XOM"],
-# 1000000,
-# 0.0,
-# 252.0)))
-#
-# (dt.datetime(2008, 1, 1),
-#  dt.datetime(2009, 1, 1),
-# ["GOOG", "AAPL", "GLD", "XOM"],
-# 1000000,
-# 0.0,
-# 252.0)
-
-# spo.minimize(calc_sr, allocs, args = (sd, ed, syms, sv, rfr, sf))
 
 
 
@@ -88,7 +73,7 @@ def calc_sr(
     '''
     -----------CALCULATING DAILY PORTFOLIO VALUE----------
     '''
-    # print(prices_all)
+
     normed = prices / prices.iloc[0].values
     alloced = normed * allocs
     pos_vals = alloced * sv
@@ -115,13 +100,7 @@ def calc_sr(
     ev = port_val[-1]
 
 
-    # print('cr is', cr)
-    # print('adr is', adr)
-    # print('sddr is', sddr)
-    # print('sr is', sr * -1)
-    # print('ev is', ev)
 
-    # print(sr*-1)
     return sr
 
 
@@ -136,7 +115,7 @@ def assess_portfolio(
         gen_plot=False,
 ):
 
-    print('\n')
+
     # pd.options.display.float_format = '{:.0f}'.format
 
     # Read in adjusted closing prices for given symbols, date range
@@ -153,7 +132,7 @@ def assess_portfolio(
     '''
     -----------CALCULATING DAILY PORTFOLIO VALUE----------
     '''
-    # print(prices_all)
+
     normed = prices / prices.iloc[0].values
     alloced = normed * allocs
     pos_vals = alloced * sv
@@ -192,7 +171,7 @@ def assess_portfolio(
             [port_val, prices_SPY], keys=["Portfolio", "SPY"], axis=1
         )
         # plt.plot(df_temp)
-        # plt.show()
+
         pass
 
     ev = port_val[-1]
@@ -229,7 +208,7 @@ def optimize_portfolio(
         standard deviation of daily returns, and Sharpe ratio  		  	   		 	   		  		  		    	 		 		   		 		  
     :rtype: tuple  		  	   		 	   		  		  		    	 		 		   		 		  
     """  		  	   		 	   		  		  		    	 		 		   		 		  
-    print('\n')
+
 
     # Read in adjusted closing prices for given symbols, date range
     dates = pd.date_range(sd, ed)
@@ -239,9 +218,6 @@ def optimize_portfolio(
     # port_val = prices_SPY
 
 
-    # normed_SPY = prices_SPY / prices_SPY.iloc[0].values
-    # normed
-
 
     # Get daily portfolio value
 
@@ -249,32 +225,28 @@ def optimize_portfolio(
     #optimizer
     allocs = [.2/len(syms)] * len(syms)
     init_bounds = (0, 1)
+
+
     bds = ((init_bounds,) * len(allocs))
-    # print(bds)
-    constraint1 = {'type': 'eq', 'fun': lambda inputs: 1-np.sum(allocs) }
+
+
     # bds = (0,1) * len(allocs)
     best_result = spo.minimize(calc_sr, allocs, args=(sd, ed, syms, 1000000, 0, 252),
         options = {'disp':False},
         bounds = bds,
         constraints = ({'type': 'eq', 'fun': lambda allocs: 1.0 - np.sum(allocs)})
     )
-    # print(np.sum(best_result.x))
+
     best_allocs = best_result.x
-    '''
-    constraints: sum of allocs need to equal to 1
-    '''
-    # print('here')
+
     cr, adr, sddr, sr, ev, port_val = assess_portfolio(sd, ed, syms, best_allocs, 1000000, 0, 252, False)
 
 
 
     '''
-    Trying to get graph right
-    '''
-    '''
-       -----------CALCULATING DAILY PORTFOLIO VALUE----------
-       '''
-    # print(prices_all)
+   -----------CALCULATING DAILY PORTFOLIO VALUE----------
+   '''
+
     sv = 1000000
     normed = prices / prices.iloc[0].values
     alloced = normed * best_allocs
@@ -290,38 +262,41 @@ def optimize_portfolio(
 
     ########## SPY
     prices_SPY = prices_SPY[1:]/prices_SPY[0]
-    # print(prices_SPY)
+
 
     #portfolio value
-    print(port_val)
+
     port_val = port_val[1:]/port_val[0]
-    # print(cr, adr, sddr, sr,ev)
+
     # Compare daily portfolio value with SPY using a normalized plot  		  	   		 	   		  		  		    	 		 		   		 		  
-    if gen_plot:
-        # add code to plot here
-        # df_temp = pd.concat(
-        #     [port_val, prices_SPY], keys=["Portfolio", "SPY"], axis=1
-        # )
-        # df_temp.plot()
-        plt.plot(port_val, label="portfolio")
-        plt.plot(prices_SPY, label = "SPY")
+    # if gen_plot:
+    #     # add code to plot here
+    #     # df_temp = pd.concat(
+    #     #     [port_val, prices_SPY], keys=["Portfolio", "SPY"], axis=1
+    #     # )
+    #     # df_temp.plot()
+    #     plt.plot(port_val, label="portfolio")
+    #     plt.plot(prices_SPY, label = "SPY")
+    #
 
-        # print(cr)
-        plt.legend()
-        plt.show()
-        pass
+    #     plt.legend()
+    #     plt.savefig()
+    #      plt.close()
+    #     pass
 
 
-    # allocs = [0]
-    # cr = 1
-    # adr = 1
-    # sddr = 1
-    # sr = 1
-    # print('best allocs is', best_allocs)
-    # print('best cr is', cr)
-    # print('best adr', adr)
-    # print('best sddr', sddr)
-    # print('best sr', sr)
+    plt.plot(port_val, label="portfolio")
+    plt.plot(prices_SPY, label="SPY")
+
+
+    plt.legend()
+    plt.title('Daily Portfolio Value and SPY')
+    plt.xlabel('Date')
+    plt.xticks(rotation = 30)
+    plt.ylabel('Price')
+    plt.grid(visible= True)
+
+    plt.savefig('Figure1.png', bbox_inches='tight')
 
 
 
@@ -338,19 +313,11 @@ def test_code():
     symbols = ['IBM', 'X', 'GLD', 'JPM']
   		  	   		 	   		  		  		    	 		 		   		 		  
     # Assess the portfolio  		  	   		 	   		  		  		    	 		 		   		 		  
-    allocations, cr, adr, sddr, sr = optimize_portfolio(  		  	   		 	   		  		  		    	 		 		   		 		  
-        sd=start_date, ed=end_date, syms=symbols, gen_plot=True
+    allocations, cr, adr, sddr, sr = optimize_portfolio(
+        sd=start_date, ed=end_date, syms=symbols, gen_plot=False
     )  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
-    # Print statistics  		  	   		 	   		  		  		    	 		 		   		 		  
-    # print(f"Start Date: {start_date}")
-    # print(f"End Date: {end_date}")
-    # print(f"Symbols: {symbols}")
-    # print(f"Allocations:{allocations}")
-    # print(f"Sharpe Ratio: {sr}")
-    # print(f"Volatility (stdev of daily returns): {sddr}")
-    # print(f"Average Daily Return: {adr}")
-    # print(f"Cumulative Return: {cr}")
+
   		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
 if __name__ == "__main__":  		  	   		 	   		  		  		    	 		 		   		 		  
