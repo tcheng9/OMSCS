@@ -26,7 +26,7 @@ GT honor code violation.
 import numpy as np
 
 
-class DTLearner(object):
+class BagLearner(object):
     """
     This is a Linear Regression Learner. It is implemented correctly.
 
@@ -35,11 +35,15 @@ class DTLearner(object):
     :type verbose: bool
     """
 
-    def __init__(self, leaf_size = 1, verbose=False):
+    def __init__(self, learner, kwargs = {"argument1":1, "argument2":2}, bags = 20, boost = False, verbose=False):
         """
         Constructor method
         """
-        self.leaf_size = 1
+        self.learner = learner
+        self.kwargs = kwargs
+        self.bags =bags
+        self.boost = boost
+        self.verbose = verbose
         pass  # move along, these aren't the drones you're looking for
 
     def author(self):
@@ -50,9 +54,7 @@ class DTLearner(object):
         return "tcheng99"  # replace tb34 with your Georgia Tech username
 
     def study_group(self):
-        # print('tcheng99')
         return 'tcheng99'
-
     def add_evidence(self, data_x, data_y):
         """
         Add training data to learner
@@ -64,36 +66,14 @@ class DTLearner(object):
         """
 
         # slap on 1s column so linear regression finds a constant term
-        # new_data_x = np.ones([data_x.shape[0], data_x.shape[1] + 1])
-        # new_data_x[:, 0: data_x.shape[1]] = data_x
+        new_data_x = np.ones([data_x.shape[0], data_x.shape[1] + 1])
+        new_data_x[:, 0: data_x.shape[1]] = data_x
+
         # build and save the model
-        # print(new_data_x)
+        self.model_coefs, residuals, rank, s = np.linalg.lstsq(
+            new_data_x, data_y, rcond=None
+        )
 
-        def dtAlgo():
-            if data_x.shape[0] == 1:
-                print('base case 1')
-                print([-1, data_y[0], None, None])
-                return [-1, data_y[0], None, None]
-            elif (data_y == data_y[0]).all():
-                print('base case 2: all target data is the same')
-                return [-1, data_y[0], None, None]
-            else:
-                print(data_x)
-                print(data_y)
-                # vals = np.corrcoef(data_x, y=data_y)
-                # print(vals)
-
-
-
-                    # np.where(data_y == data_y[0], 1, -1):
-
-        dtAlgo()
-
-    # def dtAlgo(self, data):
-    #     if data.shape[0] == 1:
-    #         return [0, data[0, -1], None, None]
-
-        # if data.y
     def query(self, points):
         """
         Estimate a set of test points given the model we built.
@@ -109,18 +89,4 @@ class DTLearner(object):
 
 
 if __name__ == "__main__":
-    x_train = np.array([[1, 3, 4], [5, 3, 1], [2, 3, 1]])
-    y_train = np.array([[5], [5], [7]])
-    print(x_train.shape)
-    print(y_train.shape)
-    # print(arr.shape)
-    learner = DTLearner()
-    learner.add_evidence(x_train, y_train)
-    # learner.add_evidence()
-
-
-
-# lin reg code
-# self.model_coefs, residuals, rank, s = np.linalg.lstsq(
-#     new_data_x, data_y, rcond=None
-# )
+    print("the secret clue is 'zzyzx'")
