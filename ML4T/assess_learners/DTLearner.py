@@ -81,7 +81,7 @@ class DTLearner(object):
                 print('base case 2: all target data is the same')
                 return [-1, data[0, -1], None, None]
             else:
-
+                print('recursive')
                 # # print('case: general ')
                 # print(data_x)
                 # print(data_y)
@@ -106,6 +106,7 @@ class DTLearner(object):
                 # #recurse left
                 rows, cols = np.where(data[:, best_feature_index] <= split_val)
                 left_split = data[rows, :]
+
                 left_tree = dtAlgo(left_split)
 
                 #recurse right
@@ -115,16 +116,17 @@ class DTLearner(object):
                 right_tree = dtAlgo(right_split)
 
                 #build root
-
-                root = [best_feature_index, split_val, 1, left_tree.shape[1] + 1]
+                # print(left_tree)
+                print(best_feature_index)
+                root = [best_feature_index, split_val, 1, left_split.shape[0] + 1]
 
                 return np.concatenate((root, left_tree, right_tree))
 
 
 
                 #conc left, right,
-        dtAlgo(merged_data)
-
+        tree = dtAlgo(merged_data)
+        print(tree)
     # def dtAlgo(self, data):
     #     if data.shape[0] == 1:
     #         return [0, data[0, -1], None, None]
