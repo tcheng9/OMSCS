@@ -52,6 +52,9 @@ class DTLearner(object):
     def study_group(self):
         # print('tcheng99')
         return 'tcheng99'
+    def pick_best(self, data_x, data_y):
+        vals = np.corrcoef(data_x, y=data_y.T)
+        return vals[-1].T
 
     def add_evidence(self, data_x, data_y):
         """
@@ -63,31 +66,62 @@ class DTLearner(object):
         :type data_y: numpy.ndarray
         """
 
-        # slap on 1s column so linear regression finds a constant term
-        # new_data_x = np.ones([data_x.shape[0], data_x.shape[1] + 1])
-        # new_data_x[:, 0: data_x.shape[1]] = data_x
-        # build and save the model
-        # print(new_data_x)
+        merged_data = np.concatenate((data_x, data_y) , axis = 1)
+        print(merged_data)
+        # print(data_y)
 
-        def dtAlgo():
-            if data_x.shape[0] == 1:
+
+        def dtAlgo(data):
+
+            if data.shape[0] == 1:
                 print('base case 1')
-                print([-1, data_y[0], None, None])
-                return [-1, data_y[0], None, None]
-            elif (data_y == data_y[0]).all():
+                print([-1, data[0, -1], None, None])
+                return [-1, data[0, -1], None, None]
+            elif (data[:, -1] == data[0, -1]).all():
                 print('base case 2: all target data is the same')
-                return [-1, data_y[0], None, None]
+                return [-1, data[0, -1], None, None]
             else:
-                print(data_x)
-                print(data_y)
-                # vals = np.corrcoef(data_x, y=data_y)
-                # print(vals)
+                # # print('case: general ')
+                # print(data_x)
+                # print(data_y)
+                #######line 4: pick best metric
+                # print(data[:,0:-1])
+                print('broken here')
+                print(data[:, 0:-1].shape)
+                print(data[:, -1].shape)
+
+                vals = np.corrcoef(data[:,0:-1], y=data[:, -1])
+                print('correlation matrix', '\n',  vals)
+
+                vals = vals[-1].T
+                print('correlatons with y', '\n', vals)
+
+                #https://www.w3resource.com/python-exercises/numpy/python-numpy-exercise-120.php#:~:text=argmax()%20function%20returns%20the,original%20shape%20of%20the%20array.
+                best_feature_index = np.unravel_index(vals[1:-1].argmax(), vals.shape)
+                print('max index for best factor')
+                print(best_feature_index)
+                print(vals[0])
+                print(data[:, best_feature_index])
+                print(np.median(data[:, best_feature_index]))
+
+                # #determine split val
+                print('split val')
+                split_val = np.median(data[:, best_feature_index])
+                print(split_val)
+                #recurse left and right
+                # print(data[:, best_feature_index] <= split_val)
+                # print(data[data[:, best_feature_index] <= split_val])
+                # dtAlgo(data[data[:, best_feature_index] <= split_val])
+                # rightTree = dtAlgo(data[data[:, best_feature_index] > split_val])
+                print(data[data[:, best_feature_index] <= split_val])
+
+
 
 
 
                     # np.where(data_y == data_y[0], 1, -1):
 
-        dtAlgo()
+        dtAlgo(merged_data)
 
     # def dtAlgo(self, data):
     #     if data.shape[0] == 1:
@@ -109,14 +143,40 @@ class DTLearner(object):
 
 
 if __name__ == "__main__":
+    #case 1 - general case
     x_train = np.array([[1, 3, 4], [5, 3, 1], [2, 3, 1]])
     y_train = np.array([[5], [5], [7]])
-    print(x_train.shape)
-    print(y_train.shape)
+
+    #base case 1 - 1 row
+    # x_train = np.array([[1,2,3],])
+    # y_train = np.array([[2],])
+
+    #base case 2 - all y is same
+    # x_train = np.array([[1, 3, 4], [5, 3, 1], [2, 3, 1]])
+    # y_train = np.array([[5], [5], [5]])
     # print(arr.shape)
+
+    #class test case
+#     x_train = np.array([
+#         [.885,.330, 9.1],
+#         [.725, .39, 10.9],
+#         [.560, .5, 9.4],
+#         [.735, .570, 9.8],
+#         [.610, .630, 8.4],
+#         [.260, .630, 11.8],
+#         [.5, .68, 10.5],
+#         [.320, .780, 10]
+#
+#     ])
+#
+#     y_train = np.array([[4],[5], [6], [5],[3], [8],
+# [7],
+#         [6]
+#     ])
+
+
     learner = DTLearner()
     learner.add_evidence(x_train, y_train)
-    # learner.add_evidence()
 
 
 
