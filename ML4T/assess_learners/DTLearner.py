@@ -81,46 +81,48 @@ class DTLearner(object):
                 print('base case 2: all target data is the same')
                 return [-1, data[0, -1], None, None]
             else:
+
                 # # print('case: general ')
                 # print(data_x)
                 # print(data_y)
                 #######line 4: pick best metric
-                # print(data[:,0:-1])
-                print('broken here')
-                print(data[:, 0:-1].shape)
-                print(data[:, -1].shape)
 
-                vals = np.corrcoef(data[:,0:-1], y=data[:, -1])
-                print('correlation matrix', '\n',  vals)
-
+                vals = np.corrcoef(data.T)
+                # print('correlation matrix', '\n',  vals)
+                #
                 vals = vals[-1].T
-                print('correlatons with y', '\n', vals)
+                # print('correlatons with y', '\n', vals)
 
                 #https://www.w3resource.com/python-exercises/numpy/python-numpy-exercise-120.php#:~:text=argmax()%20function%20returns%20the,original%20shape%20of%20the%20array.
-                best_feature_index = np.unravel_index(vals[1:-1].argmax(), vals.shape)
-                print('max index for best factor')
-                print(best_feature_index)
-                print(vals[0])
-                print(data[:, best_feature_index])
-                print(np.median(data[:, best_feature_index]))
+                best_feature_index = np.unravel_index(vals[0:-1].argmax(), vals.shape)
+                # print('max index for best factor')
+                # print(best_feature_index)
 
-                # #determine split val
-                print('split val')
+
+                # # #determine split val
+
                 split_val = np.median(data[:, best_feature_index])
-                print(split_val)
-                #recurse left and right
-                # print(data[:, best_feature_index] <= split_val)
-                # print(data[data[:, best_feature_index] <= split_val])
-                # dtAlgo(data[data[:, best_feature_index] <= split_val])
-                # rightTree = dtAlgo(data[data[:, best_feature_index] > split_val])
-                print(data[data[:, best_feature_index] <= split_val])
+
+                # #recurse left
+                rows, cols = np.where(data[:, best_feature_index] <= split_val)
+                left_split = data[rows, :]
+                left_tree = dtAlgo(left_split)
+
+                #recurse right
+                rows, cols = np.where(data[:, best_feature_index] > split_val)
+                right_split = data[rows, :]
+
+                right_tree = dtAlgo(right_split)
+
+                #build root
+
+                root = [best_feature_index, split_val, 1, left_tree.shape[1] + 1]
+
+                return np.concatenate((root, left_tree, right_tree))
 
 
 
-
-
-                    # np.where(data_y == data_y[0], 1, -1):
-
+                #conc left, right,
         dtAlgo(merged_data)
 
     # def dtAlgo(self, data):
@@ -144,8 +146,8 @@ class DTLearner(object):
 
 if __name__ == "__main__":
     #case 1 - general case
-    x_train = np.array([[1, 3, 4], [5, 3, 1], [2, 3, 1]])
-    y_train = np.array([[5], [5], [7]])
+    # x_train = np.array([[1, 3, 4], [5, 3, 1], [2, 3, 1]])
+    # y_train = np.array([[5], [5], [7]])
 
     #base case 1 - 1 row
     # x_train = np.array([[1,2,3],])
@@ -157,22 +159,22 @@ if __name__ == "__main__":
     # print(arr.shape)
 
     #class test case
-#     x_train = np.array([
-#         [.885,.330, 9.1],
-#         [.725, .39, 10.9],
-#         [.560, .5, 9.4],
-#         [.735, .570, 9.8],
-#         [.610, .630, 8.4],
-#         [.260, .630, 11.8],
-#         [.5, .68, 10.5],
-#         [.320, .780, 10]
-#
-#     ])
-#
-#     y_train = np.array([[4],[5], [6], [5],[3], [8],
-# [7],
-#         [6]
-#     ])
+    x_train = np.array([
+        [.885,.330, 9.1],
+        [.725, .39, 10.9],
+        [.560, .5, 9.4],
+        [.735, .570, 9.8],
+        [.610, .630, 8.4],
+        [.260, .630, 11.8],
+        [.5, .68, 10.5],
+        [.320, .780, 10]
+
+    ])
+
+
+
+    y_train = np.array([[4],[5], [6], [5],[3], [8], [7],[6]
+    ])
 
 
     learner = DTLearner()
