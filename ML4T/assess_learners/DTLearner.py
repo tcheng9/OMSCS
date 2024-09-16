@@ -40,6 +40,7 @@ class DTLearner(object):
         Constructor method
         """
         self.leaf_size = 1
+        self.tree = None
         pass  # move along, these aren't the drones you're looking for
 
     def author(self):
@@ -67,40 +68,30 @@ class DTLearner(object):
         """
 
         merged_data = np.concatenate((data_x, data_y) , axis = 1)
-        print(merged_data)
+        # print(merged_data)
         # print(data_y)
 
 
         def dtAlgo(data):
 
             if data.shape[0] == 1:
-                print('base case 1')
-                # print([-1, data[0, -1], None, None])
-                # a = np.array([-1, data[0, -1], None, None])
-                # a.shape
+                # print('base case 1')
+
                 return np.array([[-1, data[0, -1], None, None]])
             elif (data[:, -1] == data[0, -1]).all():
-                print('base case 2: all target data is the same')
-                a = np.array([-1, data[0, -1], None, None])
-                a.shape
+                # print('base case 2: all target data is the same')
+
                 return np.array([[-1, data[0, -1], None, None]])
             else:
 
-                print('recursive')
-                # # print('case: general ')
-                # print(data_x)
-                # print(data_y)
                 #######line 4: pick best metric
 
                 vals = np.corrcoef(data.T)
-                # print('correlation matrix', '\n',  vals)
-                #
+
                 vals = abs(vals[-1].T)
-                # print('correlatons with y', '\n', vals)
+
 
                 best_feature_index = np.unravel_index(vals[0:-1].argmax(), vals.shape)
-                # print('max index for best factor')
-                # print(best_feature_index)
 
 
                 # # #determine split val
@@ -120,29 +111,36 @@ class DTLearner(object):
                 right_tree = dtAlgo(right_split)
 
                 #build root
-                # print(left_tree)
-                print(best_feature_index)
+
                 root = np.array([[best_feature_index[0], split_val, 1, left_split.shape[0] + 1]])
-                print(root.shape)
-                print(left_tree.shape)
-                print(right_tree.shape)
+
                 return np.concatenate((root, left_tree, right_tree))
 
 
 
                 #conc left, right,
-        tree = dtAlgo(merged_data)
-        print(tree)
+        self.tree = dtAlgo(merged_data)
+
+        return self.tree
     # def dtAlgo(self, data):
     #     if data.shape[0] == 1:
     #         return [0, data[0, -1], None, None]
 
         # if data.y
-    def query(self, data_x, data_y):
-        merged_data = np.concatenate((data_x, data_y), axis=1)
+    def query(self, data_x):
+        #data_x is just training data, you don't get predictions (aka data_y
+        # merged_data = np.concatenate((data_x, data_y), axis=1)
 
+        matrix = self.tree
 
+        leaf_not_reached = True
+        while leaf_not_reached:
+            feature, split_val, left, right = matrix[0] #unpacking row of tree
+            print(feature, split_val, left, right)
 
+            feature_x, split_val_x, left_x, right_x = data_x
+
+            leaf_not_reached = False
 
 
 if __name__ == "__main__":
@@ -176,13 +174,46 @@ if __name__ == "__main__":
 
     y_train = np.array([[4],[5], [6], [5],[3], [8], [7],[6]])
 
+    x_test = np.array([
+        [.7,.45, 10],
+    ])
 
     learner = DTLearner()
     learner.add_evidence(x_train, y_train)
-
+    learner.query(x_test)
 
 
 # lin reg code
 # self.model_coefs, residuals, rank, s = np.linalg.lstsq(
 #     new_data_x, data_y, rcond=None
 # )
+
+
+'''
+Understanding query:
+
+0. now you have a full tree built so you can pass in a X-feature (not x value but a vector named X)
+1. From the tree, you have to unpack the values (feature column to check, val to split on, left node relative position such that current node row + left node row, right node relative positioning)
+2. go down until you hit a leaf node where feature column == -1 or left/rigt == None
+
+
+Questions:
+1. is the input of DTLearner supposed to be a matrix?
+
+2. how to process input of dtlearner
+a. for each row, process it and see which node it lands on. 
+b. each row should land on a leaf node
+
+3. what is the input of dtlearner
+a. x and y test so basically the same type of data we get as when we train the model
+
+4. what does y really mean?
+a. depends on your test data, ie flowers might tell you which flower it really ends up being
+b. given a set of animal features, you could figure out the exact animal it is 
+c. given cancer cell features, you could figure out the exact type of cancer it is (classificaiton via regrassion/numbers in this project)
+
+5. how to use the tree? Store it in the learner properties?
+
+6. what is DTlearner supposed to return?
+a. a vector of y values?
+'''
