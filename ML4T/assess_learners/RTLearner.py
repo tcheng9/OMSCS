@@ -24,7 +24,7 @@ GT honor code violation.
 """
 
 import numpy as np
-
+import random
 
 class RTLearner(object):
     """
@@ -50,41 +50,91 @@ class RTLearner(object):
         """
         return "tcheng99"  # replace tb34 with your Georgia Tech username
 
+    def random_feature(self, data):
+        print('placeholder')
+
     def add_evidence(self, data_x, data_y):
-        """
-        Add training data to learner
+        merged_data = np.concatenate((data_x, data_y), axis=1)
+        print(merged_data)
+        # random.seed(10)
+        # print(data_y)
 
-        :param data_x: A set of feature values used to train the learner
-        :type data_x: numpy.ndarray
-        :param data_y: The value we are attempting to predict given the X data
-        :type data_y: numpy.ndarray
-        """
+        def build_tree(data):
 
-        # slap on 1s column so linear regression finds a constant term
-        new_data_x = np.ones([data_x.shape[0], data_x.shape[1] + 1])
-        new_data_x[:, 0: data_x.shape[1]] = data_x
+            if data.shape[0] == 1:
+                print('base case 1')
 
-        # build and save the model
-        self.model_coefs, residuals, rank, s = np.linalg.lstsq(
-            new_data_x, data_y, rcond=None
-        )
+                return np.array([[-1, data[0, -1], None, None]])
+            elif (data[:, -1] == data[0, -1]).all():
+                print('base case 2')
+                return np.array([[-1, data[0, -1], None, None]])
+            else:
+
+
+                #######line 4: pick random feature
+
+                random_index = random.randint(0, data.shape[1]-2) #aka random feature/column
+
+                # #determine split val
+                random_row = random.randint(0, data.shape[0]-1)
+                # print(random_row)
+                random_val1 = data[random_row, random_index]
+
+                random_row2 = random.randint(0, data.shape[0] - 1)
+                random_val2 = data[random_row, random_index]
+
+                split_val = (random_val1 + random_val2) / 2
+
+
+                # #recurse left
+                # print(data[:, random_index])
+
+
+                left_split = data[np.where(data[:, random_index] <= split_val)]
+                print(left_split)
+                left_tree = build_tree(left_split)
+
+                # # recurse right
+                right_split = data[np.where(data[:, random_index] > split_val)]
+
+                right_tree = build_tree(right_split)
+                #
+                # # build root
+                #
+                root = np.array([[random_index, split_val, 1, left_split.shape[0] + 1]])
+
+                # return np.concatenate((root, left_tree, right_tree))
+
+
+
+        tree = build_tree(merged_data)
+
+
 
     def study_group(self):
         return 'tcheng99'
 
     def query(self, points):
-        """
-        Estimate a set of test points given the model we built.
+        print('test')
 
-        :param points: A numpy array with each row corresponding to a specific query.
-        :type points: numpy.ndarray
-        :return: The predicted result of the input data according to the trained model
-        :rtype: numpy.ndarray
-        """
-        return (self.model_coefs[:-1] * points).sum(axis=1) + self.model_coefs[
-            -1
-        ]
 
 
 if __name__ == "__main__":
-    print("the secret clue is 'zzyzx'")
+
+    # class test case
+    x_train = np.array([
+        [.885, .330, 9.1],
+        [.725, .39, 10.9],
+        [.560, .5, 9.4],
+        [.735, .570, 9.8],
+        [.610, .630, 8.4],
+        [.260, .630, 11.8],
+        [.5, .68, 10.5],
+        [.320, .780, 10]
+
+    ])
+
+    y_train = np.array([[4], [5], [6], [5], [3], [8], [7], [6]])
+
+    learner = RTLearner()
+    learner.add_evidence(x_train, y_train)

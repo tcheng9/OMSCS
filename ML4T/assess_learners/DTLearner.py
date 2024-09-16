@@ -75,12 +75,17 @@ class DTLearner(object):
 
             if data.shape[0] == 1:
                 print('base case 1')
-                print([-1, data[0, -1], None, None])
-                return [-1, data[0, -1], None, None]
+                # print([-1, data[0, -1], None, None])
+                # a = np.array([-1, data[0, -1], None, None])
+                # a.shape
+                return np.array([[-1, data[0, -1], None, None]])
             elif (data[:, -1] == data[0, -1]).all():
                 print('base case 2: all target data is the same')
-                return [-1, data[0, -1], None, None]
+                a = np.array([-1, data[0, -1], None, None])
+                a.shape
+                return np.array([[-1, data[0, -1], None, None]])
             else:
+
                 print('recursive')
                 # # print('case: general ')
                 # print(data_x)
@@ -90,10 +95,9 @@ class DTLearner(object):
                 vals = np.corrcoef(data.T)
                 # print('correlation matrix', '\n',  vals)
                 #
-                vals = vals[-1].T
+                vals = abs(vals[-1].T)
                 # print('correlatons with y', '\n', vals)
 
-                #https://www.w3resource.com/python-exercises/numpy/python-numpy-exercise-120.php#:~:text=argmax()%20function%20returns%20the,original%20shape%20of%20the%20array.
                 best_feature_index = np.unravel_index(vals[0:-1].argmax(), vals.shape)
                 # print('max index for best factor')
                 # print(best_feature_index)
@@ -118,8 +122,10 @@ class DTLearner(object):
                 #build root
                 # print(left_tree)
                 print(best_feature_index)
-                root = [best_feature_index, split_val, 1, left_split.shape[0] + 1]
-
+                root = np.array([[best_feature_index[0], split_val, 1, left_split.shape[0] + 1]])
+                print(root.shape)
+                print(left_tree.shape)
+                print(right_tree.shape)
                 return np.concatenate((root, left_tree, right_tree))
 
 
@@ -132,18 +138,11 @@ class DTLearner(object):
     #         return [0, data[0, -1], None, None]
 
         # if data.y
-    def query(self, points):
-        """
-        Estimate a set of test points given the model we built.
+    def query(self, data_x, data_y):
+        merged_data = np.concatenate((data_x, data_y), axis=1)
 
-        :param points: A numpy array with each row corresponding to a specific query.
-        :type points: numpy.ndarray
-        :return: The predicted result of the input data according to the trained model
-        :rtype: numpy.ndarray
-        """
-        return (self.model_coefs[:-1] * points).sum(axis=1) + self.model_coefs[
-            -1
-        ]
+
+
 
 
 if __name__ == "__main__":
@@ -175,8 +174,7 @@ if __name__ == "__main__":
 
 
 
-    y_train = np.array([[4],[5], [6], [5],[3], [8], [7],[6]
-    ])
+    y_train = np.array([[4],[5], [6], [5],[3], [8], [7],[6]])
 
 
     learner = DTLearner()
