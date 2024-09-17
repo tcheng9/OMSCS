@@ -180,15 +180,16 @@ class DTLearner(object):
                 #
                 # #just to terminate
                 # leaf_not_reached = False
-        res = np.array([])
+        res = np.array([[],])
         for r in data_x:
             pred = search(r)
-            pred = np.array([pred])
-            res = np.concatenate((res, pred))
+            pred = np.array([[pred],])
 
-        res.reshape(-1, 1)
-        print(res)
-        # return res
+            res = np.concatenate((res, pred), axis = 1)
+
+        res = res.reshape(-1, 1)
+
+        return res
 
 
 
@@ -208,34 +209,34 @@ if __name__ == "__main__":
 
 
     # class test case
-    x_train = np.array([
-        [.885,.330, 9.1],
-        [.725, .39, 10.9],
-        [.560, .5, 9.4],
-        [.735, .570, 9.8],
-        [.610, .630, 8.4],
-        [.260, .630, 11.8],
-        [.5, .68, 10.5],
-        [.320, .780, 10]
-
-    ])
-
-
-
-    y_train = np.array([[4],[5], [6], [5],[3], [8], [7],[6]])
-
-    x_test = np.array([
-        [.7,.45, 10],
-        [.6, .75, 9],
-        [.3, .5, 9.5],
-
-    ])
-
-    learner = DTLearner()
-    learner.add_evidence(x_train, y_train)
-    # print(learner.tree)
-
-    learner.query(x_test)
+    # x_train = np.array([
+    #     [.885,.330, 9.1],
+    #     [.725, .39, 10.9],
+    #     [.560, .5, 9.4],
+    #     [.735, .570, 9.8],
+    #     [.610, .630, 8.4],
+    #     [.260, .630, 11.8],
+    #     [.5, .68, 10.5],
+    #     [.320, .780, 10]
+    #
+    # ])
+    #
+    #
+    #
+    # y_train = np.array([[4],[5], [6], [5],[3], [8], [7],[6]])
+    #
+    # x_test = np.array([
+    #     [.7,.45, 10],
+    #     [.6, .75, 9],
+    #     [.3, .5, 9.5],
+    #
+    # ])
+    #
+    # learner = DTLearner()
+    # learner.add_evidence(x_train, y_train)
+    # # print(learner.tree)
+    #
+    # learner.query(x_test)
 
 
 # lin reg code
