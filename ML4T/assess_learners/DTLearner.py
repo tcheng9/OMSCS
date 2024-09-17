@@ -139,7 +139,7 @@ class DTLearner(object):
                 #conc left, right,
         # return dtAlgo(merged_data)
         self.tree = dtAlgo(merged_data)
-
+        # print(self.tree)
         return self.tree
 
     def query(self, data_x):
@@ -154,6 +154,8 @@ class DTLearner(object):
 
 
         def search(data):
+            # print('tree shape', self.tree.shape)
+            # print(self.tree.shape)
             #data is just a row of data such that it is [x1, x2, x3, .. xn]
 
 
@@ -179,9 +181,7 @@ class DTLearner(object):
 
                 if curr_val <= split_val:
                     index = index + left
-
                 else:
-
                     index = index + right #my indexing is off here
 
 
@@ -193,8 +193,13 @@ class DTLearner(object):
                 # leaf_not_reached = False
         res = np.array([[],])
         for r in data_x:
+
             pred = search(r)
+
+            if not pred:
+                print('missing')
             pred = np.array([[pred],])
+            # print('prediction is', pred)
 
             res = np.concatenate((res, pred), axis = 1)
 

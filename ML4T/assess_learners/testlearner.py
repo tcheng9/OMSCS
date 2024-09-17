@@ -105,24 +105,36 @@ if __name__ == "__main__":
     print(pred_y.shape)
     print(train_y.shape)
 
-    pred_y = [0.00025569,
-             -0.00322693,
-             -0.00323305
-            ]
-
-
-    train_y = [-3.6274600,
-             3.9424230,
-             -5.1791590
-            ]
+    # pred_y = [[ 0.00025569],
+    #          [-0.00322693],
+    #          [-0.00323305]
+    #         ]
+    #
+    #
+    # train_y = [-3.6274600,
+    #          3.9424230,
+    #          -5.1791590
+    #         ]
+    train_y = train_y.flatten()
+    pred_y = pred_y.flatten()
+    # print(train_y)
+    # print(pred_y)
     c = np.corrcoef(pred_y, y=train_y)
     print(f"corr: {c[0,1]}")
 
     # evaluate out of sample
-    # pred_y = learner.query(test_x)  # get the predictions
-    # rmse = math.sqrt(((test_y - pred_y) ** 2).sum() / test_y.shape[0])
-    #
-    # print("Out of sample results")
-    # print(f"RMSE: {rmse}")
-    # c = np.corrcoef(pred_y, y=test_y)
-    # print(f"corr: {c[0,1]}")
+    pred_y = learner.query(test_x)  # get the predictions
+
+    rmse = math.sqrt(((test_y - pred_y) ** 2).sum() / test_y.shape[0])
+
+    print("Out of sample results")
+    print(f"RMSE: {rmse}")
+    test_y = test_y.flatten()
+    pred_y = pred_y.flatten()
+    # test_y = test
+    print(test_y.shape)
+    print(pred_y.shape)
+    print('--------------pred_y--------')
+    # print(pred_y)
+    c = np.corrcoef(pred_y, y=test_y)
+    print(f"corr: {c[0,1]}")
