@@ -74,9 +74,9 @@ class DTLearner(object):
 
         def dtAlgo(data):
 
-            if data.shape[0] == 1:
+            if data.shape[0] == 1: # "1" SHOULD ACTUALLY BE LEAF SIZE I THINK
                 # print('base case 1')
-
+                #need to handele leaf size
                 return np.array([[-1, data[0, -1], None, None]])
             elif (data[:, -1] == data[0, -1]).all():
                 # print('base case 2: all target data is the same')
@@ -90,7 +90,7 @@ class DTLearner(object):
 
                 vals = abs(vals[-1].T)
 
-
+                #EDGE CASE: 2 OR MORE FEATURES SAME CORRELATION, MAKE SURE IT IS HANDLED
                 best_feature_index = np.unravel_index(vals[0:-1].argmax(), vals.shape)
 
 
@@ -106,8 +106,9 @@ class DTLearner(object):
 
                 #recurse right
                 rows, cols = np.where(data[:, best_feature_index] > split_val)
-                right_split = data[rows, :]
 
+                right_split = data[rows, :]
+                print(right_split)
                 right_tree = dtAlgo(right_split)
 
                 #build root
@@ -132,15 +133,53 @@ class DTLearner(object):
         # merged_data = np.concatenate((data_x, data_y), axis=1)
 
         matrix = self.tree
+        print(matrix)
+        '''
+        for each row of data in data x -> run the search algo on a single row
+        '''
 
-        leaf_not_reached = True
-        while leaf_not_reached:
-            feature, split_val, left, right = matrix[0] #unpacking row of tree
-            print(feature, split_val, left, right)
 
-            feature_x, split_val_x, left_x, right_x = data_x
+        def search(data):
+            #data is just a row of data such that it is [x1, x2, x3, .. xn]
 
-            leaf_not_reached = False
+            print('running search')
+            leaf_not_reached = True
+            index = 0
+            # feature, split_val, left, right = matrix[index]
+
+            while leaf_not_reached:
+                feature, split_val, left, right = matrix[index]
+                if feature == -1:
+                    leaf_not_reached = True
+                    return split_val
+                    # return prediction -> what is prediction?
+                    '''
+                    when you reach a leaf node, you return the split val?
+                    
+                    Return split val of that level
+                    '''
+
+
+
+                # print(feature, split_val, left, right)
+                curr_val = data[int(feature)]
+
+                if curr_val <= split_val:
+                    index = index + left
+
+                else:
+                    index = index + right #my indexing is off here
+
+
+
+
+
+                # print(index)
+
+                #just to terminate
+                leaf_not_reached = False
+
+        search(data_x[0])
 
 
 if __name__ == "__main__":
@@ -216,4 +255,39 @@ c. given cancer cell features, you could figure out the exact type of cancer it 
 
 6. what is DTlearner supposed to return?
 a. a vector of y values?
+
+
+
+Q:
+1. confused about leaf size matter? I assume we are only use leaf_size = 1
+my answer: leaf size is when you reach this leaf size (n = 1, only 1 sample) then you terminate and make it into a terminal leaf
+if n = 3, 3 samples then you create 
+2. y predictions is a matrix of n rows, 1 column
+3. x input is not just 1 row of data but could be multiple rows of data nad you are expected to return prediction for each row
+4. If so, can numpy do these for multiple rows of data or we would have to process these 1 at a time
+5. any hint on the terminal/edge case case?
+a. 1 edge case: recursion errors / at very low leaf sizes -> in the pseudocode, professor balch lists 2 exist conditons
+1. split <= left_size and 2. data.y == same. any other ones? I would consider what would happen 
+if say all the features are the and all the same rows have the same feature but the target variables are different. 
+whats gonna happen to find a correlation, find median of feature 
+"I believe it is theoretically possible to encounter a case in which the prescribed method of calculating SplitVal would cause infinite recursio"
+
+My thoughts: 
+----------------
+i think he was saying if all values split the same side, what do you do?
+
+-------------------------
+
+-> recursively split of if all 4 rows go left and 0 rows go right
+
+-> average in okay in recursive case
+
+
+New questions:
+will row split evenly? 
+My right tree is not indexing right for some reason
+Reason 1: 0 or 1 indexing is off
+Reason 2: my recurive build tree for right split is wrong
+
 '''
+
