@@ -66,7 +66,9 @@ class DTLearner(object):
         :param data_y: The value we are attempting to predict given the X data
         :type data_y: numpy.ndarray
         """
-
+        print(data_x)
+        print(data_y)
+        data_y = np.array([data_y])
         merged_data = np.concatenate((data_x, data_y) , axis = 1)
         # print(merged_data)
         # print(data_y)
@@ -148,9 +150,11 @@ class DTLearner(object):
             # feature, split_val, left, right = matrix[index]
 
             while leaf_not_reached:
-                feature, split_val, left, right = matrix[index]
+                feature, split_val, left, right = matrix[int(index)]
                 if feature == -1:
+                    print('here')
                     leaf_not_reached = True
+                    print(split_val)
                     return split_val
                     # return prediction -> what is prediction?
                     '''
@@ -175,9 +179,10 @@ class DTLearner(object):
 
 
                 # print(index)
-
-                #just to terminate
-                leaf_not_reached = False
+                # print(matrix[int(index)])
+                #
+                # #just to terminate
+                # leaf_not_reached = False
 
         search(data_x[0])
 

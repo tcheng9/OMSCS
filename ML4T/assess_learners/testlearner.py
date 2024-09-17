@@ -57,7 +57,8 @@ if __name__ == "__main__":
     print(f"{test_y.shape}")  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
     # create a learner and train it  		  	   		 	   		  		  		    	 		 		   		 		  
-    learner = lrl.LinRegLearner(verbose=True)  # create a LinRegLearner
+    # learner = lrl.LinRegLearner(verbose=True)  # create a LinRegLearner
+    learner = dtl.DTLearner(verbose = True)
     learner.add_evidence(train_x, train_y)  # train it  		  	   		 	   		  		  		    	 		 		   		 		  
     print(learner.author())  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  

@@ -61,16 +61,17 @@ class RTLearner(object):
 
         def build_tree(data):
 
+
+
+            if data.shape[0] == 0:
+                return np.array([[-500, 0, None, None]])
             if data.shape[0] == 1:
                 print('base case 1')
-
                 return np.array([[-1, data[0, -1], None, None]])
             elif (data[:, -1] == data[0, -1]).all():
                 print('base case 2')
                 return np.array([[-1, data[0, -1], None, None]])
             else:
-
-
                 #######line 4: pick random feature
 
                 random_index = random.randint(0, data.shape[1]-2) #aka random feature/column
@@ -103,11 +104,12 @@ class RTLearner(object):
                 #
                 root = np.array([[random_index, split_val, 1, left_split.shape[0] + 1]])
 
-                # return np.concatenate((root, left_tree, right_tree))
+                return np.concatenate((root, left_tree, right_tree))
 
 
 
         tree = build_tree(merged_data)
+        print(tree)
 
 
 
