@@ -99,17 +99,31 @@ class DTLearner(object):
                 # #recurse left
                 rows, cols = np.where(data[:, best_feature_index] <= split_val)
                 left_split = data[rows, :]
-                if left_split.shape[0] == 0:
-                    return np.array([])
 
+                rows, cols = np.where(data[:, best_feature_index] > split_val)
+
+                right_split = data[rows, :]
+                if left_split.shape[0] == 0 or right_split.shape[0] == 0:
+                    # print('inf recursion case')
+                    # print('data is', )
+                    # print(data)
+                    #
+                    # print('left split is', )
+                    # print(left_split)
+                    # print('mean is')
+                    # print(np.mean(data[:, -1]))
+
+                    # np.mean(data[:, -1])
+                    # print(np.array([[-1, np.mean(data[:, -1]), None, None]]))
+                    return np.array([[-1, np.mean(data[:, -1]), None, None]])
+
+                # np.array([[-1, np.mean(data[:, -1]), None, None]])
 
                 left_tree = dtAlgo(left_split)
 
 
                 #recurse right
-                rows, cols = np.where(data[:, best_feature_index] > split_val)
 
-                right_split = data[rows, :]
 
                 right_tree = dtAlgo(right_split)
 
@@ -160,9 +174,6 @@ class DTLearner(object):
                     
                     Return split val of that level
                     '''
-
-
-
 
                 curr_val = data[int(feature)]
 
@@ -221,9 +232,19 @@ if __name__ == "__main__":
     #
     # ])
     #
+    # y_train = np.array([[4], [5], [6], [5], [6], [3], [4], [5]])
+    # ## infinite recursion test case
+    # # x_train = np.array([
+    # #     [.885,.330, 9.1],
+    # #     [.725, .39, 10],
+    # #     [.560, .5, 10],
+    # #     [.735, .570,10],
+    # #
+    # #
+    # # ])
     #
     #
-    # y_train = np.array([[4],[5], [6], [5],[3], [8], [7],[6]])
+    # # y_train = np.array([[4],[5], [6], [5]])
     #
     # x_test = np.array([
     #     [.7,.45, 10],
@@ -236,75 +257,11 @@ if __name__ == "__main__":
     # learner.add_evidence(x_train, y_train)
     # # print(learner.tree)
     #
-    # learner.query(x_test)
-
+    # res = learner.query(x_test)
+    # print('res')
+    # print(res)
 
 # lin reg code
 # self.model_coefs, residuals, rank, s = np.linalg.lstsq(
 #     new_data_x, data_y, rcond=None
 # )
-
-
-'''
-Understanding query:
-
-0. now you have a full tree built so you can pass in a X-feature (not x value but a vector named X)
-1. From the tree, you have to unpack the values (feature column to check, val to split on, left node relative position such that current node row + left node row, right node relative positioning)
-2. go down until you hit a leaf node where feature column == -1 or left/rigt == None
-
-
-Questions:
-1. is the input of DTLearner supposed to be a matrix?
-
-2. how to process input of dtlearner
-a. for each row, process it and see which node it lands on. 
-b. each row should land on a leaf node
-
-3. what is the input of dtlearner
-a. x and y test so basically the same type of data we get as when we train the model
-
-4. what does y really mean?
-a. depends on your test data, ie flowers might tell you which flower it really ends up being
-b. given a set of animal features, you could figure out the exact animal it is 
-c. given cancer cell features, you could figure out the exact type of cancer it is (classificaiton via regrassion/numbers in this project)
-
-5. how to use the tree? Store it in the learner properties?
-
-6. what is DTlearner supposed to return?
-a. a vector of y values?
-
-
-
-Q:
-1. confused about leaf size matter? I assume we are only use leaf_size = 1
-my answer: leaf size is when you reach this leaf size (n = 1, only 1 sample) then you terminate and make it into a terminal leaf
-if n = 3, 3 samples then you create 
-2. y predictions is a matrix of n rows, 1 column
-3. x input is not just 1 row of data but could be multiple rows of data nad you are expected to return prediction for each row
-4. If so, can numpy do these for multiple rows of data or we would have to process these 1 at a time
-5. any hint on the terminal/edge case case?
-a. 1 edge case: recursion errors / at very low leaf sizes -> in the pseudocode, professor balch lists 2 exist conditons
-1. split <= left_size and 2. data.y == same. any other ones? I would consider what would happen 
-if say all the features are the and all the same rows have the same feature but the target variables are different. 
-whats gonna happen to find a correlation, find median of feature 
-"I believe it is theoretically possible to encounter a case in which the prescribed method of calculating SplitVal would cause infinite recursio"
-
-My thoughts: 
-----------------
-i think he was saying if all values split the same side, what do you do?
-
--------------------------
-
--> recursively split of if all 4 rows go left and 0 rows go right
-
--> average in okay in recursive case
-
-
-New questions:
-will row split evenly? 
-My right tree is not indexing right for some reason
-Reason 1: 0 or 1 indexing is off
-Reason 2: my recurive build tree for right split is wrong
-
-'''
-

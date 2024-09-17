@@ -92,7 +92,7 @@ class RTLearner(object):
 
 
                 left_split = data[np.where(data[:, random_index] <= split_val)]
-                print(left_split)
+
                 left_tree = build_tree(left_split)
 
                 # # recurse right
@@ -110,14 +110,55 @@ class RTLearner(object):
 
         tree = build_tree(merged_data)
         print(tree)
-
+        return tree
 
 
     def study_group(self):
         return 'tcheng99'
 
     def query(self, points):
-        print('test')
+        # data is just a row of data such that it is [x1, x2, x3, .. xn]
+
+        leaf_not_reached = True
+        index = 0
+        # feature, split_val, left, right = matrix[index]
+        # arr = []
+        while leaf_not_reached:
+            feature, split_val, left, right = matrix[int(index)]
+            if feature == -1:
+                leaf_not_reached = True
+
+                return split_val
+                # return prediction -> what is prediction?
+                '''
+                when you reach a leaf node, you return the split val?
+
+                Return split val of that level
+                '''
+
+            curr_val = data[int(feature)]
+
+            if curr_val <= split_val:
+                index = index + left
+
+            else:
+
+                index = index + right  # my indexing is off here
+
+            #
+            # #just to terminate
+            # leaf_not_reached = False
+
+        res = np.array([[], ])
+        for r in data_x:
+            pred = search(r)
+            pred = np.array([[pred], ])
+
+            res = np.concatenate((res, pred), axis=1)
+
+        res = res.reshape(-1, 1)
+
+        return res
 
 
 
@@ -140,3 +181,4 @@ if __name__ == "__main__":
 
     learner = RTLearner()
     learner.add_evidence(x_train, y_train)
+    learner.query(x_test)

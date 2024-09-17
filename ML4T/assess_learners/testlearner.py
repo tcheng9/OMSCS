@@ -89,19 +89,39 @@ if __name__ == "__main__":
     print(learner.author())
 
     # # evaluate in sample
-    # pred_y = learner.query(train_x)  # get the predictions
+    pred_y = learner.query(train_x)  # get the predictions
     # print(pred_y)
-    # rmse = math.sqrt(((train_y - pred_y) ** 2).sum() / train_y.shape[0])
-    #
-    # print("In sample results")
-    # print(f"RMSE: {rmse}")
-    # c = np.corrcoef(pred_y, y=train_y)
-    # print(f"corr: {c[0,1]}")
-    #
-    # # evaluate out of sample
+    rmse = math.sqrt(((train_y - pred_y) ** 2).sum() / train_y.shape[0])
+
+    print("In sample results")
+    print(f"RMSE: {rmse}")
+    print('-------------pred y------------')
+    print(pred_y.shape)
+    print('--------------train y--------------')
+    print(train_y.shape)
+    # print(np.isnan(pred_y).sum(), np.isnan(train_y).sum())
+    pred_y.flatten()
+    np.array(train_y.flatten())
+    print(pred_y.shape)
+    print(train_y.shape)
+
+    pred_y = [0.00025569,
+             -0.00322693,
+             -0.00323305
+            ]
+
+
+    train_y = [-3.6274600,
+             3.9424230,
+             -5.1791590
+            ]
+    c = np.corrcoef(pred_y, y=train_y)
+    print(f"corr: {c[0,1]}")
+
+    # evaluate out of sample
     # pred_y = learner.query(test_x)  # get the predictions
     # rmse = math.sqrt(((test_y - pred_y) ** 2).sum() / test_y.shape[0])
-    # print()
+    #
     # print("Out of sample results")
     # print(f"RMSE: {rmse}")
     # c = np.corrcoef(pred_y, y=test_y)
