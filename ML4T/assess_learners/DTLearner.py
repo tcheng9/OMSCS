@@ -72,7 +72,8 @@ class DTLearner(object):
 
 
         def dtAlgo(data):
-
+            # if data.shape[0] == 0:
+            #     return np.array([])
             if data.shape[0] == 1: # "1" SHOULD ACTUALLY BE LEAF SIZE I THINK
 
                 #need to handele leaf size
@@ -85,10 +86,10 @@ class DTLearner(object):
 
                 #######line 4: pick best metric
 
-                vals = np.corrcoef(data.T)
-
-                vals = abs(vals[-1].T)
-
+                vals = np.corrcoef(data)
+                # print(vals)
+                vals =(vals[-1].T)
+                print(vals)
                 #EDGE CASE: 2 OR MORE FEATURES SAME CORRELATION, MAKE SURE IT IS HANDLED
                 best_feature_index = np.unravel_index(vals[0:-1].argmax(), vals.shape)
 
@@ -102,9 +103,9 @@ class DTLearner(object):
                 left_split = data[rows, :]
 
                 rows, cols = np.where(data[:, best_feature_index] > split_val)
-
                 right_split = data[rows, :]
-                if left_split.shape[0] == 0 or right_split.shape[0] == 0:
+                # if left_split.shape[0] == 0 or right_split.shape[0] == 0:
+                #     print('placeholder')
                     # print('inf recursion case')
                     # print('data is', )
                     # print(data)
@@ -116,7 +117,8 @@ class DTLearner(object):
 
                     # np.mean(data[:, -1])
                     # print(np.array([[-1, np.mean(data[:, -1]), None, None]]))
-                    return np.array([[-1, np.mean(data[:, -1]), None, None]])
+                    # return np.array([[-1, np.mean(data[:, -1]), None, None]])
+
 
                 # np.array([[-1, np.mean(data[:, -1]), None, None]])
 
@@ -140,7 +142,7 @@ class DTLearner(object):
                 #conc left, right,
         # return dtAlgo(merged_data)
         self.tree = dtAlgo(merged_data)
-        # print(self.tree)
+        print(self.tree)
         return self.tree
         # return -1
     def query(self, data_x):
@@ -226,19 +228,19 @@ if __name__ == "__main__":
 
 
     # class test case
-    # x_train = np.array([
-    #     [.885,.330, 9.1],
-    #     [.725, .39, 10.9],
-    #     [.560, .5, 9.4],
-    #     [.735, .570, 9.8],
-    #     [.610, .630, 8.4],
-    #     [.260, .630, 11.8],
-    #     [.5, .68, 10.5],
-    #     [.320, .780, 10]
-    #
-    # ])
-    #
-    # y_train = np.array([[4], [5], [6], [5], [6], [3], [4], [5]])
+    x_train = np.array([
+        [.885,.330, 9.1],
+        [.725, .39, 10.9],
+        [.560, .5, 9.4],
+        [.735, .570, 9.8],
+        [.610, .630, 8.4],
+        [.260, .630, 11.8],
+        [.5, .68, 10.5],
+        [.320, .780, 10]
+
+    ])
+
+    y_train = np.array([[4], [5], [6], [5], [6], [3], [4], [5]])
     # ## infinite recursion test case
     # # x_train = np.array([
     # #     [.885,.330, 9.1],
@@ -259,10 +261,10 @@ if __name__ == "__main__":
     #
     # ])
     #
-    # learner = DTLearner()
-    # learner.add_evidence(x_train, y_train)
-    # # print(learner.tree)
-    #
+    learner = DTLearner()
+    learner.add_evidence(x_train, y_train)
+    # print(learner.tree)
+
     # res = learner.query(x_test)
     # print('res')
     # print(res)
