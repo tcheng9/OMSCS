@@ -66,8 +66,9 @@ class DTLearner(object):
         """
 
         # data_y = np.array([data_y])
-        merged_data = np.concatenate((data_x, data_y), axis = 1)
 
+        merged_data = np.concatenate((data_x, data_y), axis = 1)
+        # print(merged_data)
 
 
         def dtAlgo(data):
@@ -91,7 +92,7 @@ class DTLearner(object):
                 #EDGE CASE: 2 OR MORE FEATURES SAME CORRELATION, MAKE SURE IT IS HANDLED
                 best_feature_index = np.unravel_index(vals[0:-1].argmax(), vals.shape)
 
-
+                # return ('here')
                 # # #determine split val
 
                 split_val = np.median(data[:, best_feature_index])
@@ -141,7 +142,7 @@ class DTLearner(object):
         self.tree = dtAlgo(merged_data)
         # print(self.tree)
         return self.tree
-
+        # return -1
     def query(self, data_x):
         #data_x is just training data, you don't get predictions (aka data_y
         # merged_data = np.concatenate((data_x, data_y), axis=1)
