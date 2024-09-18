@@ -341,17 +341,27 @@ def test_learners(description, group, datafile, seed, outputs, grader):
                 np.random.seed = tmp_numpy_seed  		  	   		 	   		  		  		    	 		 		   		 		  
                 random.seed = tmp_random_seed  		  	   		 	   		  		  		    	 		 		   		 		  
                 return learner.query(train_x)  		  	   		 	   		  		  		    	 		 		   		 		  
-  		  	   		 	   		  		  		    	 		 		   		 		  
+
             pred_y_in, pred_y_out, author = run_with_timeout(  		  	   		 	   		  		  		    	 		 		   		 		  
                 oneleaf, tree_sptc, (), {}  		  	   		 	   		  		  		    	 		 		   		 		  
-            )  		  	   		 	   		  		  		    	 		 		   		 		  
-            pred_y_in_50 = run_with_timeout(fiftyleaves, tree_sptc, (), {})  		  	   		 	   		  		  		    	 		 		   		 		  
+            )
+
+            # print(pred_y_in.shape)
+            # print(train_y.shape)
+            # # train_y = train_y.reshape(-1, 1)
+            # print(pred_y_in.shape)
+            # print(train_y.shape)
+            pred_y_in_50 = run_with_timeout(fiftyleaves, tree_sptc, (), {})
+            print(pred_y_in.shape)
+            print(np.corrcoef(pred_y_in, y=train_y))
+            print(np.corrcoef(pred_y_out, y=test_y))
             corr_in = np.corrcoef(pred_y_in, y=train_y)[0, 1]  		  	   		 	   		  		  		    	 		 		   		 		  
             corr_out = np.corrcoef(pred_y_out, y=test_y)[0, 1]  		  	   		 	   		  		  		    	 		 		   		 		  
             corr_in_50 = np.corrcoef(pred_y_in_50, y=train_y)[0, 1]  		  	   		 	   		  		  		    	 		 		   		 		  
             incorrect = False  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
-            if corr_in < outputs["insample_corr_min"] or np.isnan(corr_in):  		  	   		 	   		  		  		    	 		 		   		 		  
+            if corr_in < outputs["insample_corr_min"] or np.isnan(corr_in):
+                print('corr in', corr_in)
                 incorrect = True  		  	   		 	   		  		  		    	 		 		   		 		  
                 msgs.append(  		  	   		 	   		  		  		    	 		 		   		 		  
                     "    In-sample with leaf_size=1 correlation less than"  		  	   		 	   		  		  		    	 		 		   		 		  

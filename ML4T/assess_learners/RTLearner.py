@@ -40,6 +40,7 @@ class RTLearner(object):
         Constructor method
 
         """
+        self.tree = None
         self.leaf_size = 1
         pass  # move along, these aren't the drones you're looking for
 
@@ -55,18 +56,22 @@ class RTLearner(object):
     def add_evidence(self, data_x, data_y):
 
 
-        random.seed(10)
+        # random.seed(10)
         # print(data_y)
         # print(data_x, data_y)
+        # data_y = data_y.reshape(-1, 1)
+        # print('here')
         def build_tree(data_x, data_y):
 
-
+            # print(data_y)
+            if data_x.shape[0] == 0:
+                return np.array([[-1, -1, -1 ,-1]])
             if data_x.shape[0] == self.leaf_size:
-                print('base case 1')
-                return np.array([[-1, data_y[0,0], None, None]])
-            elif (data_y[:, -1] == data_y[0, -1]).all():
-                print('base case 2')
-                return np.array([[-1, data_y[0, 0], None, None]])
+                # print('base case 1')
+                return np.array([[-1, data_y[0], None, None]])
+            elif (data_y[:] == data_y[0]).all():
+                # print('base case 2')
+                return np.array([[-1, data_y[0], None, None]])
             else:
                 #######line 4: pick random feature
 
@@ -83,16 +88,16 @@ class RTLearner(object):
 
 
                 split_val = (random_val1 + random_val2) / 2
-                print('random col is', random_index)
-                print(split_val)
+                # print('random col is', random_index)
+                # print(split_val)
                 left_split_x = data_x[np.where(data_x[:, random_index] <= split_val)]
                 left_split_y = data_y[np.where(data_x[:, random_index] <= split_val)]
 
                 right_split_x = data_x[np.where(data_x[:, random_index] > split_val)]
                 right_split_y = data_y[np.where(data_x[:, random_index] > split_val)]
 
-                if left_split_x.shape[0] == 0 or right_split_x.shape[0] == 0:
-                    return np.array([[-1, np.mean(data_y[:,-1]), None, None]])
+                # if left_split_x.shape[0] == 0 or right_split_x.shape[0] == 0:
+                #     return np.array([[-1, np.mean(data_y[:]), None, None]])
                 left_tree = build_tree(left_split_x, left_split_y)
 
                 # # recurse right
@@ -108,7 +113,8 @@ class RTLearner(object):
         #
         #
         tree = build_tree(data_x, data_y)
-        # print(tree)
+        print(tree)
+        self.tree = tree
         return tree
 
 
@@ -117,48 +123,56 @@ class RTLearner(object):
 
     def query(self, data_x):
         # data is just a row of data such that it is [x1, x2, x3, .. xn]
-        return -1
+
         #
-        # leaf_not_reached = True
-        # index = 0
-        # # feature, split_val, left, right = matrix[index]
-        # # arr = []
-        # while leaf_not_reached:
-        #     feature, split_val, left, right = matrix[int(index)]
-        #     if feature == -1:
-        #         leaf_not_reached = True
-        #
-        #         return split_val
-        #         # return prediction -> what is prediction?
-        #         '''
-        #         when you reach a leaf node, you return the split val?
-        #
-        #         Return split val of that level
-        #         '''
-        #
-        #     curr_val = data[int(feature)]
-        #
-        #     if curr_val <= split_val:
-        #         index = index + left
-        #
-        #     else:
-        #
-        #         index = index + right  # my indexing is off here
-        #
-        #     #
-        #     # #just to terminate
-        #     # leaf_not_reached = False
-        #
-        # res = np.array([[], ])
-        # for r in data_x:
-        #     pred = search(r)
-        #     pred = np.array([[pred], ])
-        #
-        #     res = np.concatenate((res, pred), axis=1)
-        #
-        # res = res.reshape(-1, 1)
-        #
-        # return res
+        matrix = self.tree
+        leaf_not_reached = True
+        index = 0
+
+        arr = np.array([])
+
+        def search(data):
+
+            leaf_not_reached = True
+            index = 0
+            while leaf_not_reached:
+                feature, split_val, left, right = matrix[int(index)]
+                if feature == -1:
+                    # print('end')
+                    leaf_not_reached = True
+                    # print(split_val) #split val is the prediction at this point
+                    return split_val
+                    # return prediction -> what is prediction?
+                    '''
+                    when you reach a leaf node, you return the split val?
+    
+                    Return split val of that level
+                    '''
+
+                curr_val = data[int(feature)]
+
+                if curr_val <= split_val:
+                    index = index + left
+
+                else:
+
+                    index = index + right  # my indexing is off here
+
+                #
+                # #just to terminate
+                # leaf_not_reached = False
+
+        res = np.array([])
+        # print(data_x)
+        for r in data_x:
+            pred = search(r)
+            res = np.append(res, pred)
+            print(pred)
+            # res = np.concatenate((res, pred), axis=1)
+
+        print(res.shape)
+        # print('res is', res)
+        return res
 
 
 
@@ -221,6 +235,18 @@ if __name__ == "__main__":
         [5]
     ])
 
+    x_test = np.array([
+        [.885, .330, 9.1],
+        [.725, .39, 10.9],
+        [.560, .5, 9.4],
+        [.735, .570, 9.8],
+        [.610, .630, 8.4],
+        [.260, .630, 11.8],
+        [.5, .68, 10.5],
+        [.320, .780, 10]
+
+    ])
+
     learner = RTLearner()
     learner.add_evidence(x_train, y_train)
-    # learner.query(x_test)
+    learner.query(x_test)
