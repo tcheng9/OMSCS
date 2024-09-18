@@ -90,6 +90,7 @@ class RTLearner(object):
                 split_val = (random_val1 + random_val2) / 2
                 # print('random col is', random_index)
                 # print(split_val)
+
                 left_split_x = data_x[np.where(data_x[:, random_index] <= split_val)]
                 left_split_y = data_y[np.where(data_x[:, random_index] <= split_val)]
 
