@@ -29,7 +29,7 @@ import sys
 import numpy as np  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
 import LinRegLearner as lrl  		  	   		 	   		  		  		    	 		 		   		 		  
-import DTLearner as dtl
+import DTLearner_old_merged_version as dtl
 import RTLearner as rtl
 
 if __name__ == "__main__":

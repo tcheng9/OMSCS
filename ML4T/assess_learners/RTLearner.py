@@ -64,8 +64,7 @@ class RTLearner(object):
         def build_tree(data_x, data_y):
 
             # print(data_y)
-            if data_x.shape[0] == 0:
-                return np.array([[-1, -1, -1 ,-1]])
+
             if data_x.shape[0] == self.leaf_size:
                 # print('base case 1')
                 return np.array([[-1, data_y[0], None, None]])
@@ -97,8 +96,9 @@ class RTLearner(object):
                 right_split_x = data_x[np.where(data_x[:, random_index] > split_val)]
                 right_split_y = data_y[np.where(data_x[:, random_index] > split_val)]
 
-                # if left_split_x.shape[0] == 0 or right_split_x.shape[0] == 0:
-                #     return np.array([[-1, np.mean(data_y[:]), None, None]])
+                if left_split_x.shape[0] == 0 or right_split_x.shape[0] == 0:
+                    print('here')
+                    return np.array([[-1, np.mean(data_y[:]), None, None]])
                 left_tree = build_tree(left_split_x, left_split_y)
 
                 # # recurse right
@@ -225,16 +225,8 @@ if __name__ == "__main__":
 
     ])
 
-    y_train = np.array([
-        [4],
-        [5],
-        [6],
-        [5],
-        [6],
-        [3],
-        [4],
-        [5]
-    ])
+
+    y_train = np.array([4, 5, 6, 5, 6, 3, 4, 5])
 
     x_test = np.array([
         [.885, .330, 9.1],
@@ -250,4 +242,4 @@ if __name__ == "__main__":
 
     learner = RTLearner()
     learner.add_evidence(x_train, y_train)
-    learner.query(x_test)
+    # learner.query(x_test)

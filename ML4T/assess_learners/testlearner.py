@@ -41,27 +41,17 @@ if __name__ == "__main__":
 
     inf = open(sys.argv[1])
     data = np.array([])
-    # print(inf.readlines()[0])
+
     file = inf.readlines()
-    # print('here')
+
     arr = []
     for i in range(1, len(file)):
-        # print('\n', data[i])
 
-        # print(file[i].strip().split(","))
+
         tmp = list(map(float, file[i].strip().split(',')[1:]))
         # float(tmp)
         arr.append(tmp)
     data = np.array(arr)
-
-
-
-
-    # print(data)
-    # data = np.array(
-    #     [list(map(float, s.strip().split(","))) for s in range(1, len(inf.readlines())]
-    # )
-
 
 
 
@@ -85,14 +75,14 @@ if __name__ == "__main__":
 
     # create a learner and train it
     # learner = lrl.LinRegLearner(verbose=True)  # create a LinRegLearner
-    # learner = dtl.DTLearner(verbose = True)
-    learner = rtl.RTLearner(verbose = True)
+    learner = dtl.DTLearner(verbose = True)
+    # learner = rtl.RTLearner(verbose = True)
     learner.add_evidence(train_x, train_y)  # train it
     print(learner.author())
 
     # # evaluate in sample
     pred_y = learner.query(train_x)  # get the predictions
-    # print(pred_y)
+
     rmse = math.sqrt(((train_y - pred_y) ** 2).sum() / train_y.shape[0])
 
     # print("In sample results")
@@ -107,22 +97,13 @@ if __name__ == "__main__":
     # print(pred_y.shape)
     # print(train_y.shape)
 
-    # pred_y = [[ 0.00025569],
-    #          [-0.00322693],
-    #          [-0.00323305]
-    #         ]
-    #
-    #
-    # train_y = [-3.6274600,
-    #          3.9424230,
-    #          -5.1791590
-    #         ]
+
     train_y = train_y.flatten()
     pred_y = pred_y.flatten()
     # print(train_y)
     # print(pred_y)
-    print('pred y', pred_y)
-    print('train_y', train_y)
+    # print('pred y', pred_y)
+    # print('train_y', train_y)
     c = np.corrcoef(pred_y, y=train_y)
     print(f"corr: {c[0,1]}")
 
@@ -136,9 +117,6 @@ if __name__ == "__main__":
     test_y = test_y.flatten()
     pred_y = pred_y.flatten()
     # test_y = test
-    print(test_y.shape)
-    print(pred_y.shape)
-    print('--------------pred_y--------')
-    # print(pred_y)
+
     c = np.corrcoef(pred_y, y=test_y)
     print(f"corr: {c[0,1]}")

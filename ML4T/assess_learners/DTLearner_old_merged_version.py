@@ -67,50 +67,43 @@ class DTLearner(object):
 
         # data_y = np.array([data_y])
 
+        merged_data = np.concatenate((data_x, data_y), axis = 1)
+        # print(merged_data)
 
 
-        def dtAlgo(data_x, data_y):
+        def dtAlgo(data):
             # if data.shape[0] == 0:
             #     return np.array([])
-            if data_x.shape[0] == self.leaf_size: # "1" SHOULD ACTUALLY BE LEAF SIZE I THINK
+            if data.shape[0] == 1: # "1" SHOULD ACTUALLY BE LEAF SIZE I THINK
 
                 #need to handele leaf size
-                return np.array([[-1, data_y[0], None, None]])
-            elif (data_y[:] == data_y[0]).all():
-                return np.array([[-1, data_y[0], None, None]])
+                return np.array([[-1, data[0, -1], None, None]])
+            elif (data[:, -1] == data[0, -1]).all():
+
+
+                return np.array([[-1, data[0, -1], None, None]])
             else:
 
                 #######line 4: pick best metric
-                print(data_x.shape)
-                print(data_y.shape)
-                vals = np.corrcoef(data_x, data_y, rowvar = False)
+
+                vals = np.corrcoef(data)
                 # print(vals)
                 vals =(vals[-1].T)
-                # print(vals)
-
-
+                print(vals)
                 #EDGE CASE: 2 OR MORE FEATURES SAME CORRELATION, MAKE SURE IT IS HANDLED
                 best_feature_index = np.unravel_index(vals[0:-1].argmax(), vals.shape)
 
                 # return ('here')
                 # # #determine split val
-                print(data_x)
-                split_val = np.median(data_x[:, best_feature_index])
+
+                split_val = np.median(data[:, best_feature_index])
 
                 # #recurse left
-                # rows, cols = np.where(data_x[:, best_feature_index] <= split_val)
-                # left_split_x = data_x[rows, :]
-                # left_split_y
-                # rows, cols = np.where(data_x[:, best_feature_index] > split_val)
-                # right_split_x = data_x[rows, :]
-                # right_split_y = data_y[rows]
+                rows, cols = np.where(data[:, best_feature_index] <= split_val)
+                left_split = data[rows, :]
 
-                left_split_x = data_x[np.where(data_x[:, best_feature_index] <= split_val)]
-                left_split_y = data_y[np.where(data_x[:, best_feature_index] <= split_val)]
-                print(left_split_x.shape)
-                right_split_x = data_x[np.where(data_x[:, best_feature_index] > split_val)]
-                right_split_y = data_y[np.where(data_x[:, best_feature_index] > split_val)]
-
+                rows, cols = np.where(data[:, best_feature_index] > split_val)
+                right_split = data[rows, :]
                 # if left_split.shape[0] == 0 or right_split.shape[0] == 0:
                 #     print('placeholder')
                     # print('inf recursion case')
@@ -129,18 +122,18 @@ class DTLearner(object):
 
                 # np.array([[-1, np.mean(data[:, -1]), None, None]])
 
-                left_tree = dtAlgo(left_split_x, left_split_y)
+                left_tree = dtAlgo(left_split)
 
 
                 #recurse right
 
 
-                right_tree = dtAlgo(right_split_x, right_split_y)
+                right_tree = dtAlgo(right_split)
 
 
                 #build root
 
-                root = np.array([[best_feature_index[0], split_val, 1, left_split_x.shape[0] + 1]])
+                root = np.array([[best_feature_index[0], split_val, 1, left_split.shape[0] + 1]])
 
                 return np.concatenate((root, left_tree, right_tree))
 
@@ -148,7 +141,7 @@ class DTLearner(object):
 
                 #conc left, right,
         # return dtAlgo(merged_data)
-        self.tree = dtAlgo(data_x, data_y)
+        self.tree = dtAlgo(merged_data)
         print(self.tree)
         return self.tree
         # return -1

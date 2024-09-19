@@ -68,17 +68,17 @@ learning_test_cases = [
     ########################  		  	   		 	   		  		  		    	 		 		   		 		  
     # DTLearner test cases #  		  	   		 	   		  		  		    	 		 		   		 		  
     ########################  		  	   		 	   		  		  		    	 		 		   		 		  
-    # LearningTestCase(
-    #     description="Test Case 01: Deterministic Tree",
-    #     group="DTLearner",
-    #     datafile="Istanbul.csv",
-    #     seed=1481090001,
-    #     outputs=dict(
-    #         insample_corr_min=0.95,
-    #         outsample_corr_min=0.15,
-    #         insample_corr_max=0.95,
-    #     ),
-    # ),
+    LearningTestCase(
+        description="Test Case 01: Deterministic Tree",
+        group="DTLearner",
+        datafile="Istanbul.csv",
+        seed=1481090001,
+        outputs=dict(
+            insample_corr_min=0.95,
+            outsample_corr_min=0.15,
+            insample_corr_max=0.95,
+        ),
+    ),
     # LearningTestCase(
     #     description="Test Case 02: Deterministic Tree",
     #     group="DTLearner",
@@ -115,17 +115,17 @@ learning_test_cases = [
     # ########################
     # # RTLearner test cases #
     # ########################
-    LearningTestCase(
-        description="Test Case 01: Random Tree",
-        group="RTLearner",
-        datafile="Istanbul.csv",
-        seed=1481090001,
-        outputs=dict(
-            insample_corr_min=0.95,
-            outsample_corr_min=0.15,
-            insample_corr_max=0.95,
-        ),
-    ),
+    # LearningTestCase(
+    #     description="Test Case 01: Random Tree",
+    #     group="RTLearner",
+    #     datafile="Istanbul.csv",
+    #     seed=1481090001,
+    #     outputs=dict(
+    #         insample_corr_min=0.95,
+    #         outsample_corr_min=0.15,
+    #         insample_corr_max=0.95,
+    #     ),
+    # ),
     # LearningTestCase(
     #     description="Test Case 02: Random Tree",
     #     group="RTLearner",
@@ -269,7 +269,7 @@ def test_learners(description, group, datafile, seed, outputs, grader):
         if not "RTLearner" in globals():  		  	   		 	   		  		  		    	 		 		   		 		  
             from RTLearner import RTLearner  		  	   		 	   		  		  		    	 		 		   		 		  
         if not "DTLearner" in globals():  		  	   		 	   		  		  		    	 		 		   		 		  
-            from DTLearner import DTLearner  		  	   		 	   		  		  		    	 		 		   		 		  
+            from DTLearner_old_merged_version import DTLearner
         if (  		  	   		 	   		  		  		    	 		 		   		 		  
             (group == "BagLearner")  		  	   		 	   		  		  		    	 		 		   		 		  
             or (group == "InsaneLearner")  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -345,7 +345,8 @@ def test_learners(description, group, datafile, seed, outputs, grader):
             pred_y_in, pred_y_out, author = run_with_timeout(  		  	   		 	   		  		  		    	 		 		   		 		  
                 oneleaf, tree_sptc, (), {}  		  	   		 	   		  		  		    	 		 		   		 		  
             )
-
+            print(pred_y_in)
+            print(pred_y_out)
             # print(pred_y_in.shape)
             # print(train_y.shape)
             # # train_y = train_y.reshape(-1, 1)
