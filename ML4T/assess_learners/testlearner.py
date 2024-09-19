@@ -29,7 +29,7 @@ import sys
 import numpy as np  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
 import LinRegLearner as lrl  		  	   		 	   		  		  		    	 		 		   		 		  
-import DTLearner as dtl
+import DTLearner_temp as dtl
 import RTLearner as rtl
 
 if __name__ == "__main__":
@@ -97,9 +97,9 @@ if __name__ == "__main__":
     # print(pred_y.shape)
     # print(train_y.shape)
 
-
-    train_y = train_y.flatten()
-    pred_y = pred_y.flatten()
+    #
+    # train_y = train_y.flatten()
+    # pred_y = pred_y.flatten()
     # print(train_y)
     # print(pred_y)
     # print('pred y', pred_y)

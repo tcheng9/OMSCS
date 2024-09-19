@@ -40,7 +40,7 @@ class DTLearner(object):
         Constructor method
         """
         self.leaf_size = 1
-        self.tree = None
+        self.model = None
         pass  # move along, these aren't the drones you're looking for
 
     def author(self):
@@ -54,6 +54,11 @@ class DTLearner(object):
 
         return 'tcheng99'
 
+    def pick_best_feature(self, data_x, data_y):
+        corr = np.corrcoef(data_x, data_y, rowvar= False)
+        vals = np.absolute(corr[0:-1, -1])
+        best_index = np.argmax(vals)
+        return best_index
 
     def add_evidence(self, data_x, data_y):
         """
@@ -64,128 +69,105 @@ class DTLearner(object):
         :param data_y: The value we are attempting to predict given the X data
         :type data_y: numpy.ndarray
         """
-
-        # data_y = np.array([data_y])
-
-        merged_data = np.concatenate((data_x, data_y), axis = 1)
-        # print(merged_data)
+        print('asdlakndklad')
 
 
-        def dtAlgo(data):
-            # if data.shape[0] == 0:
-            #     return np.array([])
-            if data.shape[0] == 1: # "1" SHOULD ACTUALLY BE LEAF SIZE I THINK
 
+
+        def dtAlgo(data_x, data_y):
+            print('here')
+            if data_x.shape[0] <= self.leaf_size: # "1" SHOULD ACTUALLY BE LEAF SIZE I THINK
                 #need to handele leaf size
-                return np.array([[-1, data[0, -1], None, None]])
-            elif (data[:, -1] == data[0, -1]).all():
 
+                return np.array([[-1, data_y[0], None, None]])
+            elif (data_y[:] == data_y[0]).all():
 
-                return np.array([[-1, data[0, -1], None, None]])
+                return np.array([[-1, data_y[0], None, None]])
             else:
-
                 #######line 4: pick best metric
 
-                vals = np.corrcoef(data)
-                # print(vals)
-                vals =(vals[-1].T)
-                print(vals)
-                #EDGE CASE: 2 OR MORE FEATURES SAME CORRELATION, MAKE SURE IT IS HANDLED
-                best_feature_index = np.unravel_index(vals[0:-1].argmax(), vals.shape)
+                i = self.pick_best_feature(data_x, data_y)
 
-                # return ('here')
-                # # #determine split val
-
-                split_val = np.median(data[:, best_feature_index])
-
-                # #recurse left
-                rows, cols = np.where(data[:, best_feature_index] <= split_val)
-                left_split = data[rows, :]
-
-                rows, cols = np.where(data[:, best_feature_index] > split_val)
-                right_split = data[rows, :]
-                # if left_split.shape[0] == 0 or right_split.shape[0] == 0:
-                #     print('placeholder')
-                    # print('inf recursion case')
-                    # print('data is', )
-                    # print(data)
-                    #
-                    # print('left split is', )
-                    # print(left_split)
-                    # print('mean is')
-                    # print(np.mean(data[:, -1]))
-
-                    # np.mean(data[:, -1])
-                    # print(np.array([[-1, np.mean(data[:, -1]), None, None]]))
-                    # return np.array([[-1, np.mean(data[:, -1]), None, None]])
+                split_val = np.median(data_x[:, i])
 
 
-                # np.array([[-1, np.mean(data[:, -1]), None, None]])
+                left_split_x = data_x[data_x[:, i] <= split_val]
+                left_split_y = data_y[data_x[:, i] <= split_val]
 
-                left_tree = dtAlgo(left_split)
-
-
-                #recurse right
-
-
-                right_tree = dtAlgo(right_split)
+                right_split_x = data_x[data_x[:, i] > split_val]
+                right_split_y = data_y[data_x[:, i] > split_val]
 
 
-                #build root
+                # if left_split_x.shape[0] == 0:
+                #     return np.array([[-1, right_split_y.mean(), -1 , -1]])
+                if right_split_x.shape[0] == 0:
+                    return np.array([[-1, left_split_y.mean(), -1 , -1]])
 
-                root = np.array([[best_feature_index[0], split_val, 1, left_split.shape[0] + 1]])
+                left_tree = dtAlgo(left_split_x, left_split_y)
 
+                right_tree = dtAlgo(right_split_x, right_split_y)
+
+                root = np.array([[i, split_val, 1, left_split_x.shape[0] + 1]])
+                print('root shape is', root.shape)
+                print('left tree shape is', left_tree.shape)
+                print('right tree shape is', right_tree.shape)
+                print('root  is', root)
+                print('left tree  is', left_tree)
+                print('right tree  is', right_tree)
                 return np.concatenate((root, left_tree, right_tree))
 
 
 
                 #conc left, right,
         # return dtAlgo(merged_data)
-        self.tree = dtAlgo(merged_data)
-        print(self.tree)
-        return self.tree
+
+        tree = dtAlgo(data_x, data_y)
+        self.model = tree
+        print(self.model)
+        return tree
         # return -1
-    def query(self, data_x):
+
+    # [.7, .45, 10],
+
+    #[feature, split_val, left, right]
+    def search(self,data):
+        matrix = self.model
+
+        row_index = 0
+
+
+        while True:
+
+            row = self.model[row_index, :]
+            # print('row is', row)
+            feature = int(row[0])
+            split_val = row[1]
+
+            if feature == -1:
+                return row[1]
+            if data[feature] <= split_val:
+                new_row = row_index + int(row[2])
+                # print('new row is', new_row)
+            else:
+                new_row = row_index + int(row[3])
+                # print('new row is', new_row)
+
+            row_index = new_row
+            # row = self.model[int(node), :]
+
+    def query(self, train_x):
+
         #data_x is just training data, you don't get predictions (aka data_y
         # merged_data = np.concatenate((data_x, data_y), axis=1)
 
-        matrix = self.tree
+        # matrix = self.tree
 
         '''
         for each row of data in data x -> run the search algo on a single row
         '''
 
 
-        def search(data):
-            # print('tree shape', self.tree.shape)
-            # print(self.tree.shape)
-            #data is just a row of data such that it is [x1, x2, x3, .. xn]
 
-
-            leaf_not_reached = True
-            index = 0
-            # feature, split_val, left, right = matrix[index]
-            # arr = []
-            while leaf_not_reached:
-                feature, split_val, left, right = matrix[int(index)]
-                if feature == -1:
-
-                    leaf_not_reached = True
-
-                    return split_val
-                    # return prediction -> what is prediction?
-                    '''
-                    when you reach a leaf node, you return the split val?
-                    
-                    Return split val of that level
-                    '''
-
-                curr_val = data[int(feature)]
-
-                if curr_val <= split_val:
-                    index = index + left
-                else:
-                    index = index + right #my indexing is off here
 
 
 
@@ -194,20 +176,12 @@ class DTLearner(object):
                 #
                 # #just to terminate
                 # leaf_not_reached = False
-        res = np.array([[],])
-        for r in data_x:
+        res = np.array([])
+        for r in train_x:
+            pred = self.search(r)
 
-            pred = search(r)
-
-            if not pred:
-                print('missing')
-            pred = np.array([[pred],])
-            # print('prediction is', pred)
-
-            res = np.concatenate((res, pred), axis = 1)
-
-        res = res.reshape(-1, 1)
-
+            res = np.append(res, pred)
+        print('end result is', res)
         return res
 
 
@@ -240,7 +214,7 @@ if __name__ == "__main__":
 
     ])
 
-    y_train = np.array([[4], [5], [6], [5], [6], [3], [4], [5]])
+    y_train = np.array([4, 5, 6, 5, 3,8,7,6])
     # ## infinite recursion test case
     # # x_train = np.array([
     # #     [.885,.330, 9.1],
@@ -254,18 +228,17 @@ if __name__ == "__main__":
     #
     # # y_train = np.array([[4],[5], [6], [5]])
     #
-    # x_test = np.array([
-    #     [.7,.45, 10],
-    #     [.6, .75, 9],
-    #     [.3, .5, 9.5],
-    #
-    # ])
-    #
-    learner = DTLearner()
-    learner.add_evidence(x_train, y_train)
-    # print(learner.tree)
+    x_test = np.array([
+        [.7,.45, 10],
+        [.6, .75, 9],
+        [.3, .5, 9.5],
+    ])
 
-    # res = learner.query(x_test)
+    learner = DTLearner()
+    tree = learner.add_evidence(x_train, y_train)
+    # print(tree)
+
+    res = learner.query(x_test)
     # print('res')
     # print(res)
 

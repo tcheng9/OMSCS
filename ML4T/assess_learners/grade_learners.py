@@ -269,7 +269,7 @@ def test_learners(description, group, datafile, seed, outputs, grader):
         if not "RTLearner" in globals():  		  	   		 	   		  		  		    	 		 		   		 		  
             from RTLearner import RTLearner  		  	   		 	   		  		  		    	 		 		   		 		  
         if not "DTLearner" in globals():  		  	   		 	   		  		  		    	 		 		   		 		  
-            from DTLearner_old_merged_version import DTLearner
+            from DTLearner import DTLearner
         if (  		  	   		 	   		  		  		    	 		 		   		 		  
             (group == "BagLearner")  		  	   		 	   		  		  		    	 		 		   		 		  
             or (group == "InsaneLearner")  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -318,10 +318,16 @@ def test_learners(description, group, datafile, seed, outputs, grader):
                 random.seed(seed)  		  	   		 	   		  		  		    	 		 		   		 		  
                 np.random.seed = fake_seed  		  	   		 	   		  		  		    	 		 		   		 		  
                 random.seed = fake_rseed  		  	   		 	   		  		  		    	 		 		   		 		  
-                learner = clss_name(leaf_size=1, verbose=False)  		  	   		 	   		  		  		    	 		 		   		 		  
-                learner.add_evidence(train_x, train_y)  		  	   		 	   		  		  		    	 		 		   		 		  
-                insample = learner.query(train_x)  		  	   		 	   		  		  		    	 		 		   		 		  
-                outsample = learner.query(test_x)  		  	   		 	   		  		  		    	 		 		   		 		  
+                learner = clss_name(leaf_size=1, verbose=False)
+                # print(train_x.shape)
+                # print(train_y.shape)
+                learner.add_evidence(train_x, train_y)
+                # print('tree built')
+                insample = learner.query(train_x)
+                # print('test-x')
+                # print(test_x)
+                outsample = learner.query(test_x)
+
                 np.random.seed = tmp_numpy_seed  		  	   		 	   		  		  		    	 		 		   		 		  
                 random.seed = tmp_random_seed  		  	   		 	   		  		  		    	 		 		   		 		  
                 author_rv = None  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -342,8 +348,9 @@ def test_learners(description, group, datafile, seed, outputs, grader):
                 random.seed = tmp_random_seed  		  	   		 	   		  		  		    	 		 		   		 		  
                 return learner.query(train_x)  		  	   		 	   		  		  		    	 		 		   		 		  
 
-            pred_y_in, pred_y_out, author = run_with_timeout(  		  	   		 	   		  		  		    	 		 		   		 		  
-                oneleaf, tree_sptc, (), {}  		  	   		 	   		  		  		    	 		 		   		 		  
+            pred_y_in, pred_y_out, author = run_with_timeout(
+
+                oneleaf, tree_sptc, (), {}
             )
             print(pred_y_in)
             print(pred_y_out)
@@ -355,6 +362,7 @@ def test_learners(description, group, datafile, seed, outputs, grader):
             pred_y_in_50 = run_with_timeout(fiftyleaves, tree_sptc, (), {})
             print(pred_y_in.shape)
             print(np.corrcoef(pred_y_in, y=train_y))
+            print('test labels are', test_y)
             print(np.corrcoef(pred_y_out, y=test_y))
             corr_in = np.corrcoef(pred_y_in, y=train_y)[0, 1]  		  	   		 	   		  		  		    	 		 		   		 		  
             corr_out = np.corrcoef(pred_y_out, y=test_y)[0, 1]  		  	   		 	   		  		  		    	 		 		   		 		  

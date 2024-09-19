@@ -69,12 +69,13 @@ class DTLearner(object):
         :param data_y: The value we are attempting to predict given the X data
         :type data_y: numpy.ndarray
         """
+        print('asdlakndklad')
 
 
 
 
         def dtAlgo(data_x, data_y):
-
+            # print('here')
             if data_x.shape[0] <= self.leaf_size: # "1" SHOULD ACTUALLY BE LEAF SIZE I THINK
                 #need to handele leaf size
 
@@ -97,17 +98,22 @@ class DTLearner(object):
                 right_split_y = data_y[data_x[:, i] > split_val]
 
 
-                if left_split_x.shape[0] == 0:
-                    return np.array([-1, right_split_y.mean(), -1 , -1])
+                # if left_split_x.shape[0] == 0:
+                #     return np.array([[-1, right_split_y.mean(), -1 , -1]])
                 if right_split_x.shape[0] == 0:
-                    return np.array([-1, left_split_y.mean(), -1 , -1])
+                    return np.array([[-1, left_split_y.mean(), -1 , -1]])
 
                 left_tree = dtAlgo(left_split_x, left_split_y)
 
                 right_tree = dtAlgo(right_split_x, right_split_y)
 
                 root = np.array([[i, split_val, 1, left_split_x.shape[0] + 1]])
-
+                # print('root shape is', root.shape)
+                # print('left tree shape is', left_tree.shape)
+                # print('right tree shape is', right_tree.shape)
+                # print('root  is', root)
+                # print('left tree  is', left_tree)
+                # print('right tree  is', right_tree)
                 return np.concatenate((root, left_tree, right_tree))
 
 
@@ -117,7 +123,7 @@ class DTLearner(object):
 
         tree = dtAlgo(data_x, data_y)
         self.model = tree
-        # print(self.model)
+        print(self.model)
         return tree
         # return -1
 
@@ -133,7 +139,7 @@ class DTLearner(object):
         while True:
 
             row = self.model[row_index, :]
-            print('row is', row)
+            # print('row is', row)
             feature = int(row[0])
             split_val = row[1]
 
@@ -175,7 +181,7 @@ class DTLearner(object):
             pred = self.search(r)
 
             res = np.append(res, pred)
-        print('end result is', res)
+        print('my predictions are',  res)
         return res
 
 
@@ -227,59 +233,7 @@ if __name__ == "__main__":
         [.6, .75, 9],
         [.3, .5, 9.5],
     ])
-    #
-    # x_train = [
-    # 1.0, 2.0, 6.0
-    # 2.0, 1.0, 5.0
-    # 3.0, 3.0, 10.0
-    # 5.0, 0.0, 6.0
-    # 0.0, 5.0, 11.0
-    # 1.0, 2.0, 6.0
-    # 2.0, 1.0, 5.0
-    # 3.0, 3.0, 10.0
-    # 5.0, 0.0, 6.0
-    # 0.0, 5.0, 11.0
-    # 1.0, 2.0, 6.0
-    # 2.0, 1.0, 5.0
-    # 3.0, 3.0, 10.0
-    # 5.0, 0.0, 6.0
-    # 0.0, 5.0, 11.0
-    # 1.0, 2.0, 6.0
-    # 2.0, 1.0, 5.0
-    # 3.0, 3.0, 10.0
-    # 5.0, 0.0, 6.0
-    # 0.0, 5.0, 11.0
-    # 1.0, 2.0, 6.0
-    # 2.0, 1.0, 5.0
-    # 3.0, 3.0, 10.0
-    # 5.0, 0.0, 6.0
-    # 0.0, 5.0, 11.0
-    # 1.0, 2.0, 6.0
-    # 2.0, 1.0, 5.0
-    # 3.0, 3.0, 10.0
-    # 5.0, 0.0, 6.0
-    # 0.0, 5.0, 11.0
-    # 1.0, 2.0, 6.0
-    # 2.0, 1.0, 5.0
-    # 3.0, 3.0, 10.0
-    # 5.0, 0.0, 6.0
-    # 0.0, 5.0, 11.0
-    # 1.0, 2.0, 6.0
-    # 2.0, 1.0, 5.0
-    # 3.0, 3.0, 10.0
-    # 5.0, 0.0, 6.0
-    # 0.0, 5.0, 11.0
-    # 1.0, 2.0, 6.0
-    # 2.0, 1.0, 5.0
-    # 3.0, 3.0, 10.0
-    # 5.0, 0.0, 6.0
-    # 0.0, 5.0, 11.0
-    # 1.0, 2.0, 6.0
-    # 2.0, 1.0, 5.0
-    # 3.0, 3.0, 10.0
-    # 5.0, 0.0, 6.0
-    # 0.0, 5.0, 11.0
-    # ]
+
     learner = DTLearner()
     tree = learner.add_evidence(x_train, y_train)
     # print(tree)
@@ -292,3 +246,12 @@ if __name__ == "__main__":
 # self.model_coefs, residuals, rank, s = np.linalg.lstsq(
 #     new_data_x, data_y, rcond=None
 # )
+
+
+# test_y [-2.0683450e-03  5.5902220e-03  8.3231680e-03  5.1101200e-03
+#  -4.3663850e-03 -1.4859632e-02 -3.5649930e-03  8.3096520e-03
+#   4.0869700e-04  1.0330863e-02 -8.7413000e-03  8.9430000e-03
+#
+# train_y = [-0.004029    0.00044238 -0.004029    0.00044238 -0.004029    0.00044238
+#   0.00044238  0.00044238  0.00044238  0.00044238  0.00044238  0.00044238
+#   0.00044238 -0.00623349  0.00044238  0.00044238  0.00044238 -0.004029
