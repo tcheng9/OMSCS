@@ -74,7 +74,8 @@ class DTLearner(object):
 
 
         def dtAlgo(data_x, data_y):
-
+            # print(data_x.shape)
+            # print(data_y.shape)
             if data_x.shape[0] <= self.leaf_size: # "1" SHOULD ACTUALLY BE LEAF SIZE I THINK
                 #need to handele leaf size
 
@@ -97,17 +98,24 @@ class DTLearner(object):
                 right_split_y = data_y[data_x[:, i] > split_val]
 
 
-                if left_split_x.shape[0] == 0:
-                    return np.array([-1, right_split_y.mean(), -1 , -1])
+                # if left_split_x.shape[0] == 0:
+                #     return np.array([-1, right_split_y.mean(), -1 , -1])
                 if right_split_x.shape[0] == 0:
-                    return np.array([-1, left_split_y.mean(), -1 , -1])
+                    return np.matrix([-1, left_split_y.mean(), None, None])
 
                 left_tree = dtAlgo(left_split_x, left_split_y)
 
                 right_tree = dtAlgo(right_split_x, right_split_y)
 
                 root = np.array([[i, split_val, 1, left_split_x.shape[0] + 1]])
-
+                # print('------')
+                # print('root', root.shape)
+                # print('left', left_tree.shape)
+                # print('right', right_tree.shape)
+                #
+                # print('root', root)
+                # print('left', left_tree)
+                # print('right', right_tree)
                 return np.concatenate((root, left_tree, right_tree))
 
 
@@ -117,7 +125,8 @@ class DTLearner(object):
 
         tree = dtAlgo(data_x, data_y)
         self.model = tree
-        # print(self.model)
+        print('finished')
+        print(self.model)
         return tree
         # return -1
 
