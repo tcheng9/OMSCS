@@ -22,14 +22,14 @@ GT honor code violation.
   		  	   		 	   		  		  		    	 		 		   		 		  
 -----do not edit anything above this line---  		  	   		 	   		  		  		    	 		 		   		 		  
 """  		  	   		 	   		  		  		    	 		 		   		 		  
-  		  	   		 	   		  		  		    	 		 		   		 		  
+import sys
 import math  		  	   		 	   		  		  		    	 		 		   		 		  
-import sys  		  	   		 	   		  		  		    	 		 		   		 		  
+
   		  	   		 	   		  		  		    	 		 		   		 		  
 import numpy as np  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
 import LinRegLearner as lrl  		  	   		 	   		  		  		    	 		 		   		 		  
-import DTLearner_temp as dtl
+import DTLearner as dtl
 import RTLearner as rtl
 
 if __name__ == "__main__":
@@ -79,8 +79,8 @@ if __name__ == "__main__":
 
     # create a learner and train it
     # learner = lrl.LinRegLearner(verbose=True)  # create a LinRegLearner
-    learner = dtl.DTLearner(verbose = True)
-    # learner = rtl.RTLearner(verbose = True)
+    # learner = dtl.DTLearner(verbose = True)
+    learner = rtl.RTLearner(verbose = True)
     learner.add_evidence(train_x, train_y)  # train it
     print(learner.author())
 

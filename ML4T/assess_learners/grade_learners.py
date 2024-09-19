@@ -115,50 +115,50 @@ learning_test_cases = [
     # ########################
     # # RTLearner test cases #
     # ########################
-    # LearningTestCase(
-    #     description="Test Case 01: Random Tree",
-    #     group="RTLearner",
-    #     datafile="Istanbul.csv",
-    #     seed=1481090001,
-    #     outputs=dict(
-    #         insample_corr_min=0.95,
-    #         outsample_corr_min=0.15,
-    #         insample_corr_max=0.95,
-    #     ),
-    # ),
-    # LearningTestCase(
-    #     description="Test Case 02: Random Tree",
-    #     group="RTLearner",
-    #     datafile="Istanbul.csv",
-    #     seed=1481090002,
-    #     outputs=dict(
-    #         insample_corr_min=0.95,
-    #         outsample_corr_min=0.15,
-    #         insample_corr_max=0.95,
-    #     ),
-    # ),
-    # LearningTestCase(
-    #     description="Test Case 03: Random Tree",
-    #     group="RTLearner",
-    #     datafile="Istanbul.csv",
-    #     seed=1481090003,
-    #     outputs=dict(
-    #         insample_corr_min=0.95,
-    #         outsample_corr_min=0.15,
-    #         insample_corr_max=0.95,
-    #     ),
-    # ),
-    # LearningTestCase(
-    #     description="Test Case 04: Random Tree",
-    #     group="RTLearner",
-    #     datafile="Istanbul.csv",
-    #     seed=1481090004,
-    #     outputs=dict(
-    #         insample_corr_min=0.95,
-    #         outsample_corr_min=0.15,
-    #         insample_corr_max=0.95,
-    #     ),
-    # ),
+    LearningTestCase(
+        description="Test Case 01: Random Tree",
+        group="RTLearner",
+        datafile="Istanbul.csv",
+        seed=1481090001,
+        outputs=dict(
+            insample_corr_min=0.95,
+            outsample_corr_min=0.15,
+            insample_corr_max=0.95,
+        ),
+    ),
+    LearningTestCase(
+        description="Test Case 02: Random Tree",
+        group="RTLearner",
+        datafile="Istanbul.csv",
+        seed=1481090002,
+        outputs=dict(
+            insample_corr_min=0.95,
+            outsample_corr_min=0.15,
+            insample_corr_max=0.95,
+        ),
+    ),
+    LearningTestCase(
+        description="Test Case 03: Random Tree",
+        group="RTLearner",
+        datafile="Istanbul.csv",
+        seed=1481090003,
+        outputs=dict(
+            insample_corr_min=0.95,
+            outsample_corr_min=0.15,
+            insample_corr_max=0.95,
+        ),
+    ),
+    LearningTestCase(
+        description="Test Case 04: Random Tree",
+        group="RTLearner",
+        datafile="Istanbul.csv",
+        seed=1481090004,
+        outputs=dict(
+            insample_corr_min=0.95,
+            outsample_corr_min=0.15,
+            insample_corr_max=0.95,
+        ),
+    ),
     # ######################
     # # Bagging test cases #
     # ######################
@@ -321,13 +321,13 @@ def test_learners(description, group, datafile, seed, outputs, grader):
                 learner = clss_name(leaf_size=1, verbose=False)
                 # print(train_x.shape)
                 # print(train_y.shape)
-                print('tree is', learner)
+                # print('tree is', learner)
 
                 learner.add_evidence(train_x, train_y)
                 # print('tree built')
                 insample = learner.query(train_x)
-                print('train x is', train_x[0])
-                print('train y is', train_y[0])
+                # print('train x is', train_x[0])
+                # print('train y is', train_y[0])
                 # print('test-x')
                 # print(test_x)
                 outsample = learner.query(test_x)
@@ -356,18 +356,18 @@ def test_learners(description, group, datafile, seed, outputs, grader):
 
                 oneleaf, tree_sptc, (), {}
             )
-            print(pred_y_in)
-            print(pred_y_out)
+            # print(pred_y_in)
+            # print(pred_y_out)
             # print(pred_y_in.shape)
             # print(train_y.shape)
             # # train_y = train_y.reshape(-1, 1)
             # print(pred_y_in.shape)
             # print(train_y.shape)
             pred_y_in_50 = run_with_timeout(fiftyleaves, tree_sptc, (), {})
-            print(pred_y_in.shape)
-            print(np.corrcoef(pred_y_in, y=train_y))
-
-            print(np.corrcoef(pred_y_out, y=test_y))
+            # print(pred_y_in.shape)
+            # print(np.corrcoef(pred_y_in, y=train_y))
+            #
+            # print(np.corrcoef(pred_y_out, y=test_y))
             corr_in = np.corrcoef(pred_y_in, y=train_y)[0, 1]  		  	   		 	   		  		  		    	 		 		   		 		  
             corr_out = np.corrcoef(pred_y_out, y=test_y)[0, 1]  		  	   		 	   		  		  		    	 		 		   		 		  
             corr_in_50 = np.corrcoef(pred_y_in_50, y=train_y)[0, 1]  		  	   		 	   		  		  		    	 		 		   		 		  

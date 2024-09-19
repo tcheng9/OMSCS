@@ -24,9 +24,7 @@ GT honor code violation.
 """
 
 import numpy as np
-import sys
 
-np.set_printoptions(threshold = sys.maxsize)
 
 class DTLearner(object):
     """
@@ -110,12 +108,7 @@ class DTLearner(object):
                 right_tree = dtAlgo(right_split_x, right_split_y)
 
                 root = np.array([[i, split_val, 1, left_tree.shape[0] + 1]])
-                # print('root shape is', root.shape)
-                # print('left tree shape is', left_tree.shape)
-                # print('right tree shape is', right_tree.shape)
-                # print('root  is', root)
-                # print('left tree  is', left_tree)
-                # print('right tree  is', right_tree)
+
                 return np.concatenate((root, left_tree, right_tree))
 
 
@@ -125,11 +118,8 @@ class DTLearner(object):
 
         tree = dtAlgo(data_x, data_y)
         self.model = tree
-        # print('------------------------------')
-        # print('start of model')
-        print(self.model)
-        # print('end of model')
-        # print('------------------------------')
+
+
         return tree
         # return -1
 
@@ -145,7 +135,7 @@ class DTLearner(object):
         while True:
 
             row = self.model[row_index, :]
-            # print('row is', row)
+
             feature = int(row[0])
             split_val = row[1]
 
@@ -153,10 +143,10 @@ class DTLearner(object):
                 return row[1]
             if data[feature] <= split_val:
                 new_row = row_index + int(row[2])
-                # print('new row is', new_row)
+
             else:
                 new_row = row_index + int(row[3])
-                # print('new row is', new_row)
+
 
             row_index = new_row
             # row = self.model[int(node), :]
@@ -187,13 +177,13 @@ class DTLearner(object):
             pred = self.search(r)
 
             res = np.append(res, pred)
-        # print('my predictions are',  res)
+
         return res
 
 
 
 if __name__ == "__main__":
-    print('placehlder')
+
     #case 1 - general case
     # x_train = np.array([[1, 3, 4], [5, 3, 1], [2, 3, 1]])
     # y_train = np.array([[5], [5], [7]])
@@ -242,11 +232,11 @@ if __name__ == "__main__":
 
     learner = DTLearner()
     tree = learner.add_evidence(x_train, y_train)
-    print(tree)
+
 
     # res = learner.query(x_test)
-    # print('res')
-    # print(res)
+
+
 
 # lin reg code
 # self.model_coefs, residuals, rank, s = np.linalg.lstsq(

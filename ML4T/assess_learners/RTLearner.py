@@ -41,7 +41,7 @@ class RTLearner(object):
 
         """
         self.tree = None
-        self.leaf_size = 1
+        self.leaf_size = leaf_size
         pass  # move along, these aren't the drones you're looking for
 
     def author(self):
@@ -51,27 +51,193 @@ class RTLearner(object):
         """
         return "tcheng99"  # replace tb34 with your Georgia Tech username
 
+    def study_group(self):
+        return 'tcheng99'
 
+    def pick_random_feature(self, data_x):
+
+        random_index = random.randint(0, data_x.shape[1]-1)
+        return random_index
 
     def add_evidence(self, data_x, data_y):
+        """
+        Add training data to learner
+
+        :param data_x: A set of feature values used to train the learner
+        :type data_x: numpy.ndarray
+        :param data_y: The value we are attempting to predict given the X data
+        :type data_y: numpy.ndarray
+        """
 
 
-        # random.seed(10)
-        # print(data_y)
-        # print(data_x, data_y)
-        # data_y = data_y.reshape(-1, 1)
-        # print('here')
-        def build_tree(data_x, data_y):
 
-            # print(data_y)
 
-            if data_x.shape[0] == self.leaf_size:
-                # print('base case 1')
+
+        def dtAlgo(data_x, data_y):
+
+            if data_x.shape[0] <= self.leaf_size: # "1" SHOULD ACTUALLY BE LEAF SIZE I THINK
+                #need to handele leaf size
+
                 return np.array([[-1, data_y[0], None, None]])
             elif (data_y[:] == data_y[0]).all():
-                # print('base case 2')
+
                 return np.array([[-1, data_y[0], None, None]])
             else:
+                #######line 4: pick best metric
+
+                i = self.pick_random_feature(data_x)
+
+                split_val = np.median(data_x[:, i])
+
+
+                left_split_x = data_x[data_x[:, i] <= split_val]
+                left_split_y = data_y[data_x[:, i] <= split_val]
+
+                right_split_x = data_x[data_x[:, i] > split_val]
+                right_split_y = data_y[data_x[:, i] > split_val]
+
+
+                # if left_split_x.shape[0] == 0:
+                #     return np.array([[-1, right_split_y.mean(), -1 , -1]])
+                if right_split_x.shape[0] == 0:
+                    return np.array([[-1, left_split_y.mean(), -1 , -1]])
+                #
+                left_tree = dtAlgo(left_split_x, left_split_y)
+
+                right_tree = dtAlgo(right_split_x, right_split_y)
+
+                root = np.array([[i, split_val, 1, left_tree.shape[0] + 1]])
+
+                return np.concatenate((root, left_tree, right_tree))
+
+
+
+
+                #conc left, right,
+        # return dtAlgo(merged_data)
+
+        tree = dtAlgo(data_x, data_y)
+        self.model = tree
+
+        print(tree)
+        return tree
+        # return -1
+
+    # [.7, .45, 10],
+
+    #[feature, split_val, left, right]
+    def search(self,data):
+        matrix = self.model
+
+        row_index = 0
+
+
+        while True:
+
+            row = self.model[row_index, :]
+
+            feature = int(row[0])
+            split_val = row[1]
+
+            if feature == -1:
+                return row[1]
+            if data[feature] <= split_val:
+                new_row = row_index + int(row[2])
+
+            else:
+                new_row = row_index + int(row[3])
+
+
+            row_index = new_row
+            # row = self.model[int(node), :]
+
+    def query(self, train_x):
+
+        #data_x is just training data, you don't get predictions (aka data_y
+        # merged_data = np.concatenate((data_x, data_y), axis=1)
+
+        # matrix = self.tree
+
+        '''
+        for each row of data in data x -> run the search algo on a single row
+        '''
+
+
+
+
+
+
+
+
+                #
+                # #just to terminate
+                # leaf_not_reached = False
+        res = np.array([])
+        for r in train_x:
+            pred = self.search(r)
+
+            res = np.append(res, pred)
+
+        return res
+
+
+
+if __name__ == "__main__":
+
+    #case 1 - general case
+    # x_train = np.array([[1, 3, 4], [5, 3, 1], [2, 3, 1]])
+    # y_train = np.array([[5], [5], [7]])
+
+    #base case 1 - 1 row
+    # x_train = np.array([[1,2,3],])
+    # y_train = np.array([[2],])
+
+    #base case 2 - all y is same
+    # x_train = np.array([[1, 3, 4], [5, 3, 1], [2, 3, 1]])
+    # y_train = np.array([[5], [5], [5]])
+
+
+    # class test case
+    x_train = np.array([
+        [.885,.330, 9.1],
+        [.725, .39, 10.9],
+        [.560, .5, 9.4],
+        [.735, .570, 9.8],
+        [.610, .630, 8.4],
+        [.260, .630, 11.8],
+        [.5, .68, 10.5],
+        [.320, .780, 10]
+
+    ])
+
+    y_train = np.array([4, 5, 6, 5, 3,8,7,6])
+    # ## infinite recursion test case
+    # # x_train = np.array([
+    # #     [.885,.330, 9.1],
+    # #     [.725, .39, 10],
+    # #     [.560, .5, 10],
+    # #     [.735, .570,10],
+    # #
+    # #
+    # # ])
+    #
+    #
+    # # y_train = np.array([[4],[5], [6], [5]])
+    #
+    # x_test = np.array([
+    #     [.7,.45, 10],
+    #     [.6, .75, 9],
+    #     [.3, .5, 9.5],
+    # ])
+
+    learner = RTLearner()
+    tree = learner.add_evidence(x_train, y_train)
+
+
+    # res = learner.query(x_test)
+
+
+'''
                 #######line 4: pick random feature
 
                 random_index = random.randint(0, data_x.shape[1]-1) #aka random feature/column
@@ -99,147 +265,4 @@ class RTLearner(object):
                 if left_split_x.shape[0] == 0 or right_split_x.shape[0] == 0:
                     print('here')
                     return np.array([[-1, np.mean(data_y[:]), None, None]])
-                left_tree = build_tree(left_split_x, left_split_y)
-
-                # # recurse right
-
-                right_tree = build_tree(right_split_x, right_split_y)
-                # #
-                # # # build root
-                # #
-                root = np.array([[random_index, split_val, 1, left_split_x.shape[0] + 1]])
-                #
-                return np.concatenate((root, left_tree, right_tree))
-
-        #
-        #
-        tree = build_tree(data_x, data_y)
-        print(tree)
-        self.tree = tree
-        return tree
-
-
-    def study_group(self):
-        return 'tcheng99'
-
-    def query(self, data_x):
-        # data is just a row of data such that it is [x1, x2, x3, .. xn]
-
-        #
-        matrix = self.tree
-        leaf_not_reached = True
-        index = 0
-
-        arr = np.array([])
-
-        def search(data):
-
-            leaf_not_reached = True
-            index = 0
-            while leaf_not_reached:
-                feature, split_val, left, right = matrix[int(index)]
-                if feature == -1:
-                    # print('end')
-                    leaf_not_reached = True
-                    # print(split_val) #split val is the prediction at this point
-                    return split_val
-                    # return prediction -> what is prediction?
-                    '''
-                    when you reach a leaf node, you return the split val?
-    
-                    Return split val of that level
-                    '''
-
-                curr_val = data[int(feature)]
-
-                if curr_val <= split_val:
-                    index = index + left
-
-                else:
-
-                    index = index + right  # my indexing is off here
-
-                #
-                # #just to terminate
-                # leaf_not_reached = False
-
-        res = np.array([])
-        # print(data_x)
-        for r in data_x:
-            pred = search(r)
-            res = np.append(res, pred)
-            print(pred)
-            # res = np.concatenate((res, pred), axis=1)
-
-        print(res.shape)
-        # print('res is', res)
-        return res
-
-
-
-if __name__ == "__main__":
-
-    # class test case
-    # x_train = np.array([
-    #     [.885, .330, 9.1],
-    #     [.725, .39, 10.9],
-    #     [.560, .5, 9.4],
-    #     [.735, .570, 9.8],
-    #     [.610, .630, 8.4],
-    #     [.260, .630, 11.8],
-    #     [.5, .68, 10.5],
-    #     [.320, .780, 10]
-    #
-    # ])
-    #
-    # y_train = np.array([[4], [5], [6], [5], [3], [8], [7], [6]])
-
-
-    #base case 1
-    # x_train = np.array([
-    #     [.885, .330, 9.1]
-    # ])
-    #
-    # y_train = np.array([100])
-    #
-    # #base case 2
-    # x_train = np.array([
-    #     [.885, .330, 9.1],
-    #     [.885, .330, 9.1],
-    #     [.885, .330, 9.1],
-    # ])
-    #
-    # y_train = np.array([[100],  [100], [100]])
-
-    #General case
-
-    x_train = np.array([
-        [.885,.330, 9.1],
-        [.725, .39, 10.9],
-        [.560, .5, 9.4],
-        [.735, .570, 9.8],
-        [.610, .630, 8.4],
-        [.260, .630, 11.8],
-        [.5, .68, 10.5],
-        [.320, .780, 10]
-
-    ])
-
-
-    y_train = np.array([4, 5, 6, 5, 6, 3, 4, 5])
-
-    x_test = np.array([
-        [.885, .330, 9.1],
-        [.725, .39, 10.9],
-        [.560, .5, 9.4],
-        [.735, .570, 9.8],
-        [.610, .630, 8.4],
-        [.260, .630, 11.8],
-        [.5, .68, 10.5],
-        [.320, .780, 10]
-
-    ])
-
-    learner = RTLearner()
-    learner.add_evidence(x_train, y_train)
-    # learner.query(x_test)
+'''
