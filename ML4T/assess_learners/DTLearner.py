@@ -56,7 +56,7 @@ class DTLearner(object):
 
     def pick_best_feature(self, data_x, data_y):
         corr = np.corrcoef(data_x, data_y, rowvar= False)
-        vals = np.abs(corr[0:-1, -1])
+        vals = np.absolute(corr[0:-1, -1])
         best_index = np.argmax(vals)
         return best_index
 
@@ -117,29 +117,40 @@ class DTLearner(object):
 
         tree = dtAlgo(data_x, data_y)
         self.model = tree
+        # print(self.model)
         return tree
         # return -1
 
+    # [.7, .45, 10],
+
+    #[feature, split_val, left, right]
     def search(self,data):
         matrix = self.model
-        leaf_not_reached = True
-        index = 0
 
-        matrix = self.model
-        while leaf_not_reached:
+        row_index = 0
 
-            feature, split_val, left, right = matrix[int(index)]
+
+        while True:
+
+            row = self.model[row_index, :]
+            print('row is', row)
+            feature = int(row[0])
+            split_val = row[1]
+
             if feature == -1:
-                leaf_not_reached = True
-                return split_val
-
-            curr_val = data[int(feature)]
-
-            if curr_val <= split_val:
-                index = index + left
+                return row[1]
+            if data[feature] <= split_val:
+                new_row = row_index + int(row[2])
+                # print('new row is', new_row)
             else:
-                index = index + right  # my indexing is off here
-    def query(self, data_x):
+                new_row = row_index + int(row[3])
+                # print('new row is', new_row)
+
+            row_index = new_row
+            # row = self.model[int(node), :]
+
+    def query(self, train_x):
+
         #data_x is just training data, you don't get predictions (aka data_y
         # merged_data = np.concatenate((data_x, data_y), axis=1)
 
@@ -160,11 +171,11 @@ class DTLearner(object):
                 # #just to terminate
                 # leaf_not_reached = False
         res = np.array([])
-        for r in data_x:
+        for r in train_x:
             pred = self.search(r)
 
             res = np.append(res, pred)
-        # print('end result is', res)
+        print('end result is', res)
         return res
 
 
@@ -217,6 +228,58 @@ if __name__ == "__main__":
         [.3, .5, 9.5],
     ])
     #
+    # x_train = [
+    # 1.0, 2.0, 6.0
+    # 2.0, 1.0, 5.0
+    # 3.0, 3.0, 10.0
+    # 5.0, 0.0, 6.0
+    # 0.0, 5.0, 11.0
+    # 1.0, 2.0, 6.0
+    # 2.0, 1.0, 5.0
+    # 3.0, 3.0, 10.0
+    # 5.0, 0.0, 6.0
+    # 0.0, 5.0, 11.0
+    # 1.0, 2.0, 6.0
+    # 2.0, 1.0, 5.0
+    # 3.0, 3.0, 10.0
+    # 5.0, 0.0, 6.0
+    # 0.0, 5.0, 11.0
+    # 1.0, 2.0, 6.0
+    # 2.0, 1.0, 5.0
+    # 3.0, 3.0, 10.0
+    # 5.0, 0.0, 6.0
+    # 0.0, 5.0, 11.0
+    # 1.0, 2.0, 6.0
+    # 2.0, 1.0, 5.0
+    # 3.0, 3.0, 10.0
+    # 5.0, 0.0, 6.0
+    # 0.0, 5.0, 11.0
+    # 1.0, 2.0, 6.0
+    # 2.0, 1.0, 5.0
+    # 3.0, 3.0, 10.0
+    # 5.0, 0.0, 6.0
+    # 0.0, 5.0, 11.0
+    # 1.0, 2.0, 6.0
+    # 2.0, 1.0, 5.0
+    # 3.0, 3.0, 10.0
+    # 5.0, 0.0, 6.0
+    # 0.0, 5.0, 11.0
+    # 1.0, 2.0, 6.0
+    # 2.0, 1.0, 5.0
+    # 3.0, 3.0, 10.0
+    # 5.0, 0.0, 6.0
+    # 0.0, 5.0, 11.0
+    # 1.0, 2.0, 6.0
+    # 2.0, 1.0, 5.0
+    # 3.0, 3.0, 10.0
+    # 5.0, 0.0, 6.0
+    # 0.0, 5.0, 11.0
+    # 1.0, 2.0, 6.0
+    # 2.0, 1.0, 5.0
+    # 3.0, 3.0, 10.0
+    # 5.0, 0.0, 6.0
+    # 0.0, 5.0, 11.0
+    # ]
     learner = DTLearner()
     tree = learner.add_evidence(x_train, y_train)
     # print(tree)
