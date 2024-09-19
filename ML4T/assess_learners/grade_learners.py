@@ -79,39 +79,39 @@ learning_test_cases = [
             insample_corr_max=0.95,
         ),
     ),
-    # LearningTestCase(
-    #     description="Test Case 02: Deterministic Tree",
-    #     group="DTLearner",
-    #     datafile="Istanbul.csv",
-    #     seed=1481090002,
-    #     outputs=dict(
-    #         insample_corr_min=0.95,
-    #         outsample_corr_min=0.15,
-    #         insample_corr_max=0.95,
-    #     ),
-    # ),
-    # LearningTestCase(
-    #     description="Test Case 03: Deterministic Tree",
-    #     group="DTLearner",
-    #     datafile="Istanbul.csv",
-    #     seed=1481090003,
-    #     outputs=dict(
-    #         insample_corr_min=0.95,
-    #         outsample_corr_min=0.15,
-    #         insample_corr_max=0.95,
-    #     ),
-    # ),
-    # LearningTestCase(
-    #     description="Test Case 04: Deterministic Tree",
-    #     group="DTLearner",
-    #     datafile="Istanbul.csv",
-    #     seed=1481090004,
-    #     outputs=dict(
-    #         insample_corr_min=0.95,
-    #         outsample_corr_min=0.15,
-    #         insample_corr_max=0.95,
-    #     ),
-    # ),
+    LearningTestCase(
+        description="Test Case 02: Deterministic Tree",
+        group="DTLearner",
+        datafile="Istanbul.csv",
+        seed=1481090002,
+        outputs=dict(
+            insample_corr_min=0.95,
+            outsample_corr_min=0.15,
+            insample_corr_max=0.95,
+        ),
+    ),
+    LearningTestCase(
+        description="Test Case 03: Deterministic Tree",
+        group="DTLearner",
+        datafile="Istanbul.csv",
+        seed=1481090003,
+        outputs=dict(
+            insample_corr_min=0.95,
+            outsample_corr_min=0.15,
+            insample_corr_max=0.95,
+        ),
+    ),
+    LearningTestCase(
+        description="Test Case 04: Deterministic Tree",
+        group="DTLearner",
+        datafile="Istanbul.csv",
+        seed=1481090004,
+        outputs=dict(
+            insample_corr_min=0.95,
+            outsample_corr_min=0.15,
+            insample_corr_max=0.95,
+        ),
+    ),
     # ########################
     # # RTLearner test cases #
     # ########################
@@ -299,12 +299,12 @@ def test_learners(description, group, datafile, seed, outputs, grader):
             permutation = np.random.permutation(alldata.shape[0])  		  	   		 	   		  		  		    	 		 		   		 		  
             col_permutation = np.random.permutation(alldata.shape[1] - 1)  		  	   		 	   		  		  		    	 		 		   		 		  
             train_data = alldata[permutation[:cutoff], :]  		  	   		 	   		  		  		    	 		 		   		 		  
-            # train_x = train_data[:,:-1]  		  	   		 	   		  		  		    	 		 		   		 		  
-            train_x = train_data[:, col_permutation]  		  	   		 	   		  		  		    	 		 		   		 		  
+            # train_x = train_data[:,:-1]
+            train_x = train_data[:, col_permutation]
             train_y = train_data[:, -1]  		  	   		 	   		  		  		    	 		 		   		 		  
             test_data = alldata[permutation[cutoff:], :]  		  	   		 	   		  		  		    	 		 		   		 		  
-            # test_x = test_data[:,:-1]  		  	   		 	   		  		  		    	 		 		   		 		  
-            test_x = test_data[:, col_permutation]  		  	   		 	   		  		  		    	 		 		   		 		  
+            # test_x = test_data[:,:-1]
+            test_x = test_data[:, col_permutation]
             test_y = test_data[:, -1]  		  	   		 	   		  		  		    	 		 		   		 		  
         msgs = []  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
@@ -321,9 +321,13 @@ def test_learners(description, group, datafile, seed, outputs, grader):
                 learner = clss_name(leaf_size=1, verbose=False)
                 # print(train_x.shape)
                 # print(train_y.shape)
+                print('tree is', learner)
+
                 learner.add_evidence(train_x, train_y)
                 # print('tree built')
                 insample = learner.query(train_x)
+                print('train x is', train_x[0])
+                print('train y is', train_y[0])
                 # print('test-x')
                 # print(test_x)
                 outsample = learner.query(test_x)
@@ -362,7 +366,7 @@ def test_learners(description, group, datafile, seed, outputs, grader):
             pred_y_in_50 = run_with_timeout(fiftyleaves, tree_sptc, (), {})
             print(pred_y_in.shape)
             print(np.corrcoef(pred_y_in, y=train_y))
-            print('test labels are', test_y)
+
             print(np.corrcoef(pred_y_out, y=test_y))
             corr_in = np.corrcoef(pred_y_in, y=train_y)[0, 1]  		  	   		 	   		  		  		    	 		 		   		 		  
             corr_out = np.corrcoef(pred_y_out, y=test_y)[0, 1]  		  	   		 	   		  		  		    	 		 		   		 		  

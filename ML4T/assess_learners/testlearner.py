@@ -38,7 +38,7 @@ if __name__ == "__main__":
 
         print("Usage: python LinRegLearner.py <filename>")
         sys.exit(1)
-
+    #data cleaning specifically for istanbul.csv
     inf = open(sys.argv[1])
     data = np.array([])
 
@@ -54,11 +54,15 @@ if __name__ == "__main__":
     data = np.array(arr)
 
 
+    # #code for simple csv to run
+    # inf = open(sys.argv[1])
+    # data = np.array(
+    #     [list(map(float, s.strip().split(","))) for s in inf.readlines()]
+    # )
 
 
 
-
-    # compute how much of the data is training and testing
+# compute how much of the data is training and testing
     train_rows = int(0.6 * data.shape[0])
     test_rows = data.shape[0] - train_rows
 

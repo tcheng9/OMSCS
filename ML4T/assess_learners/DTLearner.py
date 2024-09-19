@@ -24,7 +24,9 @@ GT honor code violation.
 """
 
 import numpy as np
+import sys
 
+np.set_printoptions(threshold = sys.maxsize)
 
 class DTLearner(object):
     """
@@ -39,7 +41,7 @@ class DTLearner(object):
         """
         Constructor method
         """
-        self.leaf_size = 1
+        self.leaf_size = leaf_size
         self.model = None
         pass  # move along, these aren't the drones you're looking for
 
@@ -69,13 +71,13 @@ class DTLearner(object):
         :param data_y: The value we are attempting to predict given the X data
         :type data_y: numpy.ndarray
         """
-        print('asdlakndklad')
+
 
 
 
 
         def dtAlgo(data_x, data_y):
-            # print('here')
+
             if data_x.shape[0] <= self.leaf_size: # "1" SHOULD ACTUALLY BE LEAF SIZE I THINK
                 #need to handele leaf size
 
@@ -107,7 +109,7 @@ class DTLearner(object):
 
                 right_tree = dtAlgo(right_split_x, right_split_y)
 
-                root = np.array([[i, split_val, 1, left_split_x.shape[0] + 1]])
+                root = np.array([[i, split_val, 1, left_tree.shape[0] + 1]])
                 # print('root shape is', root.shape)
                 # print('left tree shape is', left_tree.shape)
                 # print('right tree shape is', right_tree.shape)
@@ -123,7 +125,11 @@ class DTLearner(object):
 
         tree = dtAlgo(data_x, data_y)
         self.model = tree
+        # print('------------------------------')
+        # print('start of model')
         print(self.model)
+        # print('end of model')
+        # print('------------------------------')
         return tree
         # return -1
 
@@ -181,7 +187,7 @@ class DTLearner(object):
             pred = self.search(r)
 
             res = np.append(res, pred)
-        print('my predictions are',  res)
+        # print('my predictions are',  res)
         return res
 
 
@@ -228,17 +234,17 @@ if __name__ == "__main__":
     #
     # # y_train = np.array([[4],[5], [6], [5]])
     #
-    x_test = np.array([
-        [.7,.45, 10],
-        [.6, .75, 9],
-        [.3, .5, 9.5],
-    ])
+    # x_test = np.array([
+    #     [.7,.45, 10],
+    #     [.6, .75, 9],
+    #     [.3, .5, 9.5],
+    # ])
 
     learner = DTLearner()
     tree = learner.add_evidence(x_train, y_train)
-    # print(tree)
+    print(tree)
 
-    res = learner.query(x_test)
+    # res = learner.query(x_test)
     # print('res')
     # print(res)
 
