@@ -94,7 +94,7 @@ class BagLearner(object):
         :param data_y: The value we are attempting to predict given the X data
         :type data_y: numpy.ndarray
         """
-        print('placeholder')
+
 
     def query(self, test_x):
 
@@ -110,7 +110,7 @@ class BagLearner(object):
 
         for i in range(len(self.models)):
             y_pred = self.models[i].query(test_x)
-            print(y_pred)
+
             for j in range(len(y_pred)):
                 res[j] += y_pred[j]
 
@@ -123,7 +123,6 @@ class BagLearner(object):
         return res
 
 
-    # print('placeholder')
 
 
 

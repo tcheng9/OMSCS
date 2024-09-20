@@ -24,63 +24,53 @@ GT honor code violation.
 """
 
 import numpy as np
-
+import BagLearner as bl
+import LinRegLearner as lrl
 
 class InsaneLearner(object):
-    """
-    This is a Linear Regression Learner. It is implemented correctly.
-
-    :param verbose: If “verbose” is True, your code can print out information for debugging.
-        If verbose = False your code should not generate ANY output. When we test your code, verbose will be False.
-    :type verbose: bool
-    """
-
     def __init__(self, verbose=False):
-        """
-        Constructor method
-        """
-        pass  # move along, these aren't the drones you're looking for
-
+        self.models = []
     def author(self):
-        """
-        :return: The GT username of the student
-        :rtype: str
-        """
         return "tcheng99"  # replace tb34 with your Georgia Tech username
-
-
     def add_evidence(self, data_x, data_y):
-        """
-        Add training data to learner
+        for i in range(20):
+            model = bl.BagLearner(learner = lrl.LinRegLearner, kwargs = {},  bags = 20, boost = False, verbose = False)
+            model.add_evidence(data_x, data_y)
+            self.models.append(model)
+    def query(self, test_x):
+        res = np.array([0] * test_x.shape[0])
+        for i in range(len(self.models)):
+            y_pred = self.models[i].query(test_x)
+            for j in range(len(y_pred)):
+                res[j] += y_pred[j]
+        for i in range(test_x.shape[0]):
+            res[i] = res[i] / len(self.models)
+        return res
 
-        :param data_x: A set of feature values used to train the learner
-        :type data_x: numpy.ndarray
-        :param data_y: The value we are attempting to predict given the X data
-        :type data_y: numpy.ndarray
-        """
-
-        # slap on 1s column so linear regression finds a constant term
-        new_data_x = np.ones([data_x.shape[0], data_x.shape[1] + 1])
-        new_data_x[:, 0: data_x.shape[1]] = data_x
-
-        # build and save the model
-        self.model_coefs, residuals, rank, s = np.linalg.lstsq(
-            new_data_x, data_y, rcond=None
-        )
-
-    def query(self, points):
-        """
-        Estimate a set of test points given the model we built.
-
-        :param points: A numpy array with each row corresponding to a specific query.
-        :type points: numpy.ndarray
-        :return: The predicted result of the input data according to the trained model
-        :rtype: numpy.ndarray
-        """
-        return (self.model_coefs[:-1] * points).sum(axis=1) + self.model_coefs[
-            -1
-        ]
 
 
 if __name__ == "__main__":
     print("the secret clue is 'zzyzx'")
+
+    x_train = np.array([
+        [.885, .330, 9.1],
+        [.725, .39, 10.9],
+        [.560, .5, 9.4],
+        [.735, .570, 9.8],
+        [.610, .630, 8.4],
+        [.260, .630, 11.8],
+        [.5, .68, 10.5],
+        [.320, .780, 10]
+
+    ])
+
+    x_test = np.array([
+        [.7, .45, 10],
+        [.6, .75, 9],
+        [.3, .5, 9.5],
+    ])
+    y_train = np.array([4, 5, 6, 5, 3, 8, 7, 6])
+
+    learner = InsaneLearner()
+    learner.add_evidence(x_train, y_train)
+    learner.query(x_test)

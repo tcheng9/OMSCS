@@ -65,9 +65,9 @@ LearningTestCase = namedtuple(
     "LearningTestCase", ["description", "group", "datafile", "seed", "outputs"]  		  	   		 	   		  		  		    	 		 		   		 		  
 )  		  	   		 	   		  		  		    	 		 		   		 		  
 learning_test_cases = [
-    ########################
+    #######################
     # DTLearner test cases #
-    ########################
+    #######################
     LearningTestCase(
         description="Test Case 01: Deterministic Tree",
         group="DTLearner",
@@ -221,21 +221,21 @@ learning_test_cases = [
     # ##############################
     # # RandomName + InsaneLearner #
     # ##############################
-    # LearningTestCase(
-    #     description="InsaneLearner Test Case",
-    #     group="InsaneLearner",
-    #     datafile="simple.csv",
-    #     seed=1498076428,
-    #     outputs=None,
-    # ),
-    # LearningTestCase(
-    #     description="Random Classname Test Case",
-    #     group="RandomName",
-    #     datafile="simple.csv",
-    #     seed=1498076428,
-    #     outputs=None,
-    # ),
-]  		  	   		 	   		  		  		    	 		 		   		 		  
+    LearningTestCase(
+        description="InsaneLearner Test Case",
+        group="InsaneLearner",
+        datafile="simple.csv",
+        seed=1498076428,
+        outputs=None,
+    ),
+    LearningTestCase(
+        description="Random Classname Test Case",
+        group="RandomName",
+        datafile="simple.csv",
+        seed=1498076428,
+        outputs=None,
+    ),
+]
   		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
 # Test functon(s)  		  	   		 	   		  		  		    	 		 		   		 		  
