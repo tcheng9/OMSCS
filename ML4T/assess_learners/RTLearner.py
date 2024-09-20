@@ -119,7 +119,7 @@ class RTLearner(object):
         tree = dtAlgo(data_x, data_y)
         self.model = tree
 
-        print(tree)
+        # print(tree)
         return tree
         # return -1
 

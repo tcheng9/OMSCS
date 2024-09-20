@@ -24,26 +24,23 @@ GT honor code violation.
 """
 
 import numpy as np
-
+import DTLearner as dtl
+import RTLearner as rtl
+import LinRegLearner as lrl
 
 class BagLearner(object):
-    """
-    This is a Linear Regression Learner. It is implemented correctly.
 
-    :param verbose: If “verbose” is True, your code can print out information for debugging.
-        If verbose = False your code should not generate ANY output. When we test your code, verbose will be False.
-    :type verbose: bool
-    """
 
     def __init__(self, learner, kwargs = {"argument1":1, "argument2":2}, bags = 20, boost = False, verbose=False):
         """
         Constructor method
         """
-        self.learner = learner
-        self.kwargs = kwargs
-        self.bags =bags
-        self.boost = boost
-        self.verbose = verbose
+        self.learner = learner #select a specific model to use
+        self.kwargs = kwargs #parameters per model (ie 1 model uses 1 leaf_size, 2nd model uses 10 leaf_size
+        self.bags =bags #number of models to create
+        self.boost = boost #don't use
+        self.verbose = verbose #optional to use
+        self.models = []
         pass  # move along, these aren't the drones you're looking for
 
     def author(self):
@@ -55,7 +52,40 @@ class BagLearner(object):
 
     def study_group(self):
         return 'tcheng99'
+
+
+    def resample(self, data_x, data_y):
+        subsample_x = np.empty((0, data_x.shape[1]))
+        subsample_y = np.array([])
+        resample = int(0.6 * data_x.shape[0])
+        for i in range(resample):
+            random_row = np.random.randint(0, data_x.shape[0])
+
+            # print('random index is', random_row)
+
+            subsample_x = np.vstack((subsample_x, data_x[random_row, :]))
+            subsample_y = np.append(subsample_y, data_y[random_row])
+
+        return subsample_x, subsample_y
     def add_evidence(self, data_x, data_y):
+        learners = []
+
+
+        for i in range(0, self.bags):
+
+            # sample_x, sample_y = self.resample(data_x, data_y)
+            learners.append(self.learner(**self.kwargs))
+
+
+        for i in range(0, self.bags):
+            sample_x, sample_y = self.resample(data_x, data_y)
+            learners[i].add_evidence(sample_x, sample_y)
+
+
+        self.models = learners
+
+
+
         """
         Add training data to learner
 
@@ -64,17 +94,10 @@ class BagLearner(object):
         :param data_y: The value we are attempting to predict given the X data
         :type data_y: numpy.ndarray
         """
+        print('placeholder')
 
-        # slap on 1s column so linear regression finds a constant term
-        new_data_x = np.ones([data_x.shape[0], data_x.shape[1] + 1])
-        new_data_x[:, 0: data_x.shape[1]] = data_x
+    def query(self, test_x):
 
-        # build and save the model
-        self.model_coefs, residuals, rank, s = np.linalg.lstsq(
-            new_data_x, data_y, rcond=None
-        )
-
-    def query(self, points):
         """
         Estimate a set of test points given the model we built.
 
@@ -83,10 +106,33 @@ class BagLearner(object):
         :return: The predicted result of the input data according to the trained model
         :rtype: numpy.ndarray
         """
-        return (self.model_coefs[:-1] * points).sum(axis=1) + self.model_coefs[
-            -1
-        ]
+        for i in range(len(self.models)):
+            y = self.models[i].query(test_x)
+
+    # print('placeholder')
+
 
 
 if __name__ == "__main__":
     print("the secret clue is 'zzyzx'")
+    x_train = np.array([
+        [.885, .330, 9.1],
+        [.725, .39, 10.9],
+        [.560, .5, 9.4],
+        [.735, .570, 9.8],
+        [.610, .630, 8.4],
+        [.260, .630, 11.8],
+        [.5, .68, 10.5],
+        [.320, .780, 10]
+
+    ])
+
+    x_test = np.array([
+        [.7,.45, 10],
+        [.6, .75, 9],
+        [.3, .5, 9.5],
+    ])
+    y_train = np.array([4, 5, 6, 5, 3, 8, 7, 6])
+    bagger  = BagLearner(learner = dtl.DTLearner, kwargs = {"leaf_size":1}, bags = 10, boost = False, verbose = False)
+    bagger.add_evidence(x_train, y_train)
+    bagger.query(x_test)
