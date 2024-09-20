@@ -106,8 +106,22 @@ class BagLearner(object):
         :return: The predicted result of the input data according to the trained model
         :rtype: numpy.ndarray
         """
+        res = np.array([0] * test_x.shape[0])
+
         for i in range(len(self.models)):
-            y = self.models[i].query(test_x)
+            y_pred = self.models[i].query(test_x)
+            print(y_pred)
+            for j in range(len(y_pred)):
+                res[j] += y_pred[j]
+
+
+        for i in range(test_x.shape[0]):
+            # print(res[i])
+            # print(test_x.shape[0])
+            res[i] = res[i] / self.bags
+
+        return res
+
 
     # print('placeholder')
 
