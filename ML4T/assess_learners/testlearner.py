@@ -41,11 +41,11 @@ def print_five():
     print(5)
 
 def resample(data_x, data_y):
-    np.random.seed(0)
+
     subsample_x = np.empty((0, data_x.shape[1]))
     subsample_y = np.array([])
     resample = int(0.6 * data_x.shape[0])
-    for i in range(resample):
+    for z in range(resample):
         random_row = np.random.randint(0, data_x.shape[0])
 
         # print('random index is', random_row)
@@ -62,6 +62,7 @@ if __name__ == "__main__":
         print("Usage: python LinRegLearner.py <filename>")
         sys.exit(1)
     #data cleaning specifically for istanbul.csv
+    np.random.seed(0)
     inf = open(sys.argv[1])
     data = np.array([])
 
@@ -104,76 +105,102 @@ if __name__ == "__main__":
 
     print(f"{test_x.shape}")
     print(f"{test_y.shape}")
-    train_x, train_y = resample(train_x, train_y)
-    test_x, test_y = resample(test_x, test_y)
+
     '''
     
     Experiment 1
     
     '''
+    # train_x, train_y = resample(train_x, train_y)
+    # test_x, test_y = resample(test_x, test_y)
+    # leaf_sizes = []
+    # rmse_records_in = []
+    # rmse_records_out = []
+    #
+    # print('running exp 1 - dt learner')
+    # # create a learner and train it
+    # # learner = lrl.LinRegLearner(verbose=True)  # create a LinRegLearner
+    #
+    # # for i in range(len(leaf_size)):
+    # for i in range(1, 100):
+    #     learner = dtl.DTLearner(leaf_size = i)
+    #     learner.add_evidence(train_x, train_y)  # train it
+    #
+    #
+    #     #insample calcs
+    #     pred_y = learner.query(train_x)
+    #     rmse_in = math.sqrt(((train_y - pred_y) ** 2).sum() / train_y.shape[0])
+    #
+    #
+    #     rmse_records_in.append(rmse_in)
+    #     leaf_sizes.append(i)
+    #
+    #     #out of sample calc
+    #
+    #     pred_y = learner.query(test_x)
+    #     rmse_out = math.sqrt(((test_y - pred_y) ** 2).sum() / test_y.shape[0])
+    #     rmse_records_out.append(rmse_out)
+    #
+    #
+    #
+    # plt.plot(leaf_sizes, rmse_records_in, label = "insample")
+    # plt.plot(leaf_sizes, rmse_records_out, label = "out of sample")
+    # plt.legend()
+    # plt.title('exp 1 - dt learner')
+    # plt.text(100, 0.005, 'tcheng99@gatech.edu', fontsize = 40, color = 'gray')
+    # plt.xlim(100, 0)
+    # plt.xlabel('leaf size')
+    # plt.ylabel('rmse')
+    # plt.show()
+    # # plt.savefig('exp1.png')
+    # plt.close()
+
+    '''
+    Experiment 2
+    '''
+
+
+    print('running exp 2 - bagging ')
+
+
+
     leaf_sizes = np.array([])
     rmse_records_in = np.array([])
-    corr_records_in = np.array([])
     rmse_records_out = np.array([])
-    corr_records_out = np.array([])
-    # create a learner and train it
-    # learner = lrl.LinRegLearner(verbose=True)  # create a LinRegLearner
 
-    # for i in range(len(leaf_size)):
-    for i in range(1, 100):
-        learner = dtl.DTLearner(leaf_size = i)
+    learners = []
+    for k in range(100):
+
+        learner = bl.BagLearner(learner = dtl.DTLearner, kwargs = {"leaf_size":k}, bags = 10, boost = False, verbose = False)
         learner.add_evidence(train_x, train_y)  # train it
+        learners.append(learner)
 
-
+    for i in range(100):
+        learner = learners[i]
         pred_y = learner.query(train_x)
         rmse_in = math.sqrt(((train_y - pred_y) ** 2).sum() / train_y.shape[0])
 
         rmse_records_in = np.append(rmse_records_in, rmse_in)
         leaf_sizes = np.append(leaf_sizes, i)
 
-
         pred_y = learner.query(test_x)
         rmse_out = math.sqrt(((test_y - pred_y) ** 2).sum() / test_y.shape[0])
 
         rmse_records_out = np.append(rmse_records_out, rmse_out)
-
-
-        #     # # evaluate in sample
-        # pred_y = learner.query(train_x)  # get the predictions
-        #
-        #
-        # rmse_in = math.sqrt(((train_y - pred_y) ** 2).sum() / train_y.shape[0])
-        # rmse_records_in = np.append(rmse_records_in, rmse_in)
-        # leaf_sizes = np.append(leaf_sizes, i)
-        # print("In sample results")
-        # print(f"RMSE: {rmse_in}")
-        # print(rmse_records_in)
-
-        # c = np.corrcoef(pred_y, y=train_y)
-        # print(f"corr: {c[0,1]}")
-
-        # evaluate out of sample
-        # pred_y = learner.query(test_x)  # get the predictions
-        #
-        # rmse_out = math.sqrt(((test_y - pred_y) ** 2).sum() / test_y.shape[0])
-        # rmse_records_out = np.append(rmse_records_out, rmse_out)
-
-    print(rmse_records_in.shape)
-    print(rmse_records_out.shape)
-
-    plt.plot(leaf_sizes, rmse_records_in, label = "insample")
-    plt.plot(leaf_sizes, rmse_records_out, label = "out of sample")
+    print(rmse_records_in)
+    print('---')
+    print(rmse_records_out)
+    plt.plot(leaf_sizes, rmse_records_in, label="insample")
+    plt.plot(leaf_sizes, rmse_records_out, label="out of sample")
+    plt.text(100, 0.0120, 'tcheng99@gatech.edu', fontsize=40, color='gray', rotation = 0)
+    plt.text(100, 0.0080, 'tcheng99@gatech.edu', fontsize=40, color='gray', rotation=0)
     plt.legend()
+    plt.title('exp 2 - bagging algo')
     plt.xlim(100, 0)
     plt.xlabel('leaf size')
     plt.ylabel('rmse')
-    plt.show()
-
-
-
-    '''
-    Experiment 2
-    '''
+    # plt.show()
+    plt.savefig('exp2.png')
 
 
 '''
@@ -198,3 +225,23 @@ mean rmse
         mean_rmse_out= rmse_out / 10
         rmse_records_out = np.append(rmse_records_out, rmse_out)
 '''
+
+#     # # evaluate in sample
+# pred_y = learner.query(train_x)  # get the predictions
+#
+#
+# rmse_in = math.sqrt(((train_y - pred_y) ** 2).sum() / train_y.shape[0])
+# rmse_records_in = np.append(rmse_records_in, rmse_in)
+# leaf_sizes = np.append(leaf_sizes, i)
+# print("In sample results")
+# print(f"RMSE: {rmse_in}")
+# print(rmse_records_in)
+
+# c = np.corrcoef(pred_y, y=train_y)
+# print(f"corr: {c[0,1]}")
+
+# evaluate out of sample
+# pred_y = learner.query(test_x)  # get the predictions
+#
+# rmse_out = math.sqrt(((test_y - pred_y) ** 2).sum() / test_y.shape[0])
+# rmse_records_out = np.append(rmse_records_out, rmse_out)

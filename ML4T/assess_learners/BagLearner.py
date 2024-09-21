@@ -128,6 +128,7 @@ class BagLearner(object):
 
 if __name__ == "__main__":
     print("the secret clue is 'zzyzx'")
+    # class test case
     x_train = np.array([
         [.885, .330, 9.1],
         [.725, .39, 10.9],
@@ -140,12 +141,32 @@ if __name__ == "__main__":
 
     ])
 
+    y_train = np.array([4, 5, 6, 5, 3, 8, 7, 6])
+    # ## infinite recursion test case
+    # # x_train = np.array([
+    # #     [.885,.330, 9.1],
+    # #     [.725, .39, 10],
+    # #     [.560, .5, 10],
+    # #     [.735, .570,10],
+    # #
+    # #
+    # # ])
+    #
+    #
+    # # y_train = np.array([[4],[5], [6], [5]])
+    #
     x_test = np.array([
-        [.7,.45, 10],
+        [.7, .45, 10],
         [.6, .75, 9],
         [.3, .5, 9.5],
     ])
+
+
+
+
+
     y_train = np.array([4, 5, 6, 5, 3, 8, 7, 6])
     bagger  = BagLearner(learner = dtl.DTLearner, kwargs = {"leaf_size":1}, bags = 10, boost = False, verbose = False)
     bagger.add_evidence(x_train, y_train)
-    bagger.query(x_test)
+    res = bagger.query(x_test)
+    print(res)

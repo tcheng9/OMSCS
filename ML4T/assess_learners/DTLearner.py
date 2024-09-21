@@ -224,19 +224,19 @@ if __name__ == "__main__":
     #
     # # y_train = np.array([[4],[5], [6], [5]])
     #
-    # x_test = np.array([
-    #     [.7,.45, 10],
-    #     [.6, .75, 9],
-    #     [.3, .5, 9.5],
-    # ])
+    x_test = np.array([
+        [.7,.45, 10],
+        [.6, .75, 9],
+        [.3, .5, 9.5],
+    ])
 
     learner = DTLearner()
     tree = learner.add_evidence(x_train, y_train)
 
     print(tree)
-    # res = learner.query(x_test)
+    res = learner.query(x_test)
 
-
+    print(res)
 
 # lin reg code
 # self.model_coefs, residuals, rank, s = np.linalg.lstsq(
