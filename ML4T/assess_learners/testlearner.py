@@ -121,23 +121,20 @@ if __name__ == "__main__":
 
     # for i in range(len(leaf_size)):
     for i in range(1, 100):
-        # print_five()
         learner = dtl.DTLearner(leaf_size = i)
-
         learner.add_evidence(train_x, train_y)  # train it
-        rmse_in = 0
-        for j in range(10):
-            pred_y = learner.query(train_x)
-            rmse_in += math.sqrt(((train_y - pred_y) ** 2).sum() / train_y.shape[0])
-        mean_rmse_in = rmse_in / 10
+
+
+        pred_y = learner.query(train_x)
+        rmse_in = math.sqrt(((train_y - pred_y) ** 2).sum() / train_y.shape[0])
+
         rmse_records_in = np.append(rmse_records_in, rmse_in)
         leaf_sizes = np.append(leaf_sizes, i)
 
-        rmse_out = 0
-        for j in range(10):
-            pred_y = learner.query(test_x)
-            rmse_out += math.sqrt(((test_y - pred_y) ** 2).sum() / test_y.shape[0])
-        mean_rmse_out= rmse_out / 10
+
+        pred_y = learner.query(test_x)
+        rmse_out = math.sqrt(((test_y - pred_y) ** 2).sum() / test_y.shape[0])
+
         rmse_records_out = np.append(rmse_records_out, rmse_out)
 
 
@@ -164,10 +161,40 @@ if __name__ == "__main__":
     print(rmse_records_in.shape)
     print(rmse_records_out.shape)
 
-    plt.plot(leaf_sizes, rmse_records_in)
-    plt.plot(leaf_sizes, rmse_records_out)
+    plt.plot(leaf_sizes, rmse_records_in, label = "insample")
+    plt.plot(leaf_sizes, rmse_records_out, label = "out of sample")
+    plt.legend()
+    plt.xlim(100, 0)
     plt.xlabel('leaf size')
     plt.ylabel('rmse')
     plt.show()
 
 
+
+    '''
+    Experiment 2
+    '''
+
+
+'''
+mean rmse
+    for i in range(1, 100):
+        # print_five()
+        learner = dtl.DTLearner(leaf_size = i)
+
+        learner.add_evidence(train_x, train_y)  # train it
+        rmse_in = 0
+        for j in range(10):
+            pred_y = learner.query(train_x)
+            rmse_in += math.sqrt(((train_y - pred_y) ** 2).sum() / train_y.shape[0])
+        mean_rmse_in = rmse_in / 10
+        rmse_records_in = np.append(rmse_records_in, rmse_in)
+        leaf_sizes = np.append(leaf_sizes, i)
+
+        rmse_out = 0
+        for j in range(10):
+            pred_y = learner.query(test_x)
+            rmse_out += math.sqrt(((test_y - pred_y) ** 2).sum() / test_y.shape[0])
+        mean_rmse_out= rmse_out / 10
+        rmse_records_out = np.append(rmse_records_out, rmse_out)
+'''
