@@ -31,6 +31,8 @@ import numpy as np
 import LinRegLearner as lrl  		  	   		 	   		  		  		    	 		 		   		 		  
 import DTLearner as dtl
 import RTLearner as rtl
+import BagLearner as bl
+import InsaneLearner as il
 
 if __name__ == "__main__":
 
@@ -89,25 +91,10 @@ if __name__ == "__main__":
 
     rmse = math.sqrt(((train_y - pred_y) ** 2).sum() / train_y.shape[0])
 
-    # print("In sample results")
-    # print(f"RMSE: {rmse}")
-    # print('-------------pred y------------')
-    # print(pred_y.shape)
-    # print('--------------train y--------------')
-    # print(train_y.shape)
-    # # print(np.isnan(pred_y).sum(), np.isnan(train_y).sum())
-    # pred_y.flatten()
-    # np.array(train_y.flatten())
-    # print(pred_y.shape)
-    # print(train_y.shape)
+    print("In sample results")
+    print(f"RMSE: {rmse}")
 
-    #
-    # train_y = train_y.flatten()
-    # pred_y = pred_y.flatten()
-    # print(train_y)
-    # print(pred_y)
-    # print('pred y', pred_y)
-    # print('train_y', train_y)
+
     c = np.corrcoef(pred_y, y=train_y)
     print(f"corr: {c[0,1]}")
 
@@ -118,9 +105,7 @@ if __name__ == "__main__":
 
     print("Out of sample results")
     print(f"RMSE: {rmse}")
-    test_y = test_y.flatten()
-    pred_y = pred_y.flatten()
-    # test_y = test
+
 
     c = np.corrcoef(pred_y, y=test_y)
     print(f"corr: {c[0,1]}")

@@ -26,7 +26,6 @@ GT honor code violation.
 import numpy as np
 import BagLearner as bl
 import LinRegLearner as lrl
-
 class InsaneLearner(object):
     def __init__(self, verbose=False):
         self.models = []
@@ -38,39 +37,10 @@ class InsaneLearner(object):
             model.add_evidence(data_x, data_y)
             self.models.append(model)
     def query(self, test_x):
+        #shortened version
         res = np.array([0] * test_x.shape[0])
         for i in range(len(self.models)):
             y_pred = self.models[i].query(test_x)
             for j in range(len(y_pred)):
                 res[j] += y_pred[j]
-        for i in range(test_x.shape[0]):
-            res[i] = res[i] / len(self.models)
-        return res
-
-
-
-if __name__ == "__main__":
-    print("the secret clue is 'zzyzx'")
-
-    x_train = np.array([
-        [.885, .330, 9.1],
-        [.725, .39, 10.9],
-        [.560, .5, 9.4],
-        [.735, .570, 9.8],
-        [.610, .630, 8.4],
-        [.260, .630, 11.8],
-        [.5, .68, 10.5],
-        [.320, .780, 10]
-
-    ])
-
-    x_test = np.array([
-        [.7, .45, 10],
-        [.6, .75, 9],
-        [.3, .5, 9.5],
-    ])
-    y_train = np.array([4, 5, 6, 5, 3, 8, 7, 6])
-
-    learner = InsaneLearner()
-    learner.add_evidence(x_train, y_train)
-    learner.query(x_test)
+        return [num / len(self.models) for num in res]
