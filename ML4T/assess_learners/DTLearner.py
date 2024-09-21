@@ -233,7 +233,7 @@ if __name__ == "__main__":
     learner = DTLearner()
     tree = learner.add_evidence(x_train, y_train)
 
-
+    print(tree)
     # res = learner.query(x_test)
 
 
