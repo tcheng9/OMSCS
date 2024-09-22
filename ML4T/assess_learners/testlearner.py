@@ -40,6 +40,10 @@ import time
 def print_five():
     print(5)
 
+def mae_calc(exp_y, true_y):
+    mae = np.sum(abs(exp_y - true_y) / true_y.shape[0])
+
+    return mae
 def resample(data_x, data_y):
 
     subsample_x = np.empty((0, data_x.shape[1]))
@@ -241,83 +245,98 @@ if __name__ == "__main__":
     '''
     experiment 3a - Time to build
     '''
-    #vanilla python version
-    # leaf_sizes = []
-    # build_times = []
-    # dt_learners = []
-    # rt_learners = []
-    # #model inits
-    # for i in range(0):
-    #     #DT learner setup
-    #     dt_learner = dtl.DTLearner(leaf_size = i)
-    #     start_time = time.time()
-    #     dt_learner.add_evidence(train_x, train_y)
-    #     end_time = time.time()
-    #     dt_learners.append(dt_learner)
-    #     print('dt tree time to build is', (end_time - start_time))
-    #
-    #     # #RT learner setup
-    #     rt_learner = rtl.RTLearner(leaf_size = i)
-    #     start_time = time.time()
-    #     rt_learner.add_evidence(train_x, train_y)
-    #     end_time = time.time()
-    #     rt_learners.append(rt_learner)
-    #     print('rt tree time to build is', (end_time - start_time))
-    #
-    #
+
     #np metod
-    leaf_sizes = np.empty((1, 80))
-    build_times = np.empty((2, 80), dtype = float)
-    learners = np.empty((2, 80), dtype = object) #row 1 = DT, row 2 = RT
-
-    # model inits
-    for i in range(80):
-        #leaf sie
-
-        leaf_sizes[0, i] = i
-        # DT learner setup
-        learner = dtl.DTLearner(leaf_size=i)
-        start_time = time.time()
-        learner.add_evidence(train_x, train_y)
-        end_time = time.time()
-        learners[0, i] = learner
-        # print('dt tree time to build is', (end_time - start_time))
-        time_diff = end_time - start_time
-        build_times[0, i] = time_diff
-        # print(learners)
-        # print(build_times)
-        #RT learner setup
-
-        learner = rtl.RTLearner(leaf_size=i)
-        start_time = time.time()
-        learner.add_evidence(train_x, train_y)
-        end_time = time.time()
-        learners[1, i] = learner
-        # print('dt tree time to build is', (end_time - start_time))
-        time_diff = end_time - start_time
-        build_times[1, i] = time_diff
-    # print(leaf_sizes)
-    # print(learners)
-    # print(build_times)
-
-    #Training models
+    # leaf_sizes = np.empty((1, 80))
+    # build_times = np.empty((2, 80), dtype = float)
+    # learners = np.empty((2, 80), dtype = object) #row 1 = DT, row 2 = RT
+    #
+    # # model inits
     # for i in range(80):
-    #     #DT learner
-    #     print('placeholder')
-    # leaf_sizes.reshape(-1)
-    # print(build_times[0, :].reshape(1, -1))
-    a = build_times[0, :].reshape(1, -1)
-    # print(a)
-    # print(leaf_sizes)
-    plt.plot(leaf_sizes[0, :], build_times[0, :], label = 'dtlearner')
-    plt.plot(leaf_sizes[0, :], build_times[1, :], label='rtlearner')
-    plt.legend()
-    plt.title('exp 3 - time to train')
-    plt.xlabel('leaf sizes')
-    plt.ylabel('time to train')
-    plt.show()
+    #     #leaf sie
+    #
+    #     leaf_sizes[0, i] = i
+    #     # DT learner setup
+    #     learner = dtl.DTLearner(leaf_size=i)
+    #     start_time = time.time()
+    #     learner.add_evidence(train_x, train_y)
+    #     end_time = time.time()
+    #     learners[0, i] = learner
+    #     # print('dt tree time to build is', (end_time - start_time))
+    #     time_diff = end_time - start_time
+    #     build_times[0, i] = time_diff
+    #     # print(learners)
+    #     # print(build_times)
+    #     #RT learner setup
+    #
+    #     learner = rtl.RTLearner(leaf_size=i)
+    #     start_time = time.time()
+    #     learner.add_evidence(train_x, train_y)
+    #     end_time = time.time()
+    #     learners[1, i] = learner
+    #     # print('dt tree time to build is', (end_time - start_time))
+    #     time_diff = end_time - start_time
+    #     build_times[1, i] = time_diff
+    # # print(leaf_sizes)
+    # # print(learners)
+    # # print(build_times)
+    #
+    # #Training models
+    #
+    # plt.plot(leaf_sizes[0, :], build_times[0, :], label = 'dtlearner')
+    # plt.plot(leaf_sizes[0, :], build_times[1, :], label='rtlearner')
+    # plt.legend()
+    # plt.title('exp 3 - time to train')
+    # plt.xlabel('leaf sizes')
+    # plt.ylabel('time to train')
+    # plt.show()
+
 
     '''
     experiment 3b - mean absolute error
     '''
 
+    # np metod
+    leaf_sizes = np.empty((1, 80))
+    maes = np.empty((2, 80), dtype=float)
+    learners = np.empty((2, 80), dtype=object)  # row 1 = DT, row 2 = RT
+
+    # model inits
+    for i in range(80):
+        # leaf sie
+
+        leaf_sizes[0, i] = i
+        # DT learner setup
+        learner = dtl.DTLearner(leaf_size=i)
+        learner.add_evidence(train_x, train_y)
+        learners[0, i] = learner
+
+
+
+        # RT learner setup
+
+        learner = rtl.RTLearner(leaf_size=i)
+        learner.add_evidence(train_x, train_y)
+        learners[1, i] = learner
+
+    #predictions
+    print('test_y shape is', test_y.shape)
+    for i in range(80):
+        y_pred = learners[0, i].query(test_x)
+        mae = np.sum(np.absolute((test_y, y_pred))) / test_y.shape[0]
+        print(mae)
+        maes[0, i] = mae
+
+        # #DTlearner mae
+        # y_pred = learners[0, i].query(test_x)
+        # mae = mae_calc(y_pred, test_y)
+        # maes[0, i] = mae
+        #
+        # #RTlearner mae
+        # y_pred = learners[1, i].query(test_x)
+        # mae = mae_calc(y_pred, test_y)
+        # maes[1, i] = mae
+
+    plt.plot(leaf_sizes[0, :], maes[0, :], label = 'dt out mean absolute error')
+    # plt.plot(leaf_sizes[0, :], maes[1, :], label='rt out mean absolute error')
+    plt.show()
