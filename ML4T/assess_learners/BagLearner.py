@@ -106,12 +106,13 @@ class BagLearner(object):
         :return: The predicted result of the input data according to the trained model
         :rtype: numpy.ndarray
         """
-        res = np.array([0] * test_x.shape[0])
+        res = np.array([float(0)] * test_x.shape[0])
 
         for i in range(len(self.models)):
             y_pred = self.models[i].query(test_x)
-
+            # print(y_pred.shape)
             for j in range(len(y_pred)):
+                # print(y_pred[j])
                 res[j] += y_pred[j]
 
 
@@ -130,18 +131,27 @@ if __name__ == "__main__":
     print("the secret clue is 'zzyzx'")
     # class test case
     x_train = np.array([
-        [.885, .330, 9.1],
-        [.725, .39, 10.9],
-        [.560, .5, 9.4],
-        [.735, .570, 9.8],
-        [.610, .630, 8.4],
-        [.260, .630, 11.8],
-        [.5, .68, 10.5],
-        [.320, .780, 10]
-
+        [.006508992, .000703323, .027263206],
+        [.008070571, .008364512, .010298404],
+        [.011703446, .019054811, .010298404],
+        [.002294509, .011703446, .019054811],
+        [.00540756, .008294571, .029936576],
+        [.022378302, .011999815, .001498313],
+        [.011166484, .002812079, .025962189],
+        [0.010573187, 0.013050445, 0.0048923]
     ])
 
-    y_train = np.array([4, 5, 6, 5, 3, 8, 7, 6])
+
+
+    y_train = np.array([
+        .000841483,
+        0.00213008,
+        -0.017031881,
+        0.023405287,
+        0.008160491,
+        -0.010673606,
+        0.000841483,
+        0.008160491])
     # ## infinite recursion test case
     # # x_train = np.array([
     # #     [.885,.330, 9.1],
@@ -155,18 +165,22 @@ if __name__ == "__main__":
     #
     # # y_train = np.array([[4],[5], [6], [5]])
     #
+    # x_test = np.array([
+    #     [.7, .45, 10],
+    #     [.6, .75, 9],
+    #     [.3, .5, 9.5],
+    # ])
+
+
     x_test = np.array([
-        [.7, .45, 10],
-        [.6, .75, 9],
-        [.3, .5, 9.5],
+        [0.002929655, 0.006462161, -0.008567381],
+        [0.011719598, 0.02094488, -0.001478936],
+        [0.015786402, 0.020041017, 0.021217576],
+
     ])
 
 
 
-
-
-    y_train = np.array([4, 5, 6, 5, 3, 8, 7, 6])
     bagger  = BagLearner(learner = dtl.DTLearner, kwargs = {"leaf_size":1}, bags = 10, boost = False, verbose = False)
     bagger.add_evidence(x_train, y_train)
     res = bagger.query(x_test)
-    print(res)

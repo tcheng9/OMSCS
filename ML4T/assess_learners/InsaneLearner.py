@@ -37,9 +37,10 @@ class InsaneLearner(object):
             model.add_evidence(data_x, data_y)
             self.models.append(model)
     def query(self, test_x):
-        res = np.array([0] * test_x.shape[0])
+        res = np.array([float(0)] * test_x.shape[0])
         for i in range(len(self.models)):
             y_pred = self.models[i].query(test_x)
             for j in range(len(y_pred)):
                 res[j] += y_pred[j]
         return [num / len(self.models) for num in res]
+

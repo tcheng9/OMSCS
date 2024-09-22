@@ -100,11 +100,37 @@ if __name__ == "__main__":
 
     test_x = data[train_rows:, 0:-1]
     test_y = data[train_rows:, -1]
-    # test_x, test_y = resample(test_x, test_y)
-    # train_y = train_y.reshape(-1, 1)
+
+    '''
+    SHUFFLE THE DATA 1 time
+    '''
+    train_x, train_y = resample(train_x, train_y)
+    test_x, test_y = resample(test_x, test_y)
 
     print(f"{test_x.shape}")
     print(f"{test_y.shape}")
+    #
+    # '''
+    # Insane learner test
+    # '''
+    #
+    # # for i in range(len(leaf_size)):
+    #
+    # learner = il.InsaneLearner()
+    # learner.add_evidence(train_x, train_y)  # train it
+    #
+    #
+    # pred_y = learner.query(train_x)
+    # rmse_in = math.sqrt(((train_y - pred_y) ** 2).sum() / train_y.shape[0])
+    #
+    # print(rmse_in)
+    #
+    #     # out of sample calc
+    #
+    # pred_y = learner.query(test_x)
+    # rmse_out = math.sqrt(((test_y - pred_y) ** 2).sum() / test_y.shape[0])
+    # print(rmse_out)
+    #
 
     '''
     
@@ -155,9 +181,9 @@ if __name__ == "__main__":
     # # plt.savefig('exp1.png')
     # plt.close()
 
-    '''
-    Experiment 2
-    '''
+    # '''
+    # Experiment 2
+    # '''
 
 
     print('running exp 2 - bagging ')
@@ -169,13 +195,13 @@ if __name__ == "__main__":
     rmse_records_out = np.array([])
 
     learners = []
-    for k in range(100):
+    for k in range(80):
 
-        learner = bl.BagLearner(learner = dtl.DTLearner, kwargs = {"leaf_size":k}, bags = 10, boost = False, verbose = False)
+        learner = bl.BagLearner(learner = dtl.DTLearner, kwargs = {"leaf_size":k}, bags = 20, boost = False, verbose = False)
         learner.add_evidence(train_x, train_y)  # train it
         learners.append(learner)
 
-    for i in range(100):
+    for i in range(80):
         learner = learners[i]
         pred_y = learner.query(train_x)
         rmse_in = math.sqrt(((train_y - pred_y) ** 2).sum() / train_y.shape[0])
@@ -190,6 +216,8 @@ if __name__ == "__main__":
     print(rmse_records_in)
     print('---')
     print(rmse_records_out)
+    print(leaf_sizes)
+    print(rmse_records_in)
     plt.plot(leaf_sizes, rmse_records_in, label="insample")
     plt.plot(leaf_sizes, rmse_records_out, label="out of sample")
     plt.text(100, 0.0120, 'tcheng99@gatech.edu', fontsize=40, color='gray', rotation = 0)
@@ -199,8 +227,22 @@ if __name__ == "__main__":
     plt.xlim(100, 0)
     plt.xlabel('leaf size')
     plt.ylabel('rmse')
-    # plt.show()
+    plt.show()
     plt.savefig('exp2.png')
+
+
+    '''
+    experiment 3
+    '''
+    #https://pythonhow.com/how/measure-elapsed-time-in-python/
+
+    '''
+    experiment 3a - Time to build
+    '''
+
+    '''
+    experiment 3b - mean absolute error
+    '''
 
 
 '''
