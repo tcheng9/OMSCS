@@ -298,7 +298,15 @@ if __name__ == "__main__":
 
     # np metod
     leaf_sizes = np.empty((1, 80))
-    maes = np.empty((2, 80), dtype=float)
+    maes = np.empty((4, 80), dtype=float)
+    '''
+    row 1 - DT - in sample mae
+    row 2 -  DT out sample
+    row 3 -  RT in smaple mae
+    row 4 -  RT out of sample mae
+    '''
+
+
     learners = np.empty((2, 80), dtype=object)  # row 1 = DT, row 2 = RT
 
     # model inits
@@ -322,21 +330,34 @@ if __name__ == "__main__":
     #predictions
     print('test_y shape is', test_y.shape)
     for i in range(80):
-        y_pred = learners[0, i].query(test_x)
-        mae = np.sum(np.absolute((test_y, y_pred))) / test_y.shape[0]
+        #Dt insample
+        y_pred = learners[0, i].query(train_x)
+        mae = (np.sum(np.absolute((train_y-y_pred)))) / train_y.shape[0] #true values - pred values
         print(mae)
         maes[0, i] = mae
 
-        # #DTlearner mae
-        # y_pred = learners[0, i].query(test_x)
-        # mae = mae_calc(y_pred, test_y)
-        # maes[0, i] = mae
-        #
-        # #RTlearner mae
-        # y_pred = learners[1, i].query(test_x)
-        # mae = mae_calc(y_pred, test_y)
-        # maes[1, i] = mae
+        #dt out of sample
+        y_pred = learners[0, i].query(test_x)
+        mae = (np.sum(np.absolute((test_y - y_pred)))) / test_y.shape[0]  # true values - pred values
+        print(mae)
+        maes[1, i] = mae
 
-    plt.plot(leaf_sizes[0, :], maes[0, :], label = 'dt out mean absolute error')
+        # rt insample
+        y_pred = learners[1, i].query(train_x)
+        mae = (np.sum(np.absolute((train_y - y_pred)))) / train_y.shape[0]  # true values - pred values
+        print(mae)
+        maes[2, i] = mae
+
+        # rt out of sample
+        y_pred = learners[1, i].query(test_x)
+        mae = (np.sum(np.absolute((test_y - y_pred)))) / test_y.shape[0]  # true values - pred values
+        print(mae)
+        maes[3, i] = mae
+
+    plt.plot(leaf_sizes[0, :], maes[0, :], label = 'dt in sample mae')
+    plt.plot(leaf_sizes[0, :], maes[1, :], label='dt out sample mae')
+    plt.plot(leaf_sizes[0, :], maes[2, :], label='rt in sample mae')
+    plt.plot(leaf_sizes[0, :], maes[3, :], label='rtt out sample mae')
     # plt.plot(leaf_sizes[0, :], maes[1, :], label='rt out mean absolute error')
+    plt.legend()
     plt.show()
