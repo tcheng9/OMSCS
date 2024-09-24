@@ -141,48 +141,48 @@ if __name__ == "__main__":
     Experiment 1
     
     '''
-    # leaf_sizes = []
-    # rmse_records_in = []
-    # rmse_records_out = []
-    #
-    # print('running exp 1 - dt learner')
-    # # create a learner and train it
-    # # learner = lrl.LinRegLearner(verbose=True)  # create a LinRegLearner
-    #
-    # # for i in range(len(leaf_size)):
-    # for i in range(1, 80):
-    #     learner = dtl.DTLearner(leaf_size = i)
-    #     learner.add_evidence(train_x, train_y)  # train it
-    #
-    #
-    #     #insample calcs
-    #     pred_y = learner.query(train_x)
-    #     rmse_in = math.sqrt(((train_y - pred_y) ** 2).sum() / train_y.shape[0])
-    #
-    #
-    #     rmse_records_in.append(rmse_in)
-    #     leaf_sizes.append(i)
-    #
-    #     #out of sample calc
-    #
-    #     pred_y = learner.query(test_x)
-    #     rmse_out = math.sqrt(((test_y - pred_y) ** 2).sum() / test_y.shape[0])
-    #     rmse_records_out.append(rmse_out)
+    leaf_sizes = []
+    rmse_records_in = []
+    rmse_records_out = []
+
+    print('running exp 1 - dt learner')
+    # create a learner and train it
+    # learner = lrl.LinRegLearner(verbose=True)  # create a LinRegLearner
+
+    # for i in range(len(leaf_size)):
+    for i in range(1, 80):
+        learner = dtl.DTLearner(leaf_size = i)
+        learner.add_evidence(train_x, train_y)  # train it
+
+
+        #insample calcs
+        pred_y = learner.query(train_x)
+        rmse_in = math.sqrt(((train_y - pred_y) ** 2).sum() / train_y.shape[0])
+
+
+        rmse_records_in.append(rmse_in)
+        leaf_sizes.append(i)
+
+        #out of sample calc
+
+        pred_y = learner.query(test_x)
+        rmse_out = math.sqrt(((test_y - pred_y) ** 2).sum() / test_y.shape[0])
+        rmse_records_out.append(rmse_out)
 
 
 
-    # plt.plot(leaf_sizes, rmse_records_in, label = "insample")
-    # plt.plot(leaf_sizes, rmse_records_out, label = "out of sample")
-    # plt.legend()
-    # plt.title('exp 1 - dt learner')
-    #
-    # plt.text(100, 0.008, 'tcheng99@gatech.edu', fontsize=40, color='gray', rotation=10)
-    # plt.xlim(80, 0)
-    # plt.xlabel('leaf size')
-    # plt.ylabel('rmse')
-    # # plt.show()
-    # plt.savefig('exp1.png')
-    # plt.close()
+    plt.plot(leaf_sizes, rmse_records_in, label = "insample")
+    plt.plot(leaf_sizes, rmse_records_out, label = "out of sample")
+    plt.legend()
+    plt.title('exp 1 - dt learner')
+
+    plt.text(100, 0.008, 'tcheng99@gatech.edu', fontsize=40, color='gray', rotation=10)
+    plt.xlim(80, 0)
+    plt.xlabel('leaf size')
+    plt.ylabel('rmse')
+    # plt.show()
+    plt.savefig('exp1.png')
+    plt.close()
 
     # '''
     # Experiment 2
@@ -193,46 +193,46 @@ if __name__ == "__main__":
 
 
     #
-    # leaf_sizes = np.array([])
-    # rmse_records_in = np.array([])
-    # rmse_records_out = np.array([])
-    #
-    # learners = []
-    # for k in range(80):
-    #
-    #     learner = bl.BagLearner(learner = dtl.DTLearner, kwargs = {"leaf_size":k}, bags = 20, boost = False, verbose = False)
-    #     learner.add_evidence(train_x, train_y)  # train it
-    #     learners.append(learner)
-    #
-    # for i in range(80):
-    #     learner = learners[i]
-    #     pred_y = learner.query(train_x)
-    #     rmse_in = math.sqrt(((train_y - pred_y) ** 2).sum() / train_y.shape[0])
-    #
-    #     rmse_records_in = np.append(rmse_records_in, rmse_in)
-    #     leaf_sizes = np.append(leaf_sizes, i)
-    #
-    #     pred_y = learner.query(test_x)
-    #     rmse_out = math.sqrt(((test_y - pred_y) ** 2).sum() / test_y.shape[0])
-    #
-    #     rmse_records_out = np.append(rmse_records_out, rmse_out)
-    # print(rmse_records_in)
-    # print('---')
-    # print(rmse_records_out)
-    # print(leaf_sizes)
-    # print(rmse_records_in)
-    # plt.plot(leaf_sizes, rmse_records_in, label="insample")
-    # plt.plot(leaf_sizes, rmse_records_out, label="out of sample")
-    # plt.text(100, 0.0120, 'tcheng99@gatech.edu', fontsize=40, color='gray', rotation = 0)
-    # plt.text(100, 0.0080, 'tcheng99@gatech.edu', fontsize=40, color='gray', rotation= 0)
-    # plt.legend()
-    # plt.title('exp 2 - bagging algo')
-    # plt.xlim(100, 0)
-    # plt.xlabel('leaf size')
-    # plt.ylabel('rmse')
-    # # plt.show()
-    # plt.savefig('exp2.png')
+    leaf_sizes = np.array([])
+    rmse_records_in = np.array([])
+    rmse_records_out = np.array([])
 
+    learners = []
+    for k in range(80):
+
+        learner = bl.BagLearner(learner = dtl.DTLearner, kwargs = {"leaf_size":k}, bags = 20, boost = False, verbose = False)
+        learner.add_evidence(train_x, train_y)  # train it
+        learners.append(learner)
+
+    for i in range(80):
+        learner = learners[i]
+        pred_y = learner.query(train_x)
+        rmse_in = math.sqrt(((train_y - pred_y) ** 2).sum() / train_y.shape[0])
+
+        rmse_records_in = np.append(rmse_records_in, rmse_in)
+        leaf_sizes = np.append(leaf_sizes, i)
+
+        pred_y = learner.query(test_x)
+        rmse_out = math.sqrt(((test_y - pred_y) ** 2).sum() / test_y.shape[0])
+
+        rmse_records_out = np.append(rmse_records_out, rmse_out)
+    print(rmse_records_in)
+    print('---')
+    print(rmse_records_out)
+    print(leaf_sizes)
+    print(rmse_records_in)
+    plt.plot(leaf_sizes, rmse_records_in, label="insample")
+    plt.plot(leaf_sizes, rmse_records_out, label="out of sample")
+    plt.text(100, 0.0120, 'tcheng99@gatech.edu', fontsize=40, color='gray', rotation = 0)
+    plt.text(100, 0.0080, 'tcheng99@gatech.edu', fontsize=40, color='gray', rotation= 0)
+    plt.legend()
+    plt.title('exp 2 - bagging algo')
+    plt.xlim(100, 0)
+    plt.xlabel('leaf size')
+    plt.ylabel('rmse')
+    # plt.show()
+    plt.savefig('exp2.png')
+    plt.close()
 
     '''
     experiment 3
@@ -247,50 +247,51 @@ if __name__ == "__main__":
     '''
 
     #np metod
-    # leaf_sizes = np.empty((1, 80))
-    # build_times = np.empty((2, 80), dtype = float)
-    # learners = np.empty((2, 80), dtype = object) #row 1 = DT, row 2 = RT
-    #
-    # # model inits
-    # for i in range(80):
-    #     #leaf sie
-    #
-    #     leaf_sizes[0, i] = i
-    #     # DT learner setup
-    #     learner = dtl.DTLearner(leaf_size=i)
-    #     start_time = time.time()
-    #     learner.add_evidence(train_x, train_y)
-    #     end_time = time.time()
-    #     learners[0, i] = learner
-    #     # print('dt tree time to build is', (end_time - start_time))
-    #     time_diff = end_time - start_time
-    #     build_times[0, i] = time_diff
-    #     # print(learners)
-    #     # print(build_times)
-    #     #RT learner setup
-    #
-    #     learner = rtl.RTLearner(leaf_size=i)
-    #     start_time = time.time()
-    #     learner.add_evidence(train_x, train_y)
-    #     end_time = time.time()
-    #     learners[1, i] = learner
-    #     # print('dt tree time to build is', (end_time - start_time))
-    #     time_diff = end_time - start_time
-    #     build_times[1, i] = time_diff
-    # # print(leaf_sizes)
-    # # print(learners)
-    # # print(build_times)
-    #
-    # #Training models
-    #
-    # plt.plot(leaf_sizes[0, :], build_times[0, :], label = 'dtlearner')
-    # plt.plot(leaf_sizes[0, :], build_times[1, :], label='rtlearner')
-    # plt.legend()
-    # plt.title('exp 3 - time to train')
-    # plt.xlabel('leaf sizes')
-    # plt.ylabel('time to train')
-    # plt.show()
+    leaf_sizes = np.empty((1, 80))
+    build_times = np.empty((2, 80), dtype = float)
+    learners = np.empty((2, 80), dtype = object) #row 1 = DT, row 2 = RT
 
+    # model inits
+    for i in range(80):
+        #leaf sie
+
+        leaf_sizes[0, i] = i
+        # DT learner setup
+        learner = dtl.DTLearner(leaf_size=i)
+        start_time = time.time()
+        learner.add_evidence(train_x, train_y)
+        end_time = time.time()
+        learners[0, i] = learner
+        # print('dt tree time to build is', (end_time - start_time))
+        time_diff = end_time - start_time
+        build_times[0, i] = time_diff
+        # print(learners)
+        # print(build_times)
+        #RT learner setup
+
+        learner = rtl.RTLearner(leaf_size=i)
+        start_time = time.time()
+        learner.add_evidence(train_x, train_y)
+        end_time = time.time()
+        learners[1, i] = learner
+        # print('dt tree time to build is', (end_time - start_time))
+        time_diff = end_time - start_time
+        build_times[1, i] = time_diff
+    # print(leaf_sizes)
+    # print(learners)
+    # print(build_times)
+
+    #Training models
+
+    plt.plot(leaf_sizes[0, :], build_times[0, :], label = 'dtlearner')
+    plt.plot(leaf_sizes[0, :], build_times[1, :], label='rtlearner')
+    plt.legend()
+    plt.title('exp 3 - time to train')
+    plt.xlabel('leaf sizes')
+    plt.ylabel('time to train')
+    # plt.show()
+    plt.savefig('exp3_build_time.png')
+    plt.close()
 
     '''
     experiment 3b - mean absolute error
@@ -328,7 +329,7 @@ if __name__ == "__main__":
         learners[1, i] = learner
 
     #predictions
-    print('test_y shape is', test_y.shape)
+    # print('test_y shape is', test_y.shape)
     for i in range(80):
         #Dt insample
         y_pred = learners[0, i].query(train_x)
@@ -360,4 +361,5 @@ if __name__ == "__main__":
     plt.plot(leaf_sizes[0, :], maes[3, :], label='rtt out sample mae')
     # plt.plot(leaf_sizes[0, :], maes[1, :], label='rt out mean absolute error')
     plt.legend()
-    plt.show()
+    # plt.show()
+    plt.savefig('exp3_mae.png')
