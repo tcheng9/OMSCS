@@ -30,7 +30,7 @@ import math
   		  	   		 	   		  		  		    	 		 		   		 		  
 import numpy as np  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
-import LinRegLearner as lrl  		  	   		 	   		  		  		    	 		 		   		 		  
+import LinRegLearner as lrl
 import DTLearner as dtl
 import RTLearner as rtl
 import BagLearner as bl
@@ -243,8 +243,8 @@ if __name__ == "__main__":
     '''
 
     # np metod
-    leaf_sizes = np.empty((1, 80))
-    maes = np.empty((4, 80), dtype=float)
+    leaf_sizes = np.empty((1, 50))
+    maes = np.empty((4, 50), dtype=float)
     '''
     row 1 - DT - in sample mae
     row 2 -  DT out sample
@@ -253,10 +253,10 @@ if __name__ == "__main__":
     '''
 
 
-    learners = np.empty((2, 80), dtype=object)  # row 1 = DT, row 2 = RT
+    learners = np.empty((2, 50), dtype=object)  # row 1 = DT, row 2 = RT
 
     # model inits
-    for i in range(80):
+    for i in range(25):
         # leaf sie
 
         leaf_sizes[0, i] = i
@@ -275,7 +275,7 @@ if __name__ == "__main__":
 
     #predictions
 
-    for i in range(80):
+    for i in range(50):
         #Dt insample
         y_pred = learners[0, i].query(train_x)
         mae = (np.sum(np.absolute((train_y-y_pred)))) / train_y.shape[0] #true values - pred values
@@ -305,7 +305,7 @@ if __name__ == "__main__":
     plt.plot(leaf_sizes[0, :], maes[2, :], label='RT In-sample MAE')
     plt.plot(leaf_sizes[0, :], maes[3, :], label='RT Out-sample MAE', linestyle = '--')
     plt.title('RTLearner vs. DTLearner MAE Comparison')
-    plt.xlim(80, 0)
+    plt.xlim(50, 0)
     plt.ylabel('Sample MAE')
     plt.xlabel('Leaf Size')
     plt.legend()
