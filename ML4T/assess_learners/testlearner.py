@@ -256,7 +256,7 @@ if __name__ == "__main__":
     learners = np.empty((2, 50), dtype=object)  # row 1 = DT, row 2 = RT
 
     # model inits
-    for i in range(25):
+    for i in range(50):
         # leaf sie
 
         leaf_sizes[0, i] = i
