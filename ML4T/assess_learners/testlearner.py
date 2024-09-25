@@ -37,13 +37,8 @@ import BagLearner as bl
 import InsaneLearner as il
 import matplotlib.pyplot as plt
 import time
-def print_five():
-    print(5)
 
-def mae_calc(exp_y, true_y):
-    mae = np.sum(abs(exp_y - true_y) / true_y.shape[0])
 
-    return mae
 def resample(data_x, data_y):
 
     subsample_x = np.empty((0, data_x.shape[1]))
@@ -52,7 +47,6 @@ def resample(data_x, data_y):
     for z in range(resample):
         random_row = np.random.randint(0, data_x.shape[0])
 
-        # print('random index is', random_row)
 
         subsample_x = np.vstack((subsample_x, data_x[random_row, :]))
         subsample_y = np.append(subsample_y, data_y[random_row])
@@ -63,7 +57,7 @@ if __name__ == "__main__":
 
     if len(sys.argv) != 2:
 
-        print("Usage: python LinRegLearner.py <filename>")
+        # print("Usage: python LinRegLearner.py <filename>")
         sys.exit(1)
     #data cleaning specifically for istanbul.csv
     np.random.seed(903967530)
@@ -77,21 +71,15 @@ if __name__ == "__main__":
 
 
         tmp = list(map(float, file[i].strip().split(',')[1:]))
-        # float(tmp)
+
         arr.append(tmp)
     data = np.array(arr)
 
 
-    # #code for simple csv to run
-    # inf = open(sys.argv[1])
-    # data = np.array(
-    #     [list(map(float, s.strip().split(","))) for s in inf.readlines()]
-    # )
 
 
 
 # compute how much of the data is training and testing
-
 
     train_rows = int(0.6 * data.shape[0])
     test_rows = data.shape[0] - train_rows
@@ -100,7 +88,7 @@ if __name__ == "__main__":
     train_x = data[:train_rows, 0:-1]
     train_y = data[:train_rows, -1]
 
-    # train_x, train_y = resample(train_x, train_y)
+
 
     test_x = data[train_rows:, 0:-1]
     test_y = data[train_rows:, -1]
@@ -111,30 +99,6 @@ if __name__ == "__main__":
     train_x, train_y = resample(train_x, train_y)
     test_x, test_y = resample(test_x, test_y)
 
-    print(f"{test_x.shape}")
-    print(f"{test_y.shape}")
-    #
-    # '''
-    # Insane learner test
-    # '''
-    #
-    # # for i in range(len(leaf_size)):
-    #
-    # learner = il.InsaneLearner()
-    # learner.add_evidence(train_x, train_y)  # train it
-    #
-    #
-    # pred_y = learner.query(train_x)
-    # rmse_in = math.sqrt(((train_y - pred_y) ** 2).sum() / train_y.shape[0])
-    #
-    # print(rmse_in)
-    #
-    #     # out of sample calc
-    #
-    # pred_y = learner.query(test_x)
-    # rmse_out = math.sqrt(((test_y - pred_y) ** 2).sum() / test_y.shape[0])
-    # print(rmse_out)
-    #
 
     '''
     
@@ -145,15 +109,9 @@ if __name__ == "__main__":
     rmse_records_in = []
     rmse_records_out = []
 
-    print('running exp 1 - dt learner')
-    # create a learner and train it
-    # learner = lrl.LinRegLearner(verbose=True)  # create a LinRegLearner
-
-    # for i in range(len(leaf_size)):
     for i in range(1, 80):
         learner = dtl.DTLearner(leaf_size = i)
         learner.add_evidence(train_x, train_y)  # train it
-
 
         #insample calcs
         pred_y = learner.query(train_x)
@@ -171,28 +129,23 @@ if __name__ == "__main__":
 
 
 
-    plt.plot(leaf_sizes, rmse_records_in, label = "insample")
-    plt.plot(leaf_sizes, rmse_records_out, label = "out of sample")
+    plt.plot(leaf_sizes, rmse_records_in, label = "In-sample RMSE")
+    plt.plot(leaf_sizes, rmse_records_out, label = "Out-sample RMSE")
     plt.legend()
-    plt.title('exp 1 - dt learner')
+    plt.title('DTLearner Across Various Leaf Sizes')
 
-    plt.text(100, 0.008, 'tcheng99@gatech.edu', fontsize=40, color='gray', rotation=10)
+    # plt.text(100, 0.008, 'tcheng99@gatech.edu', fontsize=40, color='gray', rotation=10)
     plt.xlim(80, 0)
-    plt.xlabel('leaf size')
-    plt.ylabel('rmse')
-    # plt.show()
+    plt.xlabel('Leaf Size')
+    plt.ylabel('Sample RMSE')
+
     plt.savefig('exp1.png')
     plt.close()
 
-    # '''
-    # Experiment 2
-    # '''
+    '''
+    Experiment 2
+    '''
 
-
-    print('running exp 2 - bagging ')
-
-
-    #
     leaf_sizes = np.array([])
     rmse_records_in = np.array([])
     rmse_records_out = np.array([])
@@ -216,21 +169,15 @@ if __name__ == "__main__":
         rmse_out = math.sqrt(((test_y - pred_y) ** 2).sum() / test_y.shape[0])
 
         rmse_records_out = np.append(rmse_records_out, rmse_out)
-    print(rmse_records_in)
-    print('---')
-    print(rmse_records_out)
-    print(leaf_sizes)
-    print(rmse_records_in)
-    plt.plot(leaf_sizes, rmse_records_in, label="insample")
-    plt.plot(leaf_sizes, rmse_records_out, label="out of sample")
-    plt.text(100, 0.0120, 'tcheng99@gatech.edu', fontsize=40, color='gray', rotation = 0)
-    plt.text(100, 0.0080, 'tcheng99@gatech.edu', fontsize=40, color='gray', rotation= 0)
+
+    plt.plot(leaf_sizes, rmse_records_in, label="In-sample RMSE")
+    plt.plot(leaf_sizes, rmse_records_out, label="Out-sample RMSE")
     plt.legend()
-    plt.title('exp 2 - bagging algo')
-    plt.xlim(100, 0)
-    plt.xlabel('leaf size')
-    plt.ylabel('rmse')
-    # plt.show()
+    plt.title('Evaluating Bagging Performance Across RMSE')
+    plt.xlim(80, 0)
+    plt.xlabel('Leaf Size')
+    plt.ylabel('Sample RMSE')
+
     plt.savefig('exp2.png')
     plt.close()
 
@@ -262,11 +209,10 @@ if __name__ == "__main__":
         learner.add_evidence(train_x, train_y)
         end_time = time.time()
         learners[0, i] = learner
-        # print('dt tree time to build is', (end_time - start_time))
+
         time_diff = end_time - start_time
         build_times[0, i] = time_diff
-        # print(learners)
-        # print(build_times)
+
         #RT learner setup
 
         learner = rtl.RTLearner(leaf_size=i)
@@ -274,22 +220,21 @@ if __name__ == "__main__":
         learner.add_evidence(train_x, train_y)
         end_time = time.time()
         learners[1, i] = learner
-        # print('dt tree time to build is', (end_time - start_time))
+
         time_diff = end_time - start_time
         build_times[1, i] = time_diff
-    # print(leaf_sizes)
-    # print(learners)
-    # print(build_times)
+
 
     #Training models
 
     plt.plot(leaf_sizes[0, :], build_times[0, :], label = 'dtlearner')
     plt.plot(leaf_sizes[0, :], build_times[1, :], label='rtlearner')
     plt.legend()
-    plt.title('exp 3 - time to train')
-    plt.xlabel('leaf sizes')
-    plt.ylabel('time to train')
-    # plt.show()
+    plt.title('Comparing Random Tree vs. Decisions Based on Tree Building Times')
+    plt.xlabel('Leaf Sizes')
+    plt.ylabel('Time to build decision tree')
+    plt.xlim(80, 0)
+
     plt.savefig('exp3_build_time.png')
     plt.close()
 
@@ -329,37 +274,40 @@ if __name__ == "__main__":
         learners[1, i] = learner
 
     #predictions
-    # print('test_y shape is', test_y.shape)
+
     for i in range(80):
         #Dt insample
         y_pred = learners[0, i].query(train_x)
         mae = (np.sum(np.absolute((train_y-y_pred)))) / train_y.shape[0] #true values - pred values
-        print(mae)
+
         maes[0, i] = mae
 
         #dt out of sample
         y_pred = learners[0, i].query(test_x)
         mae = (np.sum(np.absolute((test_y - y_pred)))) / test_y.shape[0]  # true values - pred values
-        print(mae)
+
         maes[1, i] = mae
 
         # rt insample
         y_pred = learners[1, i].query(train_x)
         mae = (np.sum(np.absolute((train_y - y_pred)))) / train_y.shape[0]  # true values - pred values
-        print(mae)
+
         maes[2, i] = mae
 
         # rt out of sample
         y_pred = learners[1, i].query(test_x)
         mae = (np.sum(np.absolute((test_y - y_pred)))) / test_y.shape[0]  # true values - pred values
-        print(mae)
+
         maes[3, i] = mae
 
-    plt.plot(leaf_sizes[0, :], maes[0, :], label = 'dt in sample mae')
-    plt.plot(leaf_sizes[0, :], maes[1, :], label='dt out sample mae')
-    plt.plot(leaf_sizes[0, :], maes[2, :], label='rt in sample mae')
-    plt.plot(leaf_sizes[0, :], maes[3, :], label='rtt out sample mae')
-    # plt.plot(leaf_sizes[0, :], maes[1, :], label='rt out mean absolute error')
+    plt.plot(leaf_sizes[0, :], maes[0, :], label = 'DT In-sample MAE')
+    plt.plot(leaf_sizes[0, :], maes[1, :], label='DT Out-sample MAE', linestyle = '--')
+    plt.plot(leaf_sizes[0, :], maes[2, :], label='RT In-sample MAE')
+    plt.plot(leaf_sizes[0, :], maes[3, :], label='RT Out-sample MAE', linestyle = '--')
+    plt.title('RTLearner vs. DTLearner MAE Comparison')
+    plt.xlim(80, 0)
+    plt.ylabel('Sample MAE')
+    plt.xlabel('Leaf Size')
     plt.legend()
-    # plt.show()
+
     plt.savefig('exp3_mae.png')

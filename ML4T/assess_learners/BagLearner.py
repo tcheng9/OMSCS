@@ -61,7 +61,6 @@ class BagLearner(object):
         for i in range(resample):
             random_row = np.random.randint(0, data_x.shape[0])
 
-            # print('random index is', random_row)
 
             subsample_x = np.vstack((subsample_x, data_x[random_row, :]))
             subsample_y = np.append(subsample_y, data_y[random_row])
@@ -73,7 +72,6 @@ class BagLearner(object):
 
         for i in range(0, self.bags):
 
-            # sample_x, sample_y = self.resample(data_x, data_y)
             learners.append(self.learner(**self.kwargs))
 
 
@@ -110,15 +108,11 @@ class BagLearner(object):
 
         for i in range(len(self.models)):
             y_pred = self.models[i].query(test_x)
-            # print(y_pred.shape)
             for j in range(len(y_pred)):
-                # print(y_pred[j])
                 res[j] += y_pred[j]
 
-
         for i in range(test_x.shape[0]):
-            # print(res[i])
-            # print(test_x.shape[0])
+
             res[i] = res[i] / self.bags
 
         return res
@@ -127,60 +121,61 @@ class BagLearner(object):
 
 
 
-if __name__ == "__main__":
-    print("the secret clue is 'zzyzx'")
-    # class test case
-    x_train = np.array([
-        [.006508992, .000703323, .027263206],
-        [.008070571, .008364512, .010298404],
-        [.011703446, .019054811, .010298404],
-        [.002294509, .011703446, .019054811],
-        [.00540756, .008294571, .029936576],
-        [.022378302, .011999815, .001498313],
-        [.011166484, .002812079, .025962189],
-        [0.010573187, 0.013050445, 0.0048923]
-    ])
+# if __name__ == "__main__":
+#
+#     # class test case
+#     x_train = np.array([
+#         [.006508992, .000703323, .027263206],
+#         [.008070571, .008364512, .010298404],
+#         [.011703446, .019054811, .010298404],
+#         [.002294509, .011703446, .019054811],
+#         [.00540756, .008294571, .029936576],
+#         [.022378302, .011999815, .001498313],
+#         [.011166484, .002812079, .025962189],
+#         [0.010573187, 0.013050445, 0.0048923]
+#     ])
+#
+#
+#
+#     y_train = np.array([
+#         .000841483,
+#         0.00213008,
+#         -0.017031881,
+#         0.023405287,
+#         0.008160491,
+#         -0.010673606,
+#         0.000841483,
+#         0.008160491])
+#     # ## infinite recursion test case
+#     # # x_train = np.array([
+#     # #     [.885,.330, 9.1],
+#     # #     [.725, .39, 10],
+#     # #     [.560, .5, 10],
+#     # #     [.735, .570,10],
+#     # #
+#     # #
+#     # # ])
+#     #
+#     #
+#     # # y_train = np.array([[4],[5], [6], [5]])
+#     #
+#     # x_test = np.array([
+#     #     [.7, .45, 10],
+#     #     [.6, .75, 9],
+#     #     [.3, .5, 9.5],
+#     # ])
+#
+#
+#     x_test = np.array([
+#         [0.002929655, 0.006462161, -0.008567381],
+#         [0.011719598, 0.02094488, -0.001478936],
+#         [0.015786402, 0.020041017, 0.021217576],
+#
+#     ])
 
 
-
-    y_train = np.array([
-        .000841483,
-        0.00213008,
-        -0.017031881,
-        0.023405287,
-        0.008160491,
-        -0.010673606,
-        0.000841483,
-        0.008160491])
-    # ## infinite recursion test case
-    # # x_train = np.array([
-    # #     [.885,.330, 9.1],
-    # #     [.725, .39, 10],
-    # #     [.560, .5, 10],
-    # #     [.735, .570,10],
-    # #
-    # #
-    # # ])
     #
-    #
-    # # y_train = np.array([[4],[5], [6], [5]])
-    #
-    # x_test = np.array([
-    #     [.7, .45, 10],
-    #     [.6, .75, 9],
-    #     [.3, .5, 9.5],
-    # ])
+    # bagger  = BagLearner(learner = dtl.DTLearner, kwargs = {"leaf_size":1}, bags = 10, boost = False, verbose = False)
+    # bagger.add_evidence(x_train, y_train)
+    # res = bagger.query(x_test)
 
-
-    x_test = np.array([
-        [0.002929655, 0.006462161, -0.008567381],
-        [0.011719598, 0.02094488, -0.001478936],
-        [0.015786402, 0.020041017, 0.021217576],
-
-    ])
-
-
-
-    bagger  = BagLearner(learner = dtl.DTLearner, kwargs = {"leaf_size":1}, bags = 10, boost = False, verbose = False)
-    bagger.add_evidence(x_train, y_train)
-    res = bagger.query(x_test)
