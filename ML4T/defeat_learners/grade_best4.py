@@ -71,24 +71,24 @@ Best4TestCase = namedtuple(
     ],  		  	   		 	   		  		  		    	 		 		   		 		  
 )  		  	   		 	   		  		  		    	 		 		   		 		  
 best4_test_cases = [  		  	   		 	   		  		  		    	 		 		   		 		  
-    Best4TestCase(  		  	   		 	   		  		  		    	 		 		   		 		  
-        description="Test Case 1: Best4LinReg",  		  	   		 	   		  		  		    	 		 		   		 		  
-        group="best4lr",  		  	   		 	   		  		  		    	 		 		   		 		  
-        max_tests=15,  		  	   		 	   		  		  		    	 		 		   		 		  
-        needed_wins=10,  		  	   		 	   		  		  		    	 		 		   		 		  
-        row_limits=(10, 1000),  		  	   		 	   		  		  		    	 		 		   		 		  
-        col_limits=(2, 10),  		  	   		 	   		  		  		    	 		 		   		 		  
-        seed=1489683274,  		  	   		 	   		  		  		    	 		 		   		 		  
-    ),  		  	   		 	   		  		  		    	 		 		   		 		  
-    Best4TestCase(  		  	   		 	   		  		  		    	 		 		   		 		  
-        description="Test Case 2: Best4DT",  		  	   		 	   		  		  		    	 		 		   		 		  
-        group="best4dt",  		  	   		 	   		  		  		    	 		 		   		 		  
-        max_tests=15,  		  	   		 	   		  		  		    	 		 		   		 		  
-        needed_wins=10,  		  	   		 	   		  		  		    	 		 		   		 		  
-        row_limits=(10, 1000),  		  	   		 	   		  		  		    	 		 		   		 		  
-        col_limits=(2, 10),  		  	   		 	   		  		  		    	 		 		   		 		  
-        seed=1489683274,  		  	   		 	   		  		  		    	 		 		   		 		  
-    ),  		  	   		 	   		  		  		    	 		 		   		 		  
+    Best4TestCase(
+        description="Test Case 1: Best4LinReg",
+        group="best4lr",
+        max_tests=15,
+        needed_wins=15,
+        row_limits=(10, 1000),
+        col_limits=(2, 10),
+        seed=1,
+    ),
+    Best4TestCase(
+        description="Test Case 2: Best4DT",
+        group="best4dt",
+        max_tests=15,
+        needed_wins=15,
+        row_limits=(10, 1000),
+        col_limits=(2, 10),
+        seed=12391209,
+    ),
     Best4TestCase(  		  	   		 	   		  		  		    	 		 		   		 		  
         description="Test for author() method",  		  	   		 	   		  		  		    	 		 		   		 		  
         group="author",  		  	   		 	   		  		  		    	 		 		   		 		  

@@ -26,8 +26,8 @@ import math
   		  	   		 	   		  		  		    	 		 		   		 		  
 import numpy as np  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
-import DTLearner as dt  		  	   		 	   		  		  		    	 		 		   		 		  
-import LinRegLearner as lrl  		  	   		 	   		  		  		    	 		 		   		 		  
+import DTLearner as dt
+import LinRegLearner as lrl
 from gen_data import best_4_dt, best_4_lin_reg  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
@@ -112,7 +112,7 @@ def test_code():
     print(f"RMSE DT    : {rmse_dt}")  		  	   		 	   		  		  		    	 		 		   		 		  
     if rmse_dt < 0.9 * rmse_lr:  		  	   		 	   		  		  		    	 		 		   		 		  
         print("DT < 0.9 LR:  pass")  		  	   		 	   		  		  		    	 		 		   		 		  
-    else:  		  	   		 	   		  		  		    	 		 		   		 		  
+    else:
         print("DT >= 0.9 LR:  fail")  		  	   		 	   		  		  		    	 		 		   		 		  
     print  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  

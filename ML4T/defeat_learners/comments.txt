@@ -1,23 +1,8 @@
 <pre>--- Summary ---
-Tests passed: 1 out of 3
+Tests passed: 3 out of 3
 
 --- Details ---
-Test #0: failed 
-Description: Test Case 1: Best4LinReg (group: best4lr)
-Traceback:
-  File "/home/tommy/Documents/OMSCS/ML4T/grading/grading.py", line 152, in proc_wrapper
-    rv["output"] = func(*pos_args, **keyword_args)
-  File "/home/tommy/Documents/OMSCS/ML4T/defeat_learners/gen_data.py", line 53, in best_4_lin_reg
-    y = x[:,0] + np.sin(x[:,1]) + x[:,2]**2 + x[:,3]**3
-NameError: name 'x' is not defined
-
-Test #1: failed 
-Description: Test Case 2: Best4DT (group: best4dt)
-IncorrectOutput: Test failed on one or more output criteria.
-  Inputs:
-    Residuals: [(341.3328971512512, 341.3328971512512), (376.6926304082935, 376.6926304082935), (311.86769277321605, 311.86769277321605), (370.37884354197877, 370.3788435419788), (331.9207158574467, 331.9207158574467), (389.5768936374256, 389.5768936374256), (361.17601663069814, 361.17601663069814), (367.5662738281949, 367.5662738281949), (333.1816749666077, 333.1816749666077), (329.0607952425292, 329.0607952425292), (338.6061655205911, 338.6061655205911), (358.4044198139378, 358.4044198139378), (364.4043061351808, 364.4043061351808), (337.5793785851433, 337.5793785851433), (384.04902386091027, 384.0490238609103)]
-  Failures:
-    Better learner did not exceed worse learner. Expected 10, found 0
-
+Test #0: passed 
+Test #1: passed 
 Test #2: passed 
 </pre>

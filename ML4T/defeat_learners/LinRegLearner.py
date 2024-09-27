@@ -45,8 +45,10 @@ class LinRegLearner(object):
         :return: The GT username of the student  		  	   		 	   		  		  		    	 		 		   		 		  
         :rtype: str  		  	   		 	   		  		  		    	 		 		   		 		  
         """  		  	   		 	   		  		  		    	 		 		   		 		  
-        return "tb34"  # replace tb34 with your Georgia Tech username  		  	   		 	   		  		  		    	 		 		   		 		  
-  		  	   		 	   		  		  		    	 		 		   		 		  
+        return "tcheng99"  # replace tb34 with your Georgia Tech username
+
+    def study_group(self):
+        return 'tcheng99'
     def add_evidence(self, data_x, data_y):  		  	   		 	   		  		  		    	 		 		   		 		  
         """  		  	   		 	   		  		  		    	 		 		   		 		  
         Add training data to learner  		  	   		 	   		  		  		    	 		 		   		 		  

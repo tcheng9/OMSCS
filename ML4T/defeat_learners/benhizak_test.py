@@ -69,10 +69,11 @@ def evaluate_learners(num_iterations, data_gen_func, func_name):
         rotation=5,             # Rotation of the text (in degrees)
         transform=plt.gcf().transFigure  # Use figure coordinates for placement
     )
-    plt.savefig(f'{func_name}.png')
+    # plt.savefig(f'{func_name}.png')
+    plt.show()
     plt.close()
 
 if __name__ == "__main__":
-    num_iterations = 100
+    num_iterations = 10000
     evaluate_learners(num_iterations, gen_data.best_4_lin_reg, 'best_4_lin_reg')
     evaluate_learners(num_iterations, gen_data.best_4_dt, 'best_4_dt')
