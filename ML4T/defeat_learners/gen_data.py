@@ -104,10 +104,7 @@ def best_4_dt(seed=1489683273):
             x[i, 2] = -2 * np.random.random() * 500
             x[i, 3] = 10 * np.random.random() * 500
             y[i] = pow(x[i, 0], 3) + 10*x[i,1] + pow(x[i, 2], 3)
-        # x[i, 0] = pow(x[i, 0], 2)
-        # x[i, 1] = pow(x[i, 1] , 4)
-        # x[i, 2] = pow(x[i, 1], 6)
-        # y[i] = x[i, 0] * x[i, 1] * x[i, 2]
+
 
 
 
@@ -125,18 +122,3 @@ def study_group(self):
 
     return 'tcheng99'
   		  	   		 	   		  		  		    	 		 		   		 		  
-# if __name__ == "__main__":
-    # x,y = best_4_lin_reg(0)
-    # # print(x.shape)
-    # # print(y.shape)
-    # # print(x)
-    # # print(y)
-    # plt.plot(x[:, 0],y)
-    # plt.show()
-
-
-    # x,y = best_4_dt(0)
-    # # print(x)
-    # print(x)
-    # plt.plot(x, y)
-    # plt.show()

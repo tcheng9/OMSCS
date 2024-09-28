@@ -74,6 +74,6 @@ def evaluate_learners(num_iterations, data_gen_func, func_name):
     plt.close()
 
 if __name__ == "__main__":
-    num_iterations = 10000
+    num_iterations = 100
     evaluate_learners(num_iterations, gen_data.best_4_lin_reg, 'best_4_lin_reg')
     evaluate_learners(num_iterations, gen_data.best_4_dt, 'best_4_dt')
