@@ -84,31 +84,12 @@ def best_4_dt(seed=1489683273):
         x[i, 1] = 5 * np.random.random()
         x[i, 2] = -2 * np.random.random()
         x[i, 3] = 10 * np.random.random()
-        # #
-        # if i <= 100:
-        #     x[i, 0] = np.random.random() * 1
-        #     x[i, 1] = 5 * np.random.random() * 1
-        #     x[i, 2] = 2 * np.random.random() * 1
-        #     x[i, 3] = 10 * np.random.random() * 1
-        #
-        #     y[i] = math.log(x[i, 0]) + math.log(x[i,1]) + math.log(x[i, 2])
-        # elif (i > 100 and i <= 200):
-        #     x[i, 0] = np.random.random() * 50
-        #     x[i, 1] = 5 * np.random.random() * 50
-        #     x[i, 2] = -2 * np.random.random() * 50
-        #     x[i, 3] = 10 * np.random.random() * 50
-        #     y[i] = 1/-1* pow(x[i, 0],2 ) + 1/4*x[i,1] + 1/pow(x[i, 2], 2)
-        # else:
-        #     x[i, 0] = np.random.random() * 500
-        #     x[i, 1] = 5 * np.random.random() * 500
-        #     x[i, 2] = -2 * np.random.random() * 500
-        #     x[i, 3] = 10 * np.random.random() * 500
-        #     y[i] = pow(x[i, 0], 3) + 10*x[i,1] + pow(x[i, 2], 3)
+
         x[i, 0] = pow(x[i, 0], 2)
         x[i, 1] = pow(x[i, 1], 4)
-        # x[i, 2] = pow(x[i, 2], 6)
 
-        y[i] = x[i, 0] * x[i, 1]
+
+        y[i] = x[i, 0] * x[i, 1] + x[i,2] + x[i,3]
     return x, y
 
 
