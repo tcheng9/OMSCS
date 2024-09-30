@@ -21,7 +21,7 @@ GT honor code violation.
   		  	   		 	   		  		  		    	 		 		   		 		  
 -----do not edit anything above this line---  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
-Student Name: Tucker Balch (replace with your name)  		  	   		 	   		  		  		    	 		 		   		 		  
+Student Name: Tommy Cheng (replace with your name)  		  	   		 	   		  		  		    	 		 		   		 		  
 GT User ID: tcheng99 (replace with your User ID)  		  	   		 	   		  		  		    	 		 		   		 		  
 GT ID: 903967530 (replace with your GT ID)  		  	   		 	   		  		  		    	 		 		   		 		  
 """  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -61,56 +61,57 @@ def best_4_lin_reg(seed=1489683273):
         x[i, 0] = np.random.random() * 100
         x[i, 1] = np.random.random() * 100
         y[i] = 5*x[i, 0] + 2*x[i, 1]
-    return x, y  		  	   		 	   		  		  		    	 		 		   		 		  
-  		  	   		 	   		  		  		    	 		 		   		 		  
-  		  	   		 	   		  		  		    	 		 		   		 		  
-def best_4_dt(seed=1489683273):  		  	   		 	   		  		  		    	 		 		   		 		  
+    return x, y
+
+
+def best_4_dt(seed=1489683273):
     """  		  	   		 	   		  		  		    	 		 		   		 		  
     Returns data that performs significantly better with DTLearner than LinRegLearner.  		  	   		 	   		  		  		    	 		 		   		 		  
     The data set should include from 2 to 10 columns in X, and one column in Y.  		  	   		 	   		  		  		    	 		 		   		 		  
     The data should contain from 10 (minimum) to 1000 (maximum) rows.  		  	   		 	   		  		  		    	 		 		   		 		  
-  		  	   		 	   		  		  		    	 		 		   		 		  
-    :param seed: The random seed for your data generation.  		  	   		 	   		  		  		    	 		 		   		 		  
-    :type seed: int  		  	   		 	   		  		  		    	 		 		   		 		  
-    :return: Returns data that performs significantly better with DTLearner than LinRegLearner.  		  	   		 	   		  		  		    	 		 		   		 		  
-    :rtype: numpy.ndarray  		  	   		 	   		  		  		    	 		 		   		 		  
-    """  		  	   		 	   		  		  		    	 		 		   		 		  
-    np.random.seed(seed)  		  	   		 	   		  		  		    	 		 		   		 		  
+
+    :param seed: The random seed for your data generation.
+    :type seed: int
+    :return: Returns data that performs significantly better with DTLearner than LinRegLearner.
+    :rtype: numpy.ndarray
+    """
+    np.random.seed(seed)
     x = np.zeros((300, 4))
-    y = np.random.random(size=(300,)) * 200 - 100
+    y = np.random.random(size=(300,))
 
     for i in range(300):
-        x[i, 0] = np.random.random() * 100
-        x[i, 1] = 5 * np.random.random() * 100
-        x[i, 2] = -2 * np.random.random() * 100
-        x[i, 3] = 10 * np.random.random() * 100
+        x[i, 0] = np.random.random()
+        x[i, 1] = 5 * np.random.random()
+        x[i, 2] = -2 * np.random.random()
+        x[i, 3] = 10 * np.random.random()
         # #
-        if i <= 100:
-            x[i, 0] = np.random.random() * 1
-            x[i, 1] = 5 * np.random.random() * 1
-            x[i, 2] = 2 * np.random.random() * 1
-            x[i, 3] = 10 * np.random.random() * 1
+        # if i <= 100:
+        #     x[i, 0] = np.random.random() * 1
+        #     x[i, 1] = 5 * np.random.random() * 1
+        #     x[i, 2] = 2 * np.random.random() * 1
+        #     x[i, 3] = 10 * np.random.random() * 1
+        #
+        #     y[i] = math.log(x[i, 0]) + math.log(x[i,1]) + math.log(x[i, 2])
+        # elif (i > 100 and i <= 200):
+        #     x[i, 0] = np.random.random() * 50
+        #     x[i, 1] = 5 * np.random.random() * 50
+        #     x[i, 2] = -2 * np.random.random() * 50
+        #     x[i, 3] = 10 * np.random.random() * 50
+        #     y[i] = 1/-1* pow(x[i, 0],2 ) + 1/4*x[i,1] + 1/pow(x[i, 2], 2)
+        # else:
+        #     x[i, 0] = np.random.random() * 500
+        #     x[i, 1] = 5 * np.random.random() * 500
+        #     x[i, 2] = -2 * np.random.random() * 500
+        #     x[i, 3] = 10 * np.random.random() * 500
+        #     y[i] = pow(x[i, 0], 3) + 10*x[i,1] + pow(x[i, 2], 3)
+        x[i, 0] = pow(x[i, 0], 2)
+        x[i, 1] = pow(x[i, 1], 4)
+        # x[i, 2] = pow(x[i, 2], 6)
 
-            y[i] = math.log(x[i, 0]) + math.log(x[i,1]) + math.log(x[i, 2])
-        elif (i > 100 and i <= 200):
-            x[i, 0] = np.random.random() * 50
-            x[i, 1] = 5 * np.random.random() * 50
-            x[i, 2] = -2 * np.random.random() * 50
-            x[i, 3] = 10 * np.random.random() * 50
-            y[i] = 1/-1* pow(x[i, 0],2 ) + 1/4*x[i,1] + 1/pow(x[i, 2], 2)
-        else:
-            x[i, 0] = np.random.random() * 500
-            x[i, 1] = 5 * np.random.random() * 500
-            x[i, 2] = -2 * np.random.random() * 500
-            x[i, 3] = 10 * np.random.random() * 500
-            y[i] = pow(x[i, 0], 3) + 10*x[i,1] + pow(x[i, 2], 3)
+        y[i] = x[i, 0] * x[i, 1]
+    return x, y
 
 
-
-
-    return x, y  		  	   		 	   		  		  		    	 		 		   		 		  
-  		  	   		 	   		  		  		    	 		 		   		 		  
-  		  	   		 	   		  		  		    	 		 		   		 		  
 def author():  		  	   		 	   		  		  		    	 		 		   		 		  
     """  		  	   		 	   		  		  		    	 		 		   		 		  
     :return: The GT username of the student  		  	   		 	   		  		  		    	 		 		   		 		  
