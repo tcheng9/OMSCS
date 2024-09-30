@@ -34,8 +34,8 @@ import numpy as np
 import pandas as pd  		  	   		 	   		  		  		    	 		 		   		 		  
 from util import get_data, plot_data  		  	   		 	   		  		  		    	 		 		   		 		  
 import optimize_something.optimization as opt
-pd.set_option('display.max_colwidth', None)
-
+pd.set_option('display.max_columns', None)
+pd.set_option("display.max_rows", None)
 def build_prices(df):
     print('\n')
 
@@ -80,10 +80,33 @@ def build_trades(csv_df, prices):
         else:
             trades.loc[date, 'Cash'] = price * shares
             trades.loc[date, symbol] = -1*shares
-    print(trades)
+
     ##creating an empty trades DF to add info to
     return trades
 
+def build_holdings(trades, start_val):
+    # copy an old one and clean it and use it
+    holdings = trades.copy(deep=True)
+    holdings.iloc[:, :] = 0
+
+    #build holdings table
+    # print(holdings)
+
+    holdings.loc[:, 'AAPL'] = trades.loc[:, 'AAPL']
+    rows, cols = holdings.shape
+    print(rows, cols)
+
+    #day 0 case:
+    holdings.iloc[0, -1] = start_val
+    #day 1 - end case;
+
+    for r in range(1, rows):
+        for c in range(cols):
+            holdings.iloc[r, c] = holdings.iloc[r-1, c] + trades.iloc[r, c]
+
+    print(sum(trades.loc[:, 'Cash']))
+    print(holdings)
+    # print('here')
 # def build_trades()
 def compute_portvals(  		  	   		 	   		  		  		    	 		 		   		 		  
     orders_file="./orders/orders.csv",  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -115,7 +138,9 @@ def compute_portvals(
 
 
     prices = build_prices(df)
-    build_trades(df, prices)
+    trades = build_trades(df, prices)
+    build_holdings(trades, start_val)
+
     print('end of my code')
 
 
