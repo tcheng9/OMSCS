@@ -1,114 +1,111 @@
 <pre>--- Summary ---
-Tests passed: 1 out of 13
+Tests passed: 2 out of 13
 
 --- Details ---
 Test #0: failed 
 Test case description: Orders 1
-AssertionError: You must return a Series or single-column DataFrame!
-assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
- +  where <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.series.Series'> = pd.Series
- +  and   <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+IncorrectOutput: Test failed on one or more output criteria.
+  Inputs:
+{'orders_file': 'orders-01.csv', 'start_val': 1000000, 'commission': 0.0, 'impact': 0.0}
+  Failures:
+   Incorrect final value: 1025674.1999999998, expected 1115569.2
+   Incorrect sharpe ratio: 0.2348818518516918, expected 0.612340613407
+   Incorrect avg daily return: 0.0002662510529200105, expected 0.00055037432146
 
-Test #1: failed 
-Test case description: Orders 2
-AssertionError: You must return a Series or single-column DataFrame!
-assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
- +  where <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.series.Series'> = pd.Series
- +  and   <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
-
+Test #1: passed 
 Test #2: failed 
 Test case description: Orders 3
-AssertionError: You must return a Series or single-column DataFrame!
-assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
- +  where <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.series.Series'> = pd.Series
- +  and   <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+IncorrectOutput: Test failed on one or more output criteria.
+  Inputs:
+{'orders_file': 'orders-03.csv', 'start_val': 1000000, 'commission': 0.0, 'impact': 0.0}
+  Failures:
+   Incorrect final value: 777711.0, expected 857616.0
+   Incorrect sharpe ratio: -0.9163413234025832, expected -0.759896272199
+   Incorrect avg daily return: -0.0009239583362451801, expected -0.000571326189931
 
 Test #3: failed 
 Test case description: Orders 4
-AssertionError: You must return a Series or single-column DataFrame!
-assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
- +  where <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.series.Series'> = pd.Series
- +  and   <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+IncorrectOutput: Test failed on one or more output criteria.
+  Inputs:
+{'orders_file': 'orders-04.csv', 'start_val': 1000000, 'commission': 0.0, 'impact': 0.0}
+  Failures:
+   Incorrect final value: 585485.3999999999, expected 923545.4
+   Incorrect sharpe ratio: -1.8122720510243455, expected -0.266030146916
+   Incorrect avg daily return: -0.0021309792080093535, expected -0.000240200768212
 
 Test #4: failed 
 Test case description: Orders 5
-AssertionError: You must return a Series or single-column DataFrame!
-assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
- +  where <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.series.Series'> = pd.Series
- +  and   <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+IncorrectOutput: Test failed on one or more output criteria.
+  Inputs:
+{'orders_file': 'orders-05.csv', 'start_val': 1000000, 'commission': 0.0, 'impact': 0.0}
+  Failures:
+   Incorrect final value: 1331953.0, expected 1415563.0
+   Incorrect sharpe ratio: 1.9581962491098437, expected 2.19591520826
+   Incorrect avg daily return: 0.0010052403576240486, expected 0.00121733290744
 
 Test #5: failed 
 Test case description: Orders 6
-AssertionError: You must return a Series or single-column DataFrame!
-assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
- +  where <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.series.Series'> = pd.Series
- +  and   <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+IncorrectOutput: Test failed on one or more output criteria.
+  Inputs:
+{'orders_file': 'orders-06.csv', 'start_val': 1000000, 'commission': 0.0, 'impact': 0.0}
+  Failures:
+   Incorrect final value: 672329.3, expected 894604.3
+   Incorrect sharpe ratio: -2.548521671921914, expected -1.23463930987
+   Incorrect avg daily return: -0.0018328688714269205, expected -0.000511281541086
 
 Test #6: failed 
 Test case description: Orders 7
-AssertionError: You must return a Series or single-column DataFrame!
-assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
- +  where <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.series.Series'> = pd.Series
- +  and   <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+IncorrectOutput: Test failed on one or more output criteria.
+  Inputs:
+{'orders_file': 'orders-07.csv', 'start_val': 1000000, 'commission': 0.0, 'impact': 0.0}
+  Failures:
+   Incorrect final value: 1089701.7999999998, expected 1106563.3
+   Incorrect sharpe ratio: 1.9327852248213173, expected 2.10356512897
+   Incorrect avg daily return: 0.0003686265387011411, expected 0.0004345040621
 
 Test #7: failed 
 Test case description: Orders 8
-AssertionError: You must return a Series or single-column DataFrame!
-assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
- +  where <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.series.Series'> = pd.Series
- +  and   <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+IncorrectOutput: Test failed on one or more output criteria.
+  Inputs:
+{'orders_file': 'orders-08.csv', 'start_val': 1000000, 'commission': 0.0, 'impact': 0.0}
+  Failures:
+   Incorrect final value: 1058381.0999999999, expected 1074884.1
+   Incorrect sharpe ratio: 0.7942856605690445, expected 0.941858298061
+   Incorrect avg daily return: 0.0002626131802622985, expected 0.000332404156893
 
 Test #8: failed 
 Test case description: Orders 9
-AssertionError: You must return a Series or single-column DataFrame!
-assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
- +  where <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.series.Series'> = pd.Series
- +  and   <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+IncorrectOutput: Test failed on one or more output criteria.
+  Inputs:
+{'orders_file': 'orders-09.csv', 'start_val': 1000000, 'commission': 0.0, 'impact': 0.0}
+  Failures:
+   Incorrect final value: 982560.0, expected 1067710.0
+   Incorrect sharpe ratio: -0.2570193924297153, expected 2.90848480553
+   Incorrect avg daily return: -0.00031092594356883004, expected 0.00187252252117
 
 Test #9: failed 
 Test case description: Orders 11, commission
-AssertionError: You must return a Series or single-column DataFrame!
-assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
- +  where <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.series.Series'> = pd.Series
- +  and   <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+IncorrectOutput: Test failed on one or more output criteria.
+  Inputs:
+{'orders_file': 'orders-11.csv', 'start_val': 1000000, 'commission': 9.95, 'impact': 0.0}
+  Failures:
+   Incorrect final value: 960640.0, expected 1045700.45
 
 Test #10: failed 
 Test case description: Orders 12, impact
-AssertionError: You must return a Series or single-column DataFrame!
-assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
- +  where <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.series.Series'> = pd.Series
- +  and   <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+IncorrectOutput: Test failed on one or more output criteria.
+  Inputs:
+{'orders_file': 'orders-12.csv', 'start_val': 1000000, 'commission': 0.0, 'impact': 0.005}
+  Failures:
+   Incorrect final value: 1667755.0, expected 1705686.6665
 
 Test #11: failed 
 Test case description: Orders 10, impact and commission
-AssertionError: You must return a Series or single-column DataFrame!
-assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
- +  where <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.series.Series'> = pd.Series
- +  and   <class 'NoneType'> = type(None)
- +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+IncorrectOutput: Test failed on one or more output criteria.
+  Inputs:
+{'orders_file': 'orders-10.csv', 'start_val': 1000000, 'commission': 9.95, 'impact': 0.005}
+  Failures:
+   Incorrect final value: 969070.0, expected 1026658.3265
 
 Test #12: passed 
 </pre>

@@ -38,10 +38,12 @@ pd.set_option('display.max_columns', None)
 pd.set_option("display.max_rows", None)
 def build_prices(df):
     print('\n')
-
+    start_date = min(df['Date'])
+    end_date = max(df['Date'])
+    # print(start_date, '|', end_date)
     stocks = df['Symbol'].unique()
-    start_date = dt.datetime(2011, 1, 1)
-    end_date = dt.datetime(2011, 12, 31)
+    # start_date = dt.datetime(2011, 1, 1)
+    # end_date = dt.datetime(2011, 12, 31)
     prices = get_data(stocks, pd.date_range(start_date, end_date))
     prices = prices[stocks]  # remove SPY
     prices['Cash'] = 1.00
@@ -64,48 +66,53 @@ def build_trades(csv_df, prices):
 
     #UPDATING TRADES TABLE
     for i in range(csv_df.shape[0]):
-    #     print(csv_df[i])
-    # print(csv_df.iloc[0, :])
+
         date, symbol, order, shares = csv_df.iloc[i, :]
         # print(date)
         # print(symbol)
         # print(order)
         # print(shares)
-
+        # print(date, symbol, order, shares)
         price = prices.loc[date, symbol]
-
+        # print('price of', symbol, 'is', price)
         if order == "BUY":
-            trades.loc[date, 'Cash'] = -1 * price * shares
-            trades.loc[date, symbol] = shares
-        else:
-            trades.loc[date, 'Cash'] = price * shares
-            trades.loc[date, symbol] = -1*shares
+            #if you buy, cash goes down but shares go up
+            trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (-1 * price * shares)
+            trades.loc[date, symbol] = trades.loc[date, symbol] + shares
+        else: #sell
+            #if you sell, cash can go up OR down but shares go down
+            trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (price * shares)
+            trades.loc[date, symbol] = trades.loc[date, symbol] + (-1*shares)
 
     ##creating an empty trades DF to add info to
+    # print(trades)
     return trades
 
-def build_holdings(trades, start_val):
+def build_holdings(prices, trades, start_val):
     # copy an old one and clean it and use it
     holdings = trades.copy(deep=True)
     holdings.iloc[:, :] = 0
 
     #build holdings table
-    # print(holdings)
 
-    holdings.loc[:, 'AAPL'] = trades.loc[:, 'AAPL']
-    rows, cols = holdings.shape
+    # holdings.loc[:, 'AAPL'] = trades.loc[:, 'AAPL']
+
     # print(rows, cols)
 
     #day 0 case:
     holdings.iloc[0, -1] = start_val
-    #day 1 - end case;
 
+
+    #day 1 - end case;
+    rows, cols = holdings.shape
     for r in range(1, rows):
         for c in range(cols):
             holdings.iloc[r, c] = holdings.iloc[r-1, c] + trades.iloc[r, c]
 
     # print(sum(trades.loc[:, 'Cash']))
+    # print('holdings table')
     # print(holdings)
+    # print('------------------------------------------')
     # print('here')
     return holdings
 
@@ -115,13 +122,17 @@ def build_values(prices, holdings):
     values = prices.copy(deep=True)
     values.iloc[:, :] = 0
 
+    #need consider day 0 case
+
     rows, cols = holdings.shape
     #iterate through pandas df
-    for r in range(1, rows):
+    for r in range(rows):
         for c in range(cols):
             values.iloc[r, c] = holdings.iloc[r, c] * prices.iloc[r, c]
 
+    # print('values table')
     # print(values)
+    # print('------------------------------------------')
     return values
 
 def build_daytotal(values):
@@ -130,7 +141,11 @@ def build_daytotal(values):
     day_total.iloc[:, :] = 0
     day_total = values.sum(axis = 1)
 
+
+    print('day total table')
     print(day_total)
+    print('------------------------------------------')
+    return day_total
 
 
 def compute_portvals(  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -155,21 +170,25 @@ def compute_portvals(
     """  		  	   		 	   		  		  		    	 		 		   		 		  
     # this is the function the autograder will call to test your code  		  	   		 	   		  		  		    	 		 		   		 		  
     # NOTE: orders_file may be a string, or it may be a file object. Your  		  	   		 	   		  		  		    	 		 		   		 		  
-    # code should work correctly with either input  		  	   		 	   		  		  		    	 		 		   		 		  
+    # code should work correctly with either input
+
+
     # TODO: Your code here
     print('\n')
-    df = pd.read_csv('./orders/orders-01.csv',  parse_dates=True, na_values = ['nan'])
-
-
+    # df = pd.read_csv('./orders/orders-01.csv',  parse_dates=True, na_values = ['nan'])
+    df = pd.read_csv(orders_file, parse_dates=True, na_values = ['nan'])
+    df = df.sort_values(by = "Date")
+    # print(df)
 
     prices = build_prices(df)
     trades = build_trades(df, prices)
-    holdings = build_holdings(trades, start_val)
+    holdings = build_holdings(prices, trades, start_val)
     values = build_values(prices, holdings)
 
-    build_daytotal(values)
-    print('end of my code')
-
+    day_total = build_daytotal(values)
+    # print(day_total)
+    # print('end of my code')
+    return day_total
 
 
 
@@ -181,7 +200,7 @@ def test_code():
     # note that during autograding his function will not be called.  		  	   		 	   		  		  		    	 		 		   		 		  
     # Define input parameters  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
-    of = "./orders/orders2.csv"  		  	   		 	   		  		  		    	 		 		   		 		  
+    of = "./orders/orders-02-sorted.csv"
     sv = 1000000  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
     # Process orders  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -193,9 +212,9 @@ def test_code():
   		  	   		 	   		  		  		    	 		 		   		 		  
     # Get portfolio stats  		  	   		 	   		  		  		    	 		 		   		 		  
     # Here we just fake the data. you should use your code from previous assignments.  		  	   		 	   		  		  		    	 		 		   		 		  
-    start_date = dt.datetime(2008, 1, 1)  		  	   		 	   		  		  		    	 		 		   		 		  
-    end_date = dt.datetime(2008, 6, 1)  		  	   		 	   		  		  		    	 		 		   		 		  
-    cum_ret, avg_daily_ret, std_daily_ret, sharpe_ratio = [  		  	   		 	   		  		  		    	 		 		   		 		  
+    start_date = dt.datetime(2008, 1, 1)
+    end_date = dt.datetime(2008, 6, 1)
+    cum_ret, avg_daily_ret, std_daily_ret, sharpe_ratio = [
         0.2,  		  	   		 	   		  		  		    	 		 		   		 		  
         0.01,  		  	   		 	   		  		  		    	 		 		   		 		  
         0.02,  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -208,22 +227,22 @@ def test_code():
         1.5,  		  	   		 	   		  		  		    	 		 		   		 		  
     ]  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
-    # Compare portfolio against $SPX  		  	   		 	   		  		  		    	 		 		   		 		  
-    # print(f"Date Range: {start_date} to {end_date}")
-    # print()
-    # print(f"Sharpe Ratio of Fund: {sharpe_ratio}")
-    # print(f"Sharpe Ratio of SPY : {sharpe_ratio_SPY}")
-    # print()
-    # print(f"Cumulative Return of Fund: {cum_ret}")
-    # print(f"Cumulative Return of SPY : {cum_ret_SPY}")
-    # print()
-    # print(f"Standard Deviation of Fund: {std_daily_ret}")
-    # print(f"Standard Deviation of SPY : {std_daily_ret_SPY}")
-    # print()
-    # print(f"Average Daily Return of Fund: {avg_daily_ret}")
-    # print(f"Average Daily Return of SPY : {avg_daily_ret_SPY}")
-    # print()
-    # print(f"Final Portfolio Value: {portvals[-1]}")
+    # Compare portfolio against $SPX
+    print(f"Date Range: {start_date} to {end_date}")
+    print()
+    print(f"Sharpe Ratio of Fund: {sharpe_ratio}")
+    print(f"Sharpe Ratio of SPY : {sharpe_ratio_SPY}")
+    print()
+    print(f"Cumulative Return of Fund: {cum_ret}")
+    print(f"Cumulative Return of SPY : {cum_ret_SPY}")
+    print()
+    print(f"Standard Deviation of Fund: {std_daily_ret}")
+    print(f"Standard Deviation of SPY : {std_daily_ret_SPY}")
+    print()
+    print(f"Average Daily Return of Fund: {avg_daily_ret}")
+    print(f"Average Daily Return of SPY : {avg_daily_ret_SPY}")
+    print()
+    print(f"Final Portfolio Value: {portvals[-1]}")
   		  	   		 	   		  		  		    	 		 		   		 		  
 def author():
     """  		  	   		 	   		  		  		    	 		 		   		 		  
