@@ -94,7 +94,7 @@ def build_holdings(trades, start_val):
 
     holdings.loc[:, 'AAPL'] = trades.loc[:, 'AAPL']
     rows, cols = holdings.shape
-    print(rows, cols)
+    # print(rows, cols)
 
     #day 0 case:
     holdings.iloc[0, -1] = start_val
@@ -104,10 +104,35 @@ def build_holdings(trades, start_val):
         for c in range(cols):
             holdings.iloc[r, c] = holdings.iloc[r-1, c] + trades.iloc[r, c]
 
-    print(sum(trades.loc[:, 'Cash']))
-    print(holdings)
+    # print(sum(trades.loc[:, 'Cash']))
+    # print(holdings)
     # print('here')
-# def build_trades()
+    return holdings
+
+def build_values(prices, holdings):
+    ###NOTE: try df.cumsum()
+    # copy an old one and clean it and use it
+    values = prices.copy(deep=True)
+    values.iloc[:, :] = 0
+
+    rows, cols = holdings.shape
+    #iterate through pandas df
+    for r in range(1, rows):
+        for c in range(cols):
+            values.iloc[r, c] = holdings.iloc[r, c] * prices.iloc[r, c]
+
+    # print(values)
+    return values
+
+def build_daytotal(values):
+    # copy an old one and clean it and use it
+    day_total = values.copy(deep=True)
+    day_total.iloc[:, :] = 0
+    day_total = values.sum(axis = 1)
+
+    print(day_total)
+
+
 def compute_portvals(  		  	   		 	   		  		  		    	 		 		   		 		  
     orders_file="./orders/orders.csv",  		  	   		 	   		  		  		    	 		 		   		 		  
     start_val=1000000,  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -139,8 +164,10 @@ def compute_portvals(
 
     prices = build_prices(df)
     trades = build_trades(df, prices)
-    build_holdings(trades, start_val)
+    holdings = build_holdings(trades, start_val)
+    values = build_values(prices, holdings)
 
+    build_daytotal(values)
     print('end of my code')
 
 
@@ -232,3 +259,6 @@ if __name__ == "__main__":
     # # df.head()
     # return rv
 '''
+# Date,Symbol,Order,Shares
+
+

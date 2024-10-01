@@ -1,0 +1,114 @@
+<pre>--- Summary ---
+Tests passed: 1 out of 13
+
+--- Details ---
+Test #0: failed 
+Test case description: Orders 1
+AssertionError: You must return a Series or single-column DataFrame!
+assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
+ +  where <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.series.Series'> = pd.Series
+ +  and   <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+
+Test #1: failed 
+Test case description: Orders 2
+AssertionError: You must return a Series or single-column DataFrame!
+assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
+ +  where <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.series.Series'> = pd.Series
+ +  and   <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+
+Test #2: failed 
+Test case description: Orders 3
+AssertionError: You must return a Series or single-column DataFrame!
+assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
+ +  where <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.series.Series'> = pd.Series
+ +  and   <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+
+Test #3: failed 
+Test case description: Orders 4
+AssertionError: You must return a Series or single-column DataFrame!
+assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
+ +  where <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.series.Series'> = pd.Series
+ +  and   <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+
+Test #4: failed 
+Test case description: Orders 5
+AssertionError: You must return a Series or single-column DataFrame!
+assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
+ +  where <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.series.Series'> = pd.Series
+ +  and   <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+
+Test #5: failed 
+Test case description: Orders 6
+AssertionError: You must return a Series or single-column DataFrame!
+assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
+ +  where <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.series.Series'> = pd.Series
+ +  and   <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+
+Test #6: failed 
+Test case description: Orders 7
+AssertionError: You must return a Series or single-column DataFrame!
+assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
+ +  where <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.series.Series'> = pd.Series
+ +  and   <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+
+Test #7: failed 
+Test case description: Orders 8
+AssertionError: You must return a Series or single-column DataFrame!
+assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
+ +  where <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.series.Series'> = pd.Series
+ +  and   <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+
+Test #8: failed 
+Test case description: Orders 9
+AssertionError: You must return a Series or single-column DataFrame!
+assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
+ +  where <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.series.Series'> = pd.Series
+ +  and   <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+
+Test #9: failed 
+Test case description: Orders 11, commission
+AssertionError: You must return a Series or single-column DataFrame!
+assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
+ +  where <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.series.Series'> = pd.Series
+ +  and   <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+
+Test #10: failed 
+Test case description: Orders 12, impact
+AssertionError: You must return a Series or single-column DataFrame!
+assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
+ +  where <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.series.Series'> = pd.Series
+ +  and   <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+
+Test #11: failed 
+Test case description: Orders 10, impact and commission
+AssertionError: You must return a Series or single-column DataFrame!
+assert (<class 'NoneType'> == <class 'pandas.core.series.Series'> or (<class 'NoneType'> == <class 'pandas.core.frame.DataFrame'>))
+ +  where <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.series.Series'> = pd.Series
+ +  and   <class 'NoneType'> = type(None)
+ +  and   <class 'pandas.core.frame.DataFrame'> = pd.DataFrame
+
+Test #12: passed 
+</pre>
