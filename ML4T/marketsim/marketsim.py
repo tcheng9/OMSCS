@@ -50,7 +50,7 @@ def build_prices(df):
     # print(prices)
     return prices
 
-def build_trades(csv_df, prices):
+def build_trades(csv_df, prices, commission, impact):
     # approach 1: make a fresh df
     # stocks = csv_df.loc[:, 'Symbol'].unique()
 
@@ -77,15 +77,17 @@ def build_trades(csv_df, prices):
         # print('price of', symbol, 'is', price)
         if order == "BUY":
             #if you buy, cash goes down but shares go up
+            # trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (-1 * (( price + (impact * price) * shares)+commission)   )
             trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (-1 * price * shares)
             trades.loc[date, symbol] = trades.loc[date, symbol] + shares
         else: #sell
             #if you sell, cash can go up OR down but shares go down
-            trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (price * shares)
+            # trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (((price - (impact * price)) * shares) - commission)
+            trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (price*shares)
             trades.loc[date, symbol] = trades.loc[date, symbol] + (-1*shares)
 
     ##creating an empty trades DF to add info to
-    # print(trades)
+    print(trades)
     return trades
 
 def build_holdings(prices, trades, start_val):
@@ -102,22 +104,14 @@ def build_holdings(prices, trades, start_val):
     #day 0 case:
     holdings.iloc[0, -1] = start_val
 
-    holdings_2 = holdings.cumsum(axis =0) + trades.cumsum(axis=0)
-    print('holdings 2')
-    print(holdings_2)
-    print('---------')
+    holdings = holdings.cumsum(axis =0) + trades.cumsum(axis=0)
+    # print('holdings 2')
+    # print(holdings_2)
+    # print('---------')
     #day 1 - end case;
-    # rows, cols = holdings.shape
-    # for r in range(1, rows):
-    #     for c in range(cols):
-    #         holdings.iloc[r, c] = holdings.iloc[r-1, c] + trades.iloc[r, c]
 
-    # print(sum(trades.loc[:, 'Cash']))
-    # print('holdings table')
-    # print(holdings)
-    # print('------------------------------------------')
 
-    return holdings_2
+    return holdings
 
 def build_values(prices, holdings):
     ###NOTE: try df.cumsum()
@@ -184,7 +178,7 @@ def compute_portvals(
     # print(df)
 
     prices = build_prices(df)
-    trades = build_trades(df, prices)
+    trades = build_trades(df, prices, commission, impact)
     holdings = build_holdings(prices, trades, start_val)
     values = build_values(prices, holdings)
 
@@ -229,24 +223,24 @@ def test_code():
         sf = 252.0
     )
 
-    print(cum_ret)
+    # print(cum_ret)
 
     # Compare portfolio against $SPX
-    print(f"Date Range: {start_date} to {end_date}")
-    print()
-    print(f"Sharpe Ratio of Fund: {sharpe_ratio}")
-    # print(f"Sharpe Ratio of SPY : {sharpe_ratio_SPY}")
-    print()
-    print(f"Cumulative Return of Fund: {cum_ret}")
-    # print(f"Cumulative Return of SPY : {cum_ret_SPY}")
-    print()
-    print(f"Standard Deviation of Fund: {std_daily_ret}")
-    # print(f"Standard Deviation of SPY : {std_daily_ret_SPY}")
-    print()
-    print(f"Average Daily Return of Fund: {avg_daily_ret}")
-    # print(f"Average Daily Return of SPY : {avg_daily_ret_SPY}")
-    print()
-    print(f"Final Portfolio Value: {portvals[-1]}")
+    # print(f"Date Range: {start_date} to {end_date}")
+    # print()
+    # print(f"Sharpe Ratio of Fund: {sharpe_ratio}")
+    # # print(f"Sharpe Ratio of SPY : {sharpe_ratio_SPY}")
+    # print()
+    # print(f"Cumulative Return of Fund: {cum_ret}")
+    # # print(f"Cumulative Return of SPY : {cum_ret_SPY}")
+    # print()
+    # print(f"Standard Deviation of Fund: {std_daily_ret}")
+    # # print(f"Standard Deviation of SPY : {std_daily_ret_SPY}")
+    # print()
+    # print(f"Average Daily Return of Fund: {avg_daily_ret}")
+    # # print(f"Average Daily Return of SPY : {avg_daily_ret_SPY}")
+    # print()
+    # print(f"Final Portfolio Value: {portvals[-1]}")
   		  	   		 	   		  		  		    	 		 		   		 		  
 def author():
     """  		  	   		 	   		  		  		    	 		 		   		 		  
