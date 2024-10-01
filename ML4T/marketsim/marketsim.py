@@ -102,19 +102,22 @@ def build_holdings(prices, trades, start_val):
     #day 0 case:
     holdings.iloc[0, -1] = start_val
 
-
+    holdings_2 = holdings.cumsum(axis =0) + trades.cumsum(axis=0)
+    print('holdings 2')
+    print(holdings_2)
+    print('---------')
     #day 1 - end case;
-    rows, cols = holdings.shape
-    for r in range(1, rows):
-        for c in range(cols):
-            holdings.iloc[r, c] = holdings.iloc[r-1, c] + trades.iloc[r, c]
+    # rows, cols = holdings.shape
+    # for r in range(1, rows):
+    #     for c in range(cols):
+    #         holdings.iloc[r, c] = holdings.iloc[r-1, c] + trades.iloc[r, c]
 
     # print(sum(trades.loc[:, 'Cash']))
     # print('holdings table')
     # print(holdings)
     # print('------------------------------------------')
-    # print('here')
-    return holdings
+
+    return holdings_2
 
 def build_values(prices, holdings):
     ###NOTE: try df.cumsum()
@@ -142,9 +145,9 @@ def build_daytotal(values):
     day_total = values.sum(axis = 1)
 
 
-    print('day total table')
-    print(day_total)
-    print('------------------------------------------')
+    # print('day total table')
+    # print(day_total)
+    # print('------------------------------------------')
     return day_total
 
 
@@ -200,47 +203,48 @@ def test_code():
     # note that during autograding his function will not be called.  		  	   		 	   		  		  		    	 		 		   		 		  
     # Define input parameters  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
-    of = "./orders/orders-02-sorted.csv"
+    of = "./orders/orders-01.csv"
     sv = 1000000  		  	   		 	   		  		  		    	 		 		   		 		  
-  		  	   		 	   		  		  		    	 		 		   		 		  
+    df = pd.read_csv(of)
+    print('\n')
+    # print(df)
     # Process orders  		  	   		 	   		  		  		    	 		 		   		 		  
     portvals = compute_portvals(orders_file=of, start_val=sv)  		  	   		 	   		  		  		    	 		 		   		 		  
     if isinstance(portvals, pd.DataFrame):  		  	   		 	   		  		  		    	 		 		   		 		  
         portvals = portvals[portvals.columns[0]]  # just get the first column  		  	   		 	   		  		  		    	 		 		   		 		  
     else:  		  	   		 	   		  		  		    	 		 		   		 		  
-        "warning, code did not return a DataFrame"  		  	   		 	   		  		  		    	 		 		   		 		  
-  		  	   		 	   		  		  		    	 		 		   		 		  
+        "warning, code did not return a DataFrame"
+    # print(portvals)
     # Get portfolio stats  		  	   		 	   		  		  		    	 		 		   		 		  
     # Here we just fake the data. you should use your code from previous assignments.  		  	   		 	   		  		  		    	 		 		   		 		  
-    start_date = dt.datetime(2008, 1, 1)
-    end_date = dt.datetime(2008, 6, 1)
-    cum_ret, avg_daily_ret, std_daily_ret, sharpe_ratio = [
-        0.2,  		  	   		 	   		  		  		    	 		 		   		 		  
-        0.01,  		  	   		 	   		  		  		    	 		 		   		 		  
-        0.02,  		  	   		 	   		  		  		    	 		 		   		 		  
-        1.5,  		  	   		 	   		  		  		    	 		 		   		 		  
-    ]  		  	   		 	   		  		  		    	 		 		   		 		  
-    cum_ret_SPY, avg_daily_ret_SPY, std_daily_ret_SPY, sharpe_ratio_SPY = [  		  	   		 	   		  		  		    	 		 		   		 		  
-        0.2,  		  	   		 	   		  		  		    	 		 		   		 		  
-        0.01,  		  	   		 	   		  		  		    	 		 		   		 		  
-        0.02,  		  	   		 	   		  		  		    	 		 		   		 		  
-        1.5,  		  	   		 	   		  		  		    	 		 		   		 		  
-    ]  		  	   		 	   		  		  		    	 		 		   		 		  
-  		  	   		 	   		  		  		    	 		 		   		 		  
+    start_date = min(df['Date'])
+    end_date = max(df['Date'])
+    cum_ret, avg_daily_ret, std_daily_ret, sharpe_ratio, ev, portvals =opt.assess_portfolio(
+        start_date,
+        end_date,
+        syms = df['Symbol'].unique(),
+        allocs = [.2, .2, .2, .2],
+        sv = 1000000,
+        rfr = 0.0,
+        sf = 252.0
+    )
+
+    print(cum_ret)
+
     # Compare portfolio against $SPX
     print(f"Date Range: {start_date} to {end_date}")
     print()
     print(f"Sharpe Ratio of Fund: {sharpe_ratio}")
-    print(f"Sharpe Ratio of SPY : {sharpe_ratio_SPY}")
+    # print(f"Sharpe Ratio of SPY : {sharpe_ratio_SPY}")
     print()
     print(f"Cumulative Return of Fund: {cum_ret}")
-    print(f"Cumulative Return of SPY : {cum_ret_SPY}")
+    # print(f"Cumulative Return of SPY : {cum_ret_SPY}")
     print()
     print(f"Standard Deviation of Fund: {std_daily_ret}")
-    print(f"Standard Deviation of SPY : {std_daily_ret_SPY}")
+    # print(f"Standard Deviation of SPY : {std_daily_ret_SPY}")
     print()
     print(f"Average Daily Return of Fund: {avg_daily_ret}")
-    print(f"Average Daily Return of SPY : {avg_daily_ret_SPY}")
+    # print(f"Average Daily Return of SPY : {avg_daily_ret_SPY}")
     print()
     print(f"Final Portfolio Value: {portvals[-1]}")
   		  	   		 	   		  		  		    	 		 		   		 		  
