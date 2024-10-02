@@ -36,6 +36,7 @@ from util import get_data, plot_data
 import optimize_something.optimization as opt
 pd.set_option('display.max_columns', None)
 pd.set_option("display.max_rows", None)
+pd.options.display.float_format = '{:.2f}'.format
 def build_prices(df):
     print('\n')
     start_date = min(df['Date'])
@@ -77,17 +78,17 @@ def build_trades(csv_df, prices, commission, impact):
         # print('price of', symbol, 'is', price)
         if order == "BUY":
             #if you buy, cash goes down but shares go up
-            # trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (-1 * (( price + (impact * price) * shares)+commission)   )
-            trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (-1 * price * shares)
+            trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (-1 * ((( price + (impact * price)) * shares)+commission)   )
+            # trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (-1 * price * shares)
             trades.loc[date, symbol] = trades.loc[date, symbol] + shares
         else: #sell
             #if you sell, cash can go up OR down but shares go down
-            # trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (((price - (impact * price)) * shares) - commission)
-            trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (price*shares)
+            trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (((price - (impact * price)) * shares) - commission)
+            # trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (price*shares)
             trades.loc[date, symbol] = trades.loc[date, symbol] + (-1*shares)
 
     ##creating an empty trades DF to add info to
-    print(trades)
+    # print(trades)
     return trades
 
 def build_holdings(prices, trades, start_val):
@@ -106,7 +107,7 @@ def build_holdings(prices, trades, start_val):
 
     holdings = holdings.cumsum(axis =0) + trades.cumsum(axis=0)
     # print('holdings 2')
-    # print(holdings_2)
+    # print(holdings)
     # print('---------')
     #day 1 - end case;
 
