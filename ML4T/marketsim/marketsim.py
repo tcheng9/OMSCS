@@ -26,17 +26,18 @@ GT User ID: tcheng99 (replace with your User ID)
 GT ID: 903967530  (replace with your GT ID)  		  	   		 	   		  		  		    	 		 		   		 		  
 """  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
-import datetime as dt  		  	   		 	   		  		  		    	 		 		   		 		  
+import datetime as dt
+import math
 
   		  	   		 	   		  		  		    	 		 		   		 		  
 import numpy as np  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
 import pandas as pd  		  	   		 	   		  		  		    	 		 		   		 		  
 from util import get_data, plot_data  		  	   		 	   		  		  		    	 		 		   		 		  
-# import optimize_something.optimization as opt
-# pd.set_option('display.max_columns', None)
-# pd.set_option("display.max_rows", None)
-# pd.options.display.float_format = '{:.2f}'.format
+import optimize_something.optimization as opt
+pd.set_option('display.max_columns', None)
+pd.set_option("display.max_rows", None)
+pd.options.display.float_format = '{:.2f}'.format
 def build_prices(df):
 
     start_date = min(df['Date'])
@@ -175,60 +176,85 @@ def compute_portvals(
 
     return day_total
 
+def assess_portfolio(
+        port_val,
+        sf,
+        rfr
+):
+    cr = (port_val.iloc[-1] / port_val.iloc[0]) - 1
+    # daily returns if using port_val
+    daily_returns_all = port_val.copy()
+    daily_returns_all.iloc[1:] = (daily_returns_all.iloc[1:] / daily_returns_all.iloc[:-1].values) - 1
+    # daily_returns_all.iloc[0] = 0
+    daily_returns_all = daily_returns_all[1:]
+    # 4. mean
+    adr = daily_returns_all.mean()
+
+    # 5. standard deviation
+    sddr = daily_returns_all.std()
+
+    # 6. Sharpe Ratio
+    # sr = math.sqrt(sf)*(daily_returns_all.mean() - rfr/sddr)
+    sr = math.sqrt(sf) * (adr - rfr) / sddr
+
+    # Compare daily portfolio value with SPY using a normalized plot
 
 
-# def test_code():
-#     """
-#     Helper function to test code
-#     """
-#     # this is a helper function you can use to test your code
-#     # note that during autograding his function will not be called.
-#     # Define input parameters
-#
-#     of = "./orders/orders-02.csv"
-#     sv = 1000000
-#     df = pd.read_csv(of)
-#
-#     # Process orders
-#     portvals = compute_portvals(orders_file=of, start_val=sv)
-#     if isinstance(portvals, pd.DataFrame):
-#         portvals = portvals[portvals.columns[0]]  # just get the first column
-#     else:
-#         "warning, code did not return a DataFrame"
-#
-#     # Get portfolio stats
-#     # Here we just fake the data. you should use your code from previous assignments.
-#     start_date = min(df['Date'])
-#     end_date = max(df['Date'])
-#     allocs = [1 / len(df['Symbol'].unique())] * len(df['Symbol'].unique())
-#     cum_ret, avg_daily_ret, std_daily_ret, sharpe_ratio, ev, portvals =opt.assess_portfolio(
-#         start_date,
-#         end_date,
-#         syms = df['Symbol'].unique(),
-#         allocs = allocs,
-#         sv = 1000000,
-#         rfr = 0.0,
-#         sf = 252.0
-#     )
-#
-#
-#
-#     # # Compare portfolio against $SPX
-#     print(f"Date Range: {start_date} to {end_date}")
-#     print()
-#     print(f"Sharpe Ratio of Fund: {sharpe_ratio}")
-#     # print(f"Sharpe Ratio of SPY : {sharpe_ratio_SPY}")
-#     print()
-#     print(f"Cumulative Return of Fund: {cum_ret}")
-#     # print(f"Cumulative Return of SPY : {cum_ret_SPY}")
-#     print()
-#     print(f"Standard Deviation of Fund: {std_daily_ret}")
-#     # print(f"Standard Deviation of SPY : {std_daily_ret_SPY}")
-#     print()
-#     print(f"Average Daily Return of Fund: {avg_daily_ret}")
-#     # print(f"Average Daily Return of SPY : {avg_daily_ret_SPY}")
-#     print()
-#     print(f"Final Portfolio Value: {portvals[-1]}")
+    ev = port_val[-1]
+    return cr, adr, sddr, sr, ev,port_val
+
+
+def test_code():
+    """
+    Helper function to test code
+    """
+    # this is a helper function you can use to test your code
+    # note that during autograding his function will not be called.
+    # Define input parameters
+
+    of = "./orders/orders-01.csv"
+    sv = 1000000
+    df = pd.read_csv(of)
+
+    # Process orders
+    portvals = compute_portvals(orders_file=of, start_val=sv, commission= 0.0, impact=0.0)
+    if isinstance(portvals, pd.DataFrame):
+        portvals = portvals[portvals.columns[0]]  # just get the first column
+    else:
+        "warning, code did not return a DataFrame"
+
+    # Get portfolio stats
+    # Here we just fake the data. you should use your code from previous assignments.
+    start_date = min(df['Date'])
+    end_date = max(df['Date'])
+
+
+
+
+    cum_ret, avg_daily_ret, std_daily_ret, sharpe_ratio, ev, portvals =assess_portfolio(
+        portvals,
+        rfr = 0.0,
+        sf = 252.0
+    )
+
+
+
+    # # Compare portfolio against $SPX
+    print(f"Date Range: {start_date} to {end_date}")
+    print()
+    print(f"Sharpe Ratio of Fund: {sharpe_ratio}")
+    # print(f"Sharpe Ratio of SPY : {sharpe_ratio_SPY}")
+    print()
+    print(f"Cumulative Return of Fund: {cum_ret}")
+    # print(f"Cumulative Return of SPY : {cum_ret_SPY}")
+    print()
+    print(f"Standard Deviation of Fund: {std_daily_ret}")
+    # print(f"Standard Deviation of SPY : {std_daily_ret_SPY}")
+    print()
+    print(f"Average Daily Return of Fund: {avg_daily_ret}")
+    # print(f"Average Daily Return of SPY : {avg_daily_ret_SPY}")
+    print()
+    print(f"Final Portfolio Value: {portvals[-1]}")
   		  	   		 	   		  		  		    	 		 		   		 		  
 def author():
     """  		  	   		 	   		  		  		    	 		 		   		 		  
