@@ -34,10 +34,7 @@ import numpy as np
   		  	   		 	   		  		  		    	 		 		   		 		  
 import pandas as pd  		  	   		 	   		  		  		    	 		 		   		 		  
 from util import get_data, plot_data  		  	   		 	   		  		  		    	 		 		   		 		  
-import optimize_something.optimization as opt
-pd.set_option('display.max_columns', None)
-pd.set_option("display.max_rows", None)
-pd.options.display.float_format = '{:.2f}'.format
+
 def build_prices(df):
 
     start_date = min(df['Date'])
@@ -238,23 +235,6 @@ def test_code():
     )
 
 
-
-    # # Compare portfolio against $SPX
-    print(f"Date Range: {start_date} to {end_date}")
-    print()
-    print(f"Sharpe Ratio of Fund: {sharpe_ratio}")
-    # print(f"Sharpe Ratio of SPY : {sharpe_ratio_SPY}")
-    print()
-    print(f"Cumulative Return of Fund: {cum_ret}")
-    # print(f"Cumulative Return of SPY : {cum_ret_SPY}")
-    print()
-    print(f"Standard Deviation of Fund: {std_daily_ret}")
-    # print(f"Standard Deviation of SPY : {std_daily_ret_SPY}")
-    print()
-    print(f"Average Daily Return of Fund: {avg_daily_ret}")
-    # print(f"Average Daily Return of SPY : {avg_daily_ret_SPY}")
-    print()
-    print(f"Final Portfolio Value: {portvals[-1]}")
   		  	   		 	   		  		  		    	 		 		   		 		  
 def author():
     """  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -267,6 +247,4 @@ def study_group(self):
 
     return 'tcheng99'
 
-# if __name__ == "__main__":
-#     test_code()
 
