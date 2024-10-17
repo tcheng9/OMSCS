@@ -16,34 +16,123 @@ class Indicators:
         pass
 
     def get_stocks(self):
-        print('inside of get_stocks')
-        of = "./orders/orders-01.csv"
-        sv = 1000000
-        df = pd.read_csv(of)
 
-        print('\n')
-        # start_date = min(df['Date'])
-        # end_date = max(df['Date'])
 
-        start_date = '2008-01-01'
+        start_date = '2007-12-01'
         end_date = '2009-12-31'
 
-        stocks = df['Symbol'].unique()
         prices = get_data(['JPM'], pd.date_range(start_date, end_date))
         prices = prices['JPM']
+        self.stocks = prices
+        #Indicator 1: simple moving average
+        self.simple_moving_average(prices)
+        self.bolinger_bands(prices)
+        self.stochastic_indicator(prices)
+        self.rate_of_change(prices)
         return prices
 
 
-    def bolinger_bands(self):
+    def bolinger_bands(self, stocks):
+        stock_sd = stocks.copy()
+        stock_sd.iloc[0:] = 0
+        #BB postive where sma + 2*sd
+        bb_pos = stocks.copy()
+        bb_pos.iloc[0:] = 0
+
+        ##BB negative where sma - 2 * sd
+        bb_neg = stocks.copy()
+        bb_neg.iloc[0:] = 0
+
+        # start_row = stocks.iloc[20]
+        #getting SD for the entire time period
+        period = 14
+        for i in range(20, stocks.shape[0]):
+            sma = (stocks.iloc[i - period: i + 1].sum(axis=0)) / period
+            std = stocks.iloc[i-period:i+1].std()
+            bb_pos.iloc[i] = sma + (2 * (std))
+            bb_neg.iloc[i] = sma - (2*(std))
+        # print('bb pos')
+        # print(bb_pos.iloc[20:])
+        #
+        # print('---------')
+        # print('bb neg')
+        # print(bb_neg.iloc[20:])
+
+    def simple_moving_average(self, stocks):
+        sma = stocks.copy()
+        sma.iloc[0:] = 0
+
+
+        stocks.iloc[10]
+
+        period = 14
+        # print(stocks.iloc[20-14:20+1])
+        sum_one = stocks.iloc[20-14:20+1].sum(axis =0)
+        # print(sum_one)
+
+        for i in range(20, stocks.shape[0]):
+            val = (stocks.iloc[i-period: i+1].sum(axis =0)) / period
+            sma.iloc[i] = val
+        # print(sma.iloc[20:])
+        return sma
+
+
+    def stochastic_indicator(self, stocks):
+        si = stocks.copy()
+        si.iloc[0:] = 0
+        period = 14
+        # print(stocks.iloc[20-14:20+1])
+
+        #high over past 14 days
+        high = stocks.iloc[20 - 14:20 + 1].max()
+
+
+        #low of over past 14 days
+        low = stocks.iloc[20 - 14:20 + 1].min()
+
+        for i in range(20, stocks.shape[0]):
+            high = stocks.iloc[i-period: i+ 1].max()
+            low = stocks.iloc[i-period:i+1].min()
+            close = stocks.iloc[i]
+            val = ((close-low)/(high-low))* 100
+
+            si.iloc[i] = val
+        # print(si[20:])
+
+
+
         pass
 
-    def simple_moving_average(self):
-        pass
 
-    def stochastic_indicator(self):
-        pass
+    def rate_of_change(self, stocks):
+        roc = stocks.copy()
+        roc.iloc[0:] = 0
+        period = 14
+        # print(stocks.iloc[20-14:20+1])
 
-    def commodity_channel_index(self):
+        for i in range(20, stocks.shape[0]):
+            today = stocks.iloc[i]
+            past = stocks.iloc[i-period]
+
+            val = ((today-past)/past) * 100
+
+            roc.iloc[i] = val
+
+        print(roc.iloc[20:])
+
+        pass
+    def commodity_channel_index(self, stocks):
+        roc = stocks.copy()
+        roc.iloc[0:] = 0
+        period = 14
+
+        # typical_rate = ?? where to get the high and low?
+        # moving_average =  This is just the moving average
+        # mean_deviation = abs(typical price - moving average) / period of time
+
+
+
+
         pass
 
 
@@ -66,25 +155,13 @@ def test_code():
     # note that during autograding his function will not be called.
     # Define input parameters
 
-    of = "./orders/orders-01.csv"
-    sv = 1000000
-    df = pd.read_csv(of)
 
-    print('\n')
-    # start_date = min(df['Date'])
-    # end_date = max(df['Date'])
-
-    start_date = '2008-01-01'
-    end_date = '2009-12-31'
-
-    stocks = df['Symbol'].unique()
-    prices = get_data(['JPM'], pd.date_range(start_date, end_date))
-    prices = prices['JPM']
+    indicator = Indicators()
+    indicator.get_stocks()
+    # indicator.simple_moving_average()
+    # indicator.bolinger_bands()
 
 
 
-if __name__ == '__main__':
-
-    indicators = Indicators
-    prices = indicators.get_stocks()
-    print(prices)
+if __name__ == "__main__":
+    test_code()
