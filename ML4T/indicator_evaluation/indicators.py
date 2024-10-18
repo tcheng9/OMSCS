@@ -29,6 +29,7 @@ class Indicators:
         self.bolinger_bands(prices)
         self.stochastic_indicator(prices)
         self.rate_of_change(prices)
+        self.commodity_channel_index(prices)
         return prices
 
 
@@ -122,15 +123,50 @@ class Indicators:
 
         pass
     def commodity_channel_index(self, stocks):
-        roc = stocks.copy()
-        roc.iloc[0:] = 0
+        cci = stocks.copy()
+        cci.iloc[0:] = 0
+
+
         period = 14
+        # print(stocks.iloc[20-14:20+1])
 
-        # typical_rate = ?? where to get the high and low?
-        # moving_average =  This is just the moving average
-        # mean_deviation = abs(typical price - moving average) / period of time
+        # high over past 14 days
+        high = stocks.iloc[20 - 14:20 + 1].max()
+
+        # low of over past 14 days
+        low = stocks.iloc[20 - 14:20 + 1].min()
+
+        #creating typical price
+        tp = stocks.copy()
+        tp.iloc[0:] = 0
+        for i in range(20, stocks.shape[0]):
+            high = stocks.iloc[i - period: i + 1].max()
+            low = stocks.iloc[i - period:i + 1].min()
+            close = stocks.iloc[i]
+            tp.iloc[i] = (high + low + close) / 3
+
+        #creating moving average OF TYPICAL PRICE OVER P PERIODS
+        ma_tp = stocks.copy()
+        ma_tp.iloc[0:] = 0
 
 
+        for i in range(20, stocks.shape[0]):
+            val = (tp.iloc[i-period: i+1].sum(axis =0)) / period
+            ma_tp[i] = val
+
+        #calculating mean deviation
+        md = stocks.copy()
+        md.iloc[0:] = 0
+
+
+        for i in range(20, stocks.shape[0]):
+            diff = tp[i-period:i+1] - ma_tp[i-period: i+1]
+            abs_diff = diff.abs()
+            sum_abs_diff = abs_diff.sum()
+            md[i] = sum_abs_diff/period
+
+        for i in range(20, stocks.shape[0]):
+            cci[i] = (tp.iloc[i] - ma_tp.iloc[i]) / (0.015 * md.iloc[i])
 
 
         pass
