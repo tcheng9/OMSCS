@@ -81,7 +81,7 @@ def build_trades(csv_df, prices, commission, impact):
             trades.loc[date, symbol] = trades.loc[date, symbol] + (-1 * shares)
 
     ##creating an empty trades DF to add info to
-
+    print(trades)
     return trades
 
 
@@ -240,3 +240,6 @@ def study_group(self):
     return 'tcheng99'
 
 
+if __name__ == "__main__":
+    print('here')
+    test_code()

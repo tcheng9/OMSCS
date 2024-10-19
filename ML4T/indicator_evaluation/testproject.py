@@ -8,6 +8,11 @@ import numpy as np
 import pandas as pd
 from util import get_data, plot_data
 import matplotlib.pyplot as plt
+from marketsimcode import compute_portvals
+
+
+def build_stocks():
+    print('placeholder')
 
 def author():
     """
