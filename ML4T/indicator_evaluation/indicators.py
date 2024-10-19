@@ -124,7 +124,7 @@ class Indicators:
         pass
     def commodity_channel_index(self, stocks):
         cci = stocks.copy()
-        cci.iloc[0:] = 0
+        cci.iloc[0:,] = 0
 
 
         period = 14

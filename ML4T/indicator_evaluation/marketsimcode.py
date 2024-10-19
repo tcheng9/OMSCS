@@ -36,53 +36,55 @@ from util import get_data, plot_data
 
 
 def build_prices(df):
-    start_date = min(df['Date'])
-    end_date = max(df['Date'])
+    # print(df.index[0])
+    # start_date = df.index[0]
+    # end_date = df.index[-1]
+    stocks = df.columns[0]
 
-    stocks = df['Symbol'].unique()
-    # start_date = dt.datetime(2011, 1, 1)
-    # end_date = dt.datetime(2011, 12, 31)
-    prices = get_data(stocks, pd.date_range(start_date, end_date))
-    prices = prices[stocks]  # remove SPY
-    prices['Cash'] = 1.00
-
+    prices = get_data([stocks], pd.date_range(df.index[0], df.index[-1]))
+    prices = pd.DataFrame(prices[stocks], columns = [stocks])
+    # print(df)
+    # prices = prices[stocks]  # remove SPY
+    # prices[''] = 1.00
+    # print(prices)
+    # print(prices.shape)
     return prices
 
 
-def build_trades(csv_df, prices, commission, impact):
-    # approach 1: make a fresh df
-    # stocks = csv_df.loc[:, 'Symbol'].unique()
-
-    # trades = pd.DataFrame(index = csv_df.index, columns = stocks)
-    # trades['Cash'] = 1
-    # trades.fillna(0)
-
-    # approach 2: copy an old one and clean it
-    trades = prices.copy(deep=True)
-    trades.iloc[:, :] = 0
-
-    # UPDATING TRADES TABLE
-    for i in range(csv_df.shape[0]):
-
-        date, symbol, order, shares = csv_df.iloc[i, :]
-
-        price = prices.loc[date, symbol]
-
-        if order == "BUY":
-            # if you buy, cash goes down but shares go up
-            trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (
-                        -1 * (((price + (impact * price)) * shares) + commission))
-            # trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (-1 * price * shares)
-            trades.loc[date, symbol] = trades.loc[date, symbol] + shares
-        else:  # sell
-            # if you sell, cash can go up OR down but shares go down
-            trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (((price - (impact * price)) * shares) - commission)
-            # trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (price*shares)
-            trades.loc[date, symbol] = trades.loc[date, symbol] + (-1 * shares)
-
-    ##creating an empty trades DF to add info to
-    print(trades)
-    return trades
+# def build_trades(csv_df, prices, commission, impact):
+#     # approach 1: make a fresh df
+#     # stocks = csv_df.loc[:, 'Symbol'].unique()
+#
+#     # trades = pd.DataFrame(index = csv_df.index, columns = stocks)
+#     # trades['Cash'] = 1
+#     # trades.fillna(0)
+#
+#     # approach 2: copy an old one and clean it
+#     trades = prices.copy(deep=True)
+#     trades.iloc[:, :] = 0
+#
+#     # UPDATING TRADES TABLE
+#     for i in range(csv_df.shape[0]):
+#
+#         date, symbol, order, shares = csv_df.iloc[i, :]
+#
+#         price = prices.loc[date, symbol]
+#
+#         if order == "BUY":
+#             # if you buy, cash goes down but shares go up
+#             trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (
+#                         -1 * (((price + (impact * price)) * shares) + commission))
+#             # trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (-1 * price * shares)
+#             trades.loc[date, symbol] = trades.loc[date, symbol] + shares
+#         else:  # sell
+#             # if you sell, cash can go up OR down but shares go down
+#             trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (((price - (impact * price)) * shares) - commission)
+#             # trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (price*shares)
+#             trades.loc[date, symbol] = trades.loc[date, symbol] + (-1 * shares)
+#
+#     ##creating an empty trades DF to add info to
+#     print(trades)
+#     return trades
 
 
 def build_holdings(prices, trades, start_val):
@@ -98,7 +100,7 @@ def build_holdings(prices, trades, start_val):
     holdings.iloc[0, -1] = start_val
 
     holdings = holdings.cumsum(axis=0) + trades.cumsum(axis=0)
-
+    # print(holdings.shape)
     # day 1 - end case;
 
     return holdings
@@ -108,16 +110,18 @@ def build_values(prices, holdings):
     ###NOTE: try df.cumsum()
     # copy an old one and clean it and use it
     values = prices.copy(deep=True)
-    values.iloc[:, :] = 0
+    values.iloc[0:, ] = 0
 
     # need consider day 0 case
 
     rows, cols = holdings.shape
     # iterate through pandas df
-    for r in range(rows):
-        for c in range(cols):
-            values.iloc[r, c] = holdings.iloc[r, c] * prices.iloc[r, c]
 
+    for i in range(rows):
+        values.iloc[i] = holdings.iloc[i] * prices.iloc[i]
+    # print('values')
+    # print(values)
+    # print(values.shape)
     return values
 
 
@@ -126,12 +130,14 @@ def build_daytotal(values):
     day_total = values.copy(deep=True)
     day_total.iloc[:, :] = 0
     day_total = values.sum(axis=1)
-
+    # print('daytotla')
+    # print(day_total)
+    # print(day_total.shape)
     return day_total
 
 
 def compute_portvals(
-        orders_file="./orders/orders.csv",
+        trades = pd.DataFrame([0]),
         start_val=1000000,
         commission=9.95,
         impact=0.005,
@@ -157,16 +163,18 @@ def compute_portvals(
     # TODO: Your code here
 
     # df = pd.read_csv('./orders/orders-01.csv',  parse_dates=True, na_values = ['nan'])
-    df = pd.read_csv(orders_file, parse_dates=True, na_values=['nan'])
-    df = df.sort_values(by="Date")
-
-    prices = build_prices(df)
-    trades = build_trades(df, prices, commission, impact)
+    # df = pd.read_csv(orders_file, parse_dates=True, na_values=['nan'])
+    # df = df.sort_values(by="Date")
+    #
+    prices = build_prices(trades)
+    # # trades = build_trades(df, prices, commission, impact)
     holdings = build_holdings(prices, trades, start_val)
+
     values = build_values(prices, holdings)
-
+    # #
     day_total = build_daytotal(values)
-
+    # print('here in marketsimcode daytotal')
+    # print(day_total)
     return day_total
 
 
@@ -197,35 +205,35 @@ def assess_portfolio(
     return cr, adr, sddr, sr, ev, port_val
 
 
-def test_code():
-    """
-    Helper function to test code
-    """
-    # this is a helper function you can use to test your code
-    # note that during autograding his function will not be called.
-    # Define input parameters
-
-    of = "./orders/orders-01.csv"
-    sv = 1000000
-    df = pd.read_csv(of)
-
-    # Process orders
-    portvals = compute_portvals(orders_file=of, start_val=sv, commission=0.0, impact=0.0)
-    if isinstance(portvals, pd.DataFrame):
-        portvals = portvals[portvals.columns[0]]  # just get the first column
-    else:
-        "warning, code did not return a DataFrame"
-
-    # Get portfolio stats
-    # Here we just fake the data. you should use your code from previous assignments.
-    start_date = min(df['Date'])
-    end_date = max(df['Date'])
-
-    cum_ret, avg_daily_ret, std_daily_ret, sharpe_ratio, ev, portvals = assess_portfolio(
-        portvals,
-        rfr=0.0,
-        sf=252.0
-    )
+# def test_code():
+#     """
+#     Helper function to test code
+#     """
+#     # this is a helper function you can use to test your code
+#     # note that during autograding his function will not be called.
+#     # Define input parameters
+#
+#     of = "./orders/orders-01.csv"
+#     sv = 1000000
+#     df = pd.read_csv(of)
+#
+#     # Process orders
+#     portvals = compute_portvals(orders_file=of, start_val=sv, commission=0.0, impact=0.0)
+#     if isinstance(portvals, pd.DataFrame):
+#         portvals = portvals[portvals.columns[0]]  # just get the first column
+#     else:
+#         "warning, code did not return a DataFrame"
+#
+#     # Get portfolio stats
+#     # Here we just fake the data. you should use your code from previous assignments.
+#     start_date = min(df['Date'])
+#     end_date = max(df['Date'])
+#
+#     cum_ret, avg_daily_ret, std_daily_ret, sharpe_ratio, ev, portvals = assess_portfolio(
+#         portvals,
+#         rfr=0.0,
+#         sf=252.0
+#     )
 
 
 def author():
@@ -242,4 +250,4 @@ def study_group(self):
 
 if __name__ == "__main__":
     print('here')
-    test_code()
+    # test_code()
