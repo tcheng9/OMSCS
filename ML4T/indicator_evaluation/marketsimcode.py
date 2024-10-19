@@ -36,92 +36,81 @@ from util import get_data, plot_data
 
 
 def build_prices(df):
-    # print(df.index[0])
+
     # start_date = df.index[0]
     # end_date = df.index[-1]
     stocks = df.columns[0]
 
     prices = get_data([stocks], pd.date_range(df.index[0], df.index[-1]))
     prices = pd.DataFrame(prices[stocks], columns = [stocks])
-    # print(df)
+
     # prices = prices[stocks]  # remove SPY
-    # prices[''] = 1.00
+    prices['Cash'] = 1.00
     # print(prices)
-    # print(prices.shape)
     return prices
 
 
-# def build_trades(csv_df, prices, commission, impact):
-#     # approach 1: make a fresh df
-#     # stocks = csv_df.loc[:, 'Symbol'].unique()
-#
-#     # trades = pd.DataFrame(index = csv_df.index, columns = stocks)
-#     # trades['Cash'] = 1
-#     # trades.fillna(0)
-#
-#     # approach 2: copy an old one and clean it
-#     trades = prices.copy(deep=True)
-#     trades.iloc[:, :] = 0
-#
-#     # UPDATING TRADES TABLE
-#     for i in range(csv_df.shape[0]):
-#
-#         date, symbol, order, shares = csv_df.iloc[i, :]
-#
-#         price = prices.loc[date, symbol]
-#
-#         if order == "BUY":
-#             # if you buy, cash goes down but shares go up
-#             trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (
-#                         -1 * (((price + (impact * price)) * shares) + commission))
-#             # trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (-1 * price * shares)
-#             trades.loc[date, symbol] = trades.loc[date, symbol] + shares
-#         else:  # sell
-#             # if you sell, cash can go up OR down but shares go down
-#             trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (((price - (impact * price)) * shares) - commission)
-#             # trades.loc[date, 'Cash'] = trades.loc[date, 'Cash'] + (price*shares)
-#             trades.loc[date, symbol] = trades.loc[date, symbol] + (-1 * shares)
-#
-#     ##creating an empty trades DF to add info to
-#     print(trades)
-#     return trades
+def build_trades(opt_trades, prices, commission, impact, start_val):
+    #Setting up trades df to include cash
+    trades = prices.copy(deep=True)
+    trades.iloc[:, :] = 0
+    trades['Cash'] = 0
+
+    # trades.iloc[0, 1] = start_val
+
+    trades['JPM'] = opt_trades
+
+    for i in range(trades.shape[0]):
+        #cash = stocks * prices of that day + (cash of today)
+        # trades.loc[date, 'Cash'] + (-1 * ((( price + (impact * price)) * shares)+commission)   )
+        trades.iloc[i, 1] = ((trades.iloc[i, 0] * prices.iloc[i, 0]) * -1) + trades.iloc[i, 1]
+        # print(-1 * trades.iloc[i, 0] * prices.iloc[i])
+    # print(trades)
+
+    ##creating an empty trades DF to add info to
+    # print(trades)
+    return trades
 
 
 def build_holdings(prices, trades, start_val):
+
     # copy an old one and clean it and use it
     holdings = trades.copy(deep=True)
     holdings.iloc[:, :] = 0
-
-    # build holdings table
-
-    # holdings.loc[:, 'AAPL'] = trades.loc[:, 'AAPL']
-
-    # day 0 case:
     holdings.iloc[0, -1] = start_val
-
+    holdings.iloc[0:, 0 ] = trades.iloc[0:,0]
+    # print(holdings)
+    # #initial setup
+    # holdings.iloc[0:, ]
+        #
+    #
+    # #setting up trades
+    # for i in range(trades.shape[0]):
+    #     holdings.iloc[i,0] = trades.iloc[i]
+    # holdings.iloc[0, -1] = start_val
+    #
+    # #calculating cash
+    # for i in range(holdings.shape[0]):
+    #     holdings.iloc[i, 1] = holdings.iloc[i, 0] * prices.iloc[i] #cash = holdings * price today - cash yesterday
     holdings = holdings.cumsum(axis=0) + trades.cumsum(axis=0)
-    # print(holdings.shape)
-    # day 1 - end case;
-
+    # print(holdings)
     return holdings
 
 
 def build_values(prices, holdings):
     ###NOTE: try df.cumsum()
     # copy an old one and clean it and use it
-    values = prices.copy(deep=True)
+    values = holdings.copy(deep=True)
     values.iloc[0:, ] = 0
 
     # need consider day 0 case
 
     rows, cols = holdings.shape
     # iterate through pandas df
-
+    print(prices)
     for i in range(rows):
         values.iloc[i] = holdings.iloc[i] * prices.iloc[i]
-    # print('values')
     # print(values)
-    # print(values.shape)
     return values
 
 
@@ -130,9 +119,7 @@ def build_daytotal(values):
     day_total = values.copy(deep=True)
     day_total.iloc[:, :] = 0
     day_total = values.sum(axis=1)
-    # print('daytotla')
-    # print(day_total)
-    # print(day_total.shape)
+
     return day_total
 
 
@@ -167,14 +154,15 @@ def compute_portvals(
     # df = df.sort_values(by="Date")
     #
     prices = build_prices(trades)
-    # # trades = build_trades(df, prices, commission, impact)
-    holdings = build_holdings(prices, trades, start_val)
+    adj_trades = build_trades(trades, prices, commission, impact, start_val)
+
+    holdings = build_holdings(prices, adj_trades, start_val)
 
     values = build_values(prices, holdings)
     # #
     day_total = build_daytotal(values)
-    # print('here in marketsimcode daytotal')
-    print(day_total)
+
+
     return day_total
 
 
@@ -249,5 +237,22 @@ def study_group(self):
 
 
 if __name__ == "__main__":
-    print('here')
+
     # test_code()
+
+    '''
+    initial setup
+    '''
+    # holdings['Cash'] = 0
+    # build holdings table
+
+    # holdings.loc[:, 'AAPL'] = trades.loc[:, 'AAPL']
+
+    # day 0 case:
+    # holdings.iloc[0,-1 ] = start_val
+    #
+    # # print(holdings)
+    # holdings = holdings.cumsum(axis=0) + trades.cumsum(axis=0)
+    # # print(holdings.shape)
+    # # day 1 - end case;
+    # # print(holdings)

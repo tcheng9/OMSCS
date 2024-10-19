@@ -30,27 +30,46 @@ def study_group(self):
 
 
 if __name__ == "__main__":
-    print('place other code here')
+
+
+
+
+    #Calc TOS
     optimal_trades = testPolicy()
+
     tos_vals = compute_portvals(optimal_trades, start_val = 100000, commission =0.0, impact = 0.0 )
-    print('here')
-    # print(port_vals)
+    # print(tos_vals)
+    # cr, adr, sddr, sr, ev, port_val = assess_portfolio(tos_vals, 252,0)
+    # # print('TOS vals')
+    # # print(cr, adr, sddr, sr, ev, )
+    # print(tos_vals)
+    normed_tos_vals = tos_vals / tos_vals.iloc[0]
+    print(normed_tos_vals)
+    # print(normed_tos_vals)
+    # print(normed_tos_vals)
 
-    cr, adr, sddr, sr, ev, port_val = assess_portfolio(tos_vals, 252,0)
-    print('TOS vals')
-    print(cr, adr, sddr, sr, ev, )
+    #calc benchmark
 
-
-    print('benchmark')
 
     benchmark = benchmark()
+    benchmark['Cash'] = 1
+    # print(benchmark)
     benchmark_vals = compute_portvals(benchmark, 100000, 0.0, 0.0)
-    cr, adr, sddr, sr, ev, port_val = assess_portfolio(benchmark_vals, 252, 0)
-    print(cr, adr, sddr, sr, ev, )
+    # cr, adr, sddr, sr, ev, port_val = assess_portfolio(benchmark_vals, 252, 0)
+    # print(cr, adr, sddr, sr, ev, )
+    # normed_benchmark_vals = benchmark_vals/benchmark_vals.iloc[0]
 
-    benchmark_vals = benchmark_vals/benchmark_vals[0]
-    print(benchmark_vals )
-    tos_vals = tos_vals/tos_vals[0]
-    plt.plot(benchmark_vals, color = "purple" )
-    plt.plot(tos_vals, color = "red")
+
+
+    # # Prices
+    # df = optimal_trades
+    # stocks = df.columns[0]
+
+    # prices = get_data([stocks], pd.date_range(df.index[0], df.index[-1]))
+    # prices = pd.DataFrame(prices[stocks], columns=[stocks])
+
+
+    # plt.plot(normed_benchmark_vals, color = "purple" )
+
+    plt.plot(normed_tos_vals, color = "red")
     plt.show()

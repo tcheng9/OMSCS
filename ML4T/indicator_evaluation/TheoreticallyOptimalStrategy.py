@@ -9,31 +9,28 @@ import pandas as pd
 from util import get_data, plot_data
 import matplotlib.pyplot as plt
 
-
+# pd.set_option('display.max_row', None)
 def testPolicy(symbol = "JPM", sd=dt.datetime(2008, 1, 1), ed=dt.datetime(2009,12,31), sv = 100000):
-    print('placeholder')
-    print('\n')
+
     prices = get_data([symbol], pd.date_range(sd, ed))
-    # print(prices.shape)
+
     prices = prices[symbol]  # remove SPY
     trades = pd.DataFrame(prices, columns = [symbol])
 
     # prices['Cash'] = 1.00
-    # print(prices)
-
 
 
     trades.iloc[0:,] = 0
-    # print(trades.shape)
     current_holdings = 0
 
     for i in range(prices.shape[0]-1):
+
         today = prices.iloc[i,]
         tomorrow = prices.iloc[i+1,]
-        # print(today, 'vs', tomorrow)
+
         if tomorrow > today:
             # price will go up
-            # print('price up')
+
             if current_holdings == 1000:
 
                 #already holding stocks long and dont want to short
@@ -60,7 +57,7 @@ def testPolicy(symbol = "JPM", sd=dt.datetime(2008, 1, 1), ed=dt.datetime(2009,1
             elif current_holdings == 0:
 
                 #want to short stock and not buy long
-                trades.iloc[i,] = 1000
+                trades.iloc[i,] = -1000
                 current_holdings -= 1000
             else:
 
@@ -68,9 +65,8 @@ def testPolicy(symbol = "JPM", sd=dt.datetime(2008, 1, 1), ed=dt.datetime(2009,1
                 #you don't wnat to buy long, can't short anymore -> do nothing
                 trades.iloc[i,] = 0
         else:
-            # print('price stays the exact same')
+
             trades.iloc[i,] = 0
-    # print(trades.shape)
     # print(trades)
     return trades
 
@@ -83,17 +79,17 @@ def benchmark(symbol = "JPM", sd=dt.datetime(2008, 1, 1), ed=dt.datetime(2009,12
     trades = pd.DataFrame(prices, columns = [symbol])
 
     # prices['Cash'] = 1.00
-    # print(prices)
+
 
 
 
     trades.iloc[0:,] = 0
-    # print(trades.shape)
+
     current_holdings = 0
 
     #day 1 - just buy 1000 of stock
     trades.iloc[0] = 1000
-    print(trades)
+
     return trades
 
 def author():
