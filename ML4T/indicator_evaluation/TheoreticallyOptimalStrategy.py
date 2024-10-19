@@ -75,6 +75,26 @@ def testPolicy(symbol = "JPM", sd=dt.datetime(2008, 1, 1), ed=dt.datetime(2009,1
     return trades
 
 
+def benchmark(symbol = "JPM", sd=dt.datetime(2008, 1, 1), ed=dt.datetime(2009,12,31), sv = 100000):
+
+    prices = get_data([symbol], pd.date_range(sd, ed))
+    # print(prices.shape)
+    prices = prices[symbol]  # remove SPY
+    trades = pd.DataFrame(prices, columns = [symbol])
+
+    # prices['Cash'] = 1.00
+    # print(prices)
+
+
+
+    trades.iloc[0:,] = 0
+    # print(trades.shape)
+    current_holdings = 0
+
+    #day 1 - just buy 1000 of stock
+    trades.iloc[0] = 1000
+    print(trades)
+    return trades
 
 def author():
     """

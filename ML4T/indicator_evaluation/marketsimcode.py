@@ -138,7 +138,7 @@ def build_daytotal(values):
 
 def compute_portvals(
         trades = pd.DataFrame([0]),
-        start_val=1000000,
+        start_val=100000,
         commission=9.95,
         impact=0.005,
 ):
@@ -174,7 +174,7 @@ def compute_portvals(
     # #
     day_total = build_daytotal(values)
     # print('here in marketsimcode daytotal')
-    # print(day_total)
+    print(day_total)
     return day_total
 
 
