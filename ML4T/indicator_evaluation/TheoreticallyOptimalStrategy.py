@@ -10,7 +10,7 @@ from util import get_data, plot_data
 import matplotlib.pyplot as plt
 
 # pd.set_option('display.max_row', None)
-def testPolicy(symbol = "JPM", sd=dt.datetime(2008, 1, 1), ed=dt.datetime(2009,12,31), sv = 100000):
+def testPolicy(symbol = "AAPL", sd=dt.datetime(2010, 1, 1), ed=dt.datetime(2011,12,31), sv = 100000):
 
     prices = get_data([symbol], pd.date_range(sd, ed))
 
@@ -68,29 +68,14 @@ def testPolicy(symbol = "JPM", sd=dt.datetime(2008, 1, 1), ed=dt.datetime(2009,1
 
             trades.iloc[i,] = 0
     # print(trades)
+
+
+
+
     return trades
 
 
-def benchmark(symbol = "JPM", sd=dt.datetime(2008, 1, 1), ed=dt.datetime(2009,12,31), sv = 100000):
 
-    prices = get_data([symbol], pd.date_range(sd, ed))
-    # print(prices.shape)
-    prices = prices[symbol]  # remove SPY
-    trades = pd.DataFrame(prices, columns = [symbol])
-
-    # prices['Cash'] = 1.00
-
-
-
-
-    trades.iloc[0:,] = 0
-
-    current_holdings = 0
-
-    #day 1 - just buy 1000 of stock
-    trades.iloc[0] = 1000
-
-    return trades
 
 def author():
     """

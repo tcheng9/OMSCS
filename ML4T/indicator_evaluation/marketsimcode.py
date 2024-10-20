@@ -46,7 +46,7 @@ def build_prices(df):
 
     # prices = prices[stocks]  # remove SPY
     prices['Cash'] = 1.00
-    # print(prices)
+
     return prices
 
 
@@ -65,10 +65,9 @@ def build_trades(opt_trades, prices, commission, impact, start_val):
         # trades.loc[date, 'Cash'] + (-1 * ((( price + (impact * price)) * shares)+commission)   )
         trades.iloc[i, 1] = ((trades.iloc[i, 0] * prices.iloc[i, 0]) * -1) + trades.iloc[i, 1]
         # print(-1 * trades.iloc[i, 0] * prices.iloc[i])
-    # print(trades)
 
     ##creating an empty trades DF to add info to
-    # print(trades)
+
     return trades
 
 
@@ -78,8 +77,8 @@ def build_holdings(prices, trades, start_val):
     holdings = trades.copy(deep=True)
     holdings.iloc[:, :] = 0
     holdings.iloc[0, -1] = start_val
-    holdings.iloc[0:, 0 ] = trades.iloc[0:,0]
-    # print(holdings)
+    holdings.iloc[0:, 0 ] = 0
+
     # #initial setup
     # holdings.iloc[0:, ]
         #
@@ -93,7 +92,7 @@ def build_holdings(prices, trades, start_val):
     # for i in range(holdings.shape[0]):
     #     holdings.iloc[i, 1] = holdings.iloc[i, 0] * prices.iloc[i] #cash = holdings * price today - cash yesterday
     holdings = holdings.cumsum(axis=0) + trades.cumsum(axis=0)
-    # print(holdings)
+
     return holdings
 
 
@@ -101,18 +100,19 @@ def build_values(prices, holdings):
     ###NOTE: try df.cumsum()
     # copy an old one and clean it and use it
     values = holdings.copy(deep=True)
-    values.iloc[0:, ] = 0
+    # print(values.shape)
+    values.iloc[0:, :] = 0
 
     # need consider day 0 case
 
     rows, cols = holdings.shape
     # iterate through pandas df
-    print(prices)
+
     for i in range(rows):
         values.iloc[i] = holdings.iloc[i] * prices.iloc[i]
-    # print(values)
-    return values
 
+    return values
+    # return 1
 
 def build_daytotal(values):
     # copy an old one and clean it and use it
@@ -152,14 +152,17 @@ def compute_portvals(
     # df = pd.read_csv('./orders/orders-01.csv',  parse_dates=True, na_values = ['nan'])
     # df = pd.read_csv(orders_file, parse_dates=True, na_values=['nan'])
     # df = df.sort_values(by="Date")
-    #
+
+
+
     prices = build_prices(trades)
+
     adj_trades = build_trades(trades, prices, commission, impact, start_val)
-
+    # print(adj_trades)
     holdings = build_holdings(prices, adj_trades, start_val)
-
+    # print(holdings)
     values = build_values(prices, holdings)
-    # #
+    #
     day_total = build_daytotal(values)
 
 
@@ -237,7 +240,7 @@ def study_group(self):
 
 
 if __name__ == "__main__":
-
+    # compute_portvals()
     # test_code()
 
     '''
