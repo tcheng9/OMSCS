@@ -9,7 +9,7 @@ import pandas as pd
 from util import get_data, plot_data
 import matplotlib.pyplot as plt
 
-
+pd.set_option('display.max_row', None)
 class Indicators:
     def __init__(self):
         self.stocks = None
@@ -20,20 +20,24 @@ class Indicators:
 
         start_date = '2007-12-01'
         end_date = '2009-12-31'
-
         prices = get_data(['JPM'], pd.date_range(start_date, end_date))
         prices = prices['JPM']
+        print('\n')
+
         self.stocks = prices
         #Indicator 1: simple moving average
-        self.simple_moving_average(prices)
-        self.bolinger_bands(prices)
+        self.simple_moving_average(prices, 14)
+        self.bolinger_bands(prices, 14)
         self.stochastic_indicator(prices)
         self.rate_of_change(prices)
         self.commodity_channel_index(prices)
         return prices
 
 
-    def bolinger_bands(self, stocks):
+    def bolinger_bands(self, stocks, period):
+        '''
+        Setup
+        '''
         stock_sd = stocks.copy()
         stock_sd.iloc[0:] = 0
         #BB postive where sma + 2*sd
@@ -44,37 +48,58 @@ class Indicators:
         bb_neg = stocks.copy()
         bb_neg.iloc[0:] = 0
 
-        # start_row = stocks.iloc[20]
-        #getting SD for the entire time period
-        period = 14
-        for i in range(20, stocks.shape[0]):
-            sma = (stocks.iloc[i - period: i + 1].sum(axis=0)) / period
-            std = stocks.iloc[i-period:i+1].std()
-            bb_pos.iloc[i] = sma + (2 * (std))
-            bb_neg.iloc[i] = sma - (2*(std))
-        # print('bb pos')
-        # print(bb_pos.iloc[20:])
-        #
-        # print('---------')
-        # print('bb neg')
-        # print(bb_neg.iloc[20:])
+        bbp = stocks.copy()
+        bbp.iloc[0:] = 0
 
-    def simple_moving_average(self, stocks):
+        '''
+        Calculating BB upper/lower and percentage
+        '''
+
+
+        #getting SD for the entire time period
+
+        # for i in range(20, stocks.shape[0]-1):
+        #     sma = (stocks.iloc[i - period: i + 1].sum(axis=0)) / period
+        #     std = stocks.iloc[i-period:i+1].std()
+        #     bb_pos.iloc[i] = sma + (2 * (std))
+        #     bb_neg.iloc[i] = sma - (2*(std))
+        sma = self.simple_moving_average(stocks, 14)
+        #vectorized approach
+        # bbp.iloc[i] = ((((price.iloc[i-period+1:i+1])) - sma[i]) ** 2).sum()
+
+        for i in range(20, stocks.shape[0]):
+            bbp.iloc[i] = ((stocks.iloc[i-period+1:i] - sma[i]) ** 2).sum()
+        #     stocks.iloc[i-period+1:i+1]
+
+        # print(sma[0])
+        # print(bbp)
+        # return bbp
+    def simple_moving_average(self, stocks, period):
+
         sma = stocks.copy()
         sma.iloc[0:] = 0
 
 
-        stocks.iloc[10]
+        # stocks.iloc[10]
 
         period = 14
-        # print(stocks.iloc[20-14:20+1])
-        sum_one = stocks.iloc[20-14:20+1].sum(axis =0)
-        # print(sum_one)
 
-        for i in range(20, stocks.shape[0]):
-            val = (stocks.iloc[i-period: i+1].sum(axis =0)) / period
-            sma.iloc[i] = val
-        # print(sma.iloc[20:])
+
+        # print(stocks)
+        # #iterative approach -> NOTE: I'M PRETTY SURE THE MATH IS OFF HERE SO CORRECT IF I USE BUT DOUBT I WILL USE
+        # for i in range(0, stocks.shape[0]):
+        #     val = (stocks.iloc[i-period: i+1].sum(axis =0)) / period
+        #     sma.iloc[i] = val
+        # # print(sma.iloc[20:])
+        # # print(sma)
+        #
+        # print('-----------------')
+        #vecotrized approach
+
+        sma = stocks.rolling(window = period, min_periods = period).mean()
+        # print(sma)
+        sma = sma.iloc[20:]
+
         return sma
 
 
@@ -82,7 +107,7 @@ class Indicators:
         si = stocks.copy()
         si.iloc[0:] = 0
         period = 14
-        # print(stocks.iloc[20-14:20+1])
+
 
         #high over past 14 days
         high = stocks.iloc[20 - 14:20 + 1].max()
@@ -98,7 +123,7 @@ class Indicators:
             val = ((close-low)/(high-low))* 100
 
             si.iloc[i] = val
-        # print(si[20:])
+
 
 
 
@@ -109,7 +134,7 @@ class Indicators:
         roc = stocks.copy()
         roc.iloc[0:] = 0
         period = 14
-        # print(stocks.iloc[20-14:20+1])
+
 
         for i in range(20, stocks.shape[0]):
             today = stocks.iloc[i]
@@ -119,7 +144,7 @@ class Indicators:
 
             roc.iloc[i] = val
 
-        print(roc.iloc[20:])
+
 
         pass
     def commodity_channel_index(self, stocks):
@@ -128,7 +153,7 @@ class Indicators:
 
 
         period = 14
-        # print(stocks.iloc[20-14:20+1])
+
 
         # high over past 14 days
         high = stocks.iloc[20 - 14:20 + 1].max()
@@ -193,9 +218,30 @@ def test_code():
 
 
     indicator = Indicators()
-    indicator.get_stocks()
-    # indicator.simple_moving_average()
-    # indicator.bolinger_bands()
+    prices = indicator.get_stocks()
+
+    '''
+    Indicator 1 - SMA
+    '''
+    sma = indicator.simple_moving_average(prices, 14)
+    sma = sma.iloc[20:]
+    normed_sma = sma/sma.iloc[0]
+    # print(normed_sma)
+
+
+    prices = prices.iloc[20:]
+    normed_prices = prices/prices.iloc[0]
+    #
+    # plt.plot()
+    # plt.plot(normed_prices, color = 'green')
+    # plt.plot(normed_sma, color = 'blue')
+    #
+    # plt.show()
+
+    '''
+    Indicator 2 - BB %
+    '''
+    indicator.bolinger_bands(prices, 14)
 
 
 
