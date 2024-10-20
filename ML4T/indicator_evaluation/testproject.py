@@ -37,14 +37,20 @@ if __name__ == "__main__":
     optimal_trades = tos.testPolicy(symbol = "JPM", sd=dt.datetime(2008, 1, 1), ed=dt.datetime(2009,12,31), sv = 100000)
     #formatting trades
 
-    #
-
+    '''
+    BUILDING OPTIMAL TRADES PORTOFILIO VALUES AND STATS
+    '''
     tos_vals = compute_portvals(optimal_trades, start_val = 100000, commission =0.0, impact = 0.0 )
-    cr, adr, sddr, sr, ev, port_val = assess_portfolio(tos_vals, 252,0)
+    cr_opt, adr_opt, sddr_opt, sr_opt, ev_opt, port_val_opt = assess_portfolio(tos_vals, 252,0)
     # print(tos_vals)
+
     normed_tos_vals = tos_vals / tos_vals.iloc[0]
-    print(cr, adr, sddr, sr, ev)
-    #calc benchmark
+    # print(cr_opt, adr_opt, sddr_opt, sr_opt, ev_opt)
+
+
+    '''
+    BUILDING BENCHMARK PORTFOLIO VALUES AND STATS
+    '''
 
     benchmark = optimal_trades.copy()
     benchmark.iloc[:,:] = 0
@@ -53,23 +59,40 @@ if __name__ == "__main__":
 
     benchmark_vals = compute_portvals(benchmark, start_val = 100000, commission =0.0, impact = 0.0)
 
-    cr, adr, sddr, sr, ev, port_val = assess_portfolio(benchmark_vals, 252, 0)
+    cr_bench, adr_bench, sddr_bench, sr_bench, ev_bench, port_val_bench = assess_portfolio(benchmark_vals, 252, 0)
 
     normed_benchmark_vals = benchmark_vals/benchmark_vals.iloc[0]
 
-    print(cr, adr, sddr, sr, ev)
-
-    # # Prices
-    # df = optimal_trades
-    # stocks = df.columns[0]
-
-    # prices = get_data([stocks], pd.date_range(df.index[0], df.index[-1]))
-    # prices = pd.DataFrame(prices[stocks], columns=[stocks])
+    # print(cr_bench, adr_bench, sddr_bench, sr_bench, ev_bench)
 
 
-    plt.plot(normed_benchmark_vals, color = "purple" )
+    '''
+    BUILDING TABLE (DONE VIA A PD DATAFRAME THEN CREATING STATS
+    '''
+    a = round(cr_bench, 10)
 
-    # plt.xticks(rotation = 45)
-    plt.plot(normed_tos_vals, color = "red")
+    cr_bench =f'{cr_bench:.6f}'
+    adr_bench = f'{adr_bench:.6f}'
+    sddr_bench = f'{sddr_bench:.6f}'
+
+
+    cr_opt = f'{cr_opt:.6f}'
+    adr_opt =  f'{adr_opt:.6f}'
+    sddr_opt = f'{sddr_opt:.6f}'
+    benchmark_list = [cr_bench, adr_bench, sddr_bench]
+    opt_list = [cr_opt, adr_opt, sddr_opt]
+
+
+    # cr_bench.round
+    stats_df = pd.DataFrame([benchmark_list, opt_list], columns = ['CR', 'ADR', 'SDDR'], index = ['Benchmark', 'Optimal'])
+    stats_df.to_csv('stats.csv', index = True)
+    '''
+    BUILDING CHART
+    '''
+
+    # plt.plot(normed_benchmark_vals, color = "purple" )
     #
-    plt.show()
+    # # plt.xticks(rotation = 45)
+    # plt.plot(normed_tos_vals, color = "red")
+    # #
+    # plt.show()
