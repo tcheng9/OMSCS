@@ -60,7 +60,8 @@ def build_trades(csv_df, prices, commission, impact):
     # approach 2: copy an old one and clean it
     trades = prices.copy(deep=True)
     trades.iloc[:, :] = 0
-
+    print('\n')
+    # print(csv_df)
 
     #UPDATING TRADES TABLE
     for i in range(csv_df.shape[0]):
@@ -81,7 +82,7 @@ def build_trades(csv_df, prices, commission, impact):
             trades.loc[date, symbol] = trades.loc[date, symbol] + (-1*shares)
 
     ##creating an empty trades DF to add info to
-
+    print(trades)
     return trades
 
 def build_holdings(prices, trades, start_val):
@@ -98,7 +99,7 @@ def build_holdings(prices, trades, start_val):
     holdings.iloc[0, -1] = start_val
 
     holdings = holdings.cumsum(axis =0) + trades.cumsum(axis=0)
-
+    print(holdings)
     #day 1 - end case;
 
 
