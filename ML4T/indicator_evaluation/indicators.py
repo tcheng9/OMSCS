@@ -52,8 +52,8 @@ class Indicators:
         # #Indicator 1: simple moving average
         self.simple_moving_average(prices, 14)
         self.bolinger_bands(prices, 14)
-        self.stochastic_indicator(prices)
-        self.rate_of_change(prices)
+        self.stochastic_indicator(prices, 14)
+        self.rate_of_change(prices, 14)
         self.commodity_channel_index(prices)
         return prices
 
@@ -130,10 +130,10 @@ class Indicators:
         return sma
 
 
-    def stochastic_indicator(self, stocks):
+    def stochastic_indicator(self, stocks, period):
         si = stocks.copy()
         si.iloc[0:] = 0
-        period = self.period
+        # period = self.period
 
 
         # #high over past 14 days
@@ -162,13 +162,13 @@ class Indicators:
         return si
 
 
-    def rate_of_change(self, stocks):
+    def rate_of_change(self, stocks, period):
         roc = stocks.copy()
         roc.iloc[0:] = 0
-        period = 14
+        # period = 14
 
-
-        for i in range(20, stocks.shape[0]):
+        #iterative approach
+        for i in range(14, stocks.shape[0]):
             today = stocks.iloc[i]
             past = stocks.iloc[i-period]
 
@@ -178,7 +178,8 @@ class Indicators:
 
 
 
-        pass
+
+        return roc
     def commodity_channel_index(self, stocks):
         cci = stocks.copy()
         cci.iloc[0:,] = 0
@@ -293,8 +294,15 @@ def test_code():
     '''
     Indicator 3 - Stochastic Oscillator/Indicator
     '''
-    si = indicator.stochastic_indicator(prices)
-    plt.plot(si, color = 'blue')
-    plt.show()
+    si = indicator.stochastic_indicator(prices, 14)
+    # plt.plot(si, color = 'blue')
+    # plt.show()
+
+    '''
+    Indicator 4 - Rate of Change
+    '''
+    roc = indicator.rate_of_change(prices, 14)
+    # plt.plot(roc, color='green')
+    # plt.show()
 if __name__ == "__main__":
     test_code()
