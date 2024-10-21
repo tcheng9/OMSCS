@@ -54,7 +54,9 @@ class Indicators:
         self.bolinger_bands(prices, 14)
         self.stochastic_indicator(prices, 14)
         self.rate_of_change(prices, 14)
-        self.commodity_channel_index(prices)
+        self.ema(prices, 10)
+        self.macd_line(prices)
+        self.signal_line(prices)
         return prices
 
 
@@ -180,54 +182,68 @@ class Indicators:
 
 
         return roc
-    def commodity_channel_index(self, stocks):
-        cci = stocks.copy()
-        cci.iloc[0:,] = 0
+
+    def ema(self, stocks, period):
+        sma = stocks.copy()
+        sma.iloc[0:] = 0
+
+        sma = stocks.rolling(window = period, min_periods=period).mean()
+
+        multiplier = (2 /(period+1))
+
+        ema = stocks.copy()
+        ema.iloc[0:] = sma
+
+        for i in range(0+period, ema.shape[0]):
+            # ema.iloc[i] = stocks.iloc[i] * multiplier + ema.iloc[i-1] * (1-multiplier)
+            ema.iloc[i] = (stocks.iloc[i] - ema.iloc[i-1]) * multiplier + ema.iloc[i-1]
+
+        return ema
+
+    def macd_line(self, stocks):
+        #calc macd line
+        macd = stocks.copy()
+        macd.iloc[0:] = 0
+        twelve_ema = self.ema(stocks, 12)
+        twenty_six_ema = self.ema(stocks, 26)
 
 
-        period = 14
+        macd_line = twelve_ema-twenty_six_ema
+        return macd_line
+
+    def signal_line(self, stocks):
+        #calc macd line
+        macd = stocks.copy()
+        macd.iloc[0:] = 0
+        twelve_ema = self.ema(stocks, 12)
+        twenty_six_ema = self.ema(stocks, 26)
 
 
-        # high over past 14 days
-        high = stocks.iloc[20 - 14:20 + 1].max()
-
-        # low of over past 14 days
-        low = stocks.iloc[20 - 14:20 + 1].min()
-
-        #creating typical price
-        tp = stocks.copy()
-        tp.iloc[0:] = 0
-        for i in range(20, stocks.shape[0]):
-            high = stocks.iloc[i - period: i + 1].max()
-            low = stocks.iloc[i - period:i + 1].min()
-            close = stocks.iloc[i]
-            tp.iloc[i] = (high + low + close) / 3
-
-        #creating moving average OF TYPICAL PRICE OVER P PERIODS
-        ma_tp = stocks.copy()
-        ma_tp.iloc[0:] = 0
+        macd_line = twelve_ema-twenty_six_ema
 
 
-        for i in range(20, stocks.shape[0]):
-            val = (tp.iloc[i-period: i+1].sum(axis =0)) / period
-            ma_tp[i] = val
+        nine_ema = self.ema(stocks, 9)
 
-        #calculating mean deviation
-        md = stocks.copy()
-        md.iloc[0:] = 0
+        #calc signal line
+        signal = stocks.copy()
+        signal.iloc[0:] = 0
+
+        signal = macd_line.rolling(window=9, min_periods=9).mean()
+
+        multiplier = (2 / (9 + 1))
+        for i in range(9, macd_line.shape[0]):
+            signal.iloc[i] = ((macd_line.iloc[i] - macd_line.iloc[i-1]) * multiplier) + macd_line.iloc[i-1]
 
 
-        for i in range(20, stocks.shape[0]):
-            diff = tp[i-period:i+1] - ma_tp[i-period: i+1]
-            abs_diff = diff.abs()
-            sum_abs_diff = abs_diff.sum()
-            md[i] = sum_abs_diff/period
+        #alternative
+        # print(macd_line)
+        # signal = self.ema(macd_line[10:], 9)
+        # print(signal)
 
-        for i in range(20, stocks.shape[0]):
-            cci[i] = (tp.iloc[i] - ma_tp.iloc[i]) / (0.015 * md.iloc[i])
-
+        return signal
 
         pass
+
 
 
 def author():
@@ -251,7 +267,7 @@ def test_code():
 
     # #Statically getting prices
     start_date = dt.datetime(2008, 1, 1)
-    sd_before_30 = start_date - dt.timedelta(days=30)
+    sd_before_30 = start_date - dt.timedelta(days=60)
     end_date = dt.datetime(2009, 12, 31)
     symbols = ['JPM']
     # prices = get_data(['JPM'], pd.date_range(sd_before_30, end_date))
@@ -268,8 +284,8 @@ def test_code():
     # print(normed_sma)
 
 
-    prices = prices.iloc[20:]
-    normed_prices = prices/prices.iloc[0]
+    # prices = prices.iloc[20:]
+    # normed_prices = prices/prices.iloc[0]
     #
     # plt.plot()
     # plt.plot(normed_prices, color = 'green')
@@ -304,5 +320,21 @@ def test_code():
     roc = indicator.rate_of_change(prices, 14)
     # plt.plot(roc, color='green')
     # plt.show()
+
+    '''
+    Indicator 5 - MACD
+    '''
+
+    # ema = indicator.ema(prices, 20)
+    # plt.plot(ema)
+    # plt.show()
+
+    macd = indicator.macd_line(prices)
+    plt.plot(macd, color = 'green')
+    plt.show()
+    signal = indicator.signal_line(prices)
+    plt.plot(signal, color = 'orange')
+    plt.show()
+
 if __name__ == "__main__":
     test_code()
