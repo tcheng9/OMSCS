@@ -57,6 +57,7 @@ class Indicators:
         self.ema(prices, 10)
         self.macd_line(prices)
         self.signal_line(prices)
+        self.macd_hist(prices)
         return prices
 
 
@@ -111,6 +112,7 @@ class Indicators:
 
 
     def stochastic_indicator(self, stocks, period):
+        #AKA stochastic oscillator
         si = stocks.copy()
         si.iloc[0:] = 0
         # period = self.period
@@ -190,27 +192,41 @@ class Indicators:
         return macd_line
 
     def signal_line(self, stocks):
-        #calc macd line
-        macd = stocks.copy()
-        macd.iloc[0:] = 0
-        twelve_ema = self.ema(stocks, 12)
-        twenty_six_ema = self.ema(stocks, 26)
-
-
-        macd_line = twelve_ema-twenty_six_ema
-
-
-        nine_ema = self.ema(stocks, 9)
-
-        #calc signal line
+        # calc signal line
+        ##Using 9 day period
+        period = 9
         signal = stocks.copy()
         signal.iloc[0:] = 0
 
-        signal = macd_line.rolling(window=9, min_periods=9).mean()
+        ret_signal = stocks.copy()
+        ret_signal.iloc[0:] = 0
+        macd_line = self.macd_line(stocks)
 
-        multiplier = (2 / (9 + 1))
-        for i in range(9, macd_line.shape[0]):
-            signal.iloc[i] = ((macd_line.iloc[i] - macd_line.iloc[i-1]) * multiplier) + macd_line.iloc[i-1]
+
+
+        sma_macd_line = macd_line.rolling(window = period, min_periods=period).mean()
+
+        signal = sma_macd_line
+        multiplier = (2 / (period + 1))
+        # print(signal)
+        for i in range(period, sma_macd_line.shape[0]):
+            ret_signal.iloc[i] = ((macd_line.iloc[i] - signal.iloc[i-1])*multiplier)+signal.iloc[i-1]
+            # signal.iloc[i] = ((macd_line.iloc[i] - signal.iloc[i-1])*multiplier) + signal.iloc[i-1]
+        # print(ret_signal)
+        return ret_signal
+
+    def macd_hist(self, stocks):
+        macd_line = self.macd_line(stocks)
+        signal_line = self.signal_line(stocks)
+        macd_hist = macd_line - signal_line
+        print(macd_hist)
+        return macd_hist
+
+        # signal = macd_line.rolling(window=9, min_periods=9).mean()
+        #
+        # multiplier = (2 / (9 + 1))
+        # for i in range(9, macd_line.shape[0]):
+        #     signal.iloc[i] = ((macd_line.iloc[i] - macd_line.iloc[i-1]) * multiplier) + macd_line.iloc[i-1]
 
 
         #alternative
@@ -218,9 +234,9 @@ class Indicators:
         # signal = self.ema(macd_line[10:], 9)
         # print(signal)
 
-        return signal
-
-        pass
+        # return signal
+        #
+        # pass
 
 
 
@@ -262,14 +278,14 @@ def test_code():
     # print(normed_sma)
 
 
-    # prices = prices.iloc[20:]
-    # normed_prices = prices/prices.iloc[0]
+    prices = prices.iloc[20:]
+    normed_prices = prices/prices.iloc[0]
     #
-    # plt.plot()
-    # plt.plot(normed_prices, color = 'green')
-    # plt.plot(normed_sma, color = 'blue')
-    #
-    # plt.show()
+    plt.plot()
+    plt.plot(normed_prices, color = 'green')
+    plt.plot(normed_sma, color = 'blue')
+
+    plt.show()
 
     '''
     Indicator 2 - BB %
@@ -278,38 +294,50 @@ def test_code():
     bbp = bbp[bbp.index > start_date]
     # prices[prices.index > start_date]
 
-    # plt.figure(figsize = (10,8))
-    # plt.xticks(rotation = 'vertical')
-    # plt.plot(bbp, color = 'pink')
-    # plt.show()
+    plt.figure(figsize = (10,8))
+    plt.xticks(rotation = 'vertical')
+    plt.plot(bbp, color = 'pink')
+    plt.show()
     '''
     Indicator 3 - Stochastic Oscillator/Indicator
     '''
     si = indicator.stochastic_indicator(prices, 14)
-    # plt.plot(si, color = 'blue')
-    # plt.show()
+    plt.plot(si, color = 'blue')
+    plt.show()
 
     '''
     Indicator 4 - Rate of Change
     '''
     roc = indicator.rate_of_change(prices, 14)
-    # plt.plot(roc, color='green')
-    # plt.show()
+    plt.plot(roc, color='green')
+    plt.show()
 
     '''
     Indicator 5 - MACD
     '''
 
-    # ema = indicator.ema(prices, 20)
-    # plt.plot(ema)
-    # plt.show()
+    ema = indicator.ema(prices, 20)
+    plt.plot(ema)
+    plt.show()
+    '''
+    5.1 - MACD LINE
+    '''
+    macd = indicator.macd_line(prices)
+    plt.plot(macd, color = 'green')
+    plt.show()
 
-    # macd = indicator.macd_line(prices)
-    # plt.plot(macd, color = 'green')
-    # plt.show()
-    # signal = indicator.signal_line(prices)
-    # plt.plot(signal, color = 'orange')
-    # plt.show()
+    '''
+    5.2 - MACD - SIGNAL Line
+    '''
+    signal = indicator.signal_line(prices)
+    plt.plot(signal, color = 'orange')
+    plt.show()
 
+    '''
+    5.3 - MACD - Histogram
+    '''
+    macd_hist = indicator.macd_hist(prices)
+    plt.bar(x= macd_hist.index, height = macd_hist)
+    plt.show()
 if __name__ == "__main__":
     test_code()
