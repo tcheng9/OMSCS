@@ -29,6 +29,7 @@ class Indicators:
         Control date here
         '''
         sd_before_period = self.start_date - dt.timedelta(days = 60)
+
         # Dynamically getting prices
         prices = get_data(self.symbols, pd.date_range(sd_before_period, self.end_date))
         prices = prices['JPM']
@@ -45,9 +46,9 @@ class Indicators:
         sma = sma[sma.index > self.start_date]
         normed_sma = sma / sma.iloc[0]
 
-        prices = prices[prices.index > self.start_date]
-        normed_prices = prices/prices.iloc[0]
-        print(normed_prices)
+        prices_correct_sd = prices[prices.index > self.start_date]
+        normed_prices = prices_correct_sd/prices_correct_sd.iloc[0]
+
         plt.figure(figsize=(10, 8))
         plt.plot(normed_prices, color='orange', label = 'prices')
         plt.plot(normed_sma, color='blue', label = 'SMA')
@@ -58,22 +59,64 @@ class Indicators:
         # plt.figure(figsize=(10, 8))
         plt.xticks(rotation='40')
 
-        plt.show()
+        plt.savefig('sma.png')
+        plt.close()
         print('SMA chart built')
         '''
         Build DF and Chart for indicator 2: Bolinger Band Percentage
         '''
-        # self.bolinger_bands(prices, 14)
+
+        bbp = self.bolinger_bands(prices, 14)
+        bbp = bbp[bbp.index > self.start_date]
+
+        # prices[prices.index > start_date]
+
+        plt.figure(figsize=(10, 8))
+        plt.xticks(rotation=40)
+        plt.plot(bbp, color='green', label = 'BB%')
+        plt.title('Bolinger Bands Percentage')
+        plt.xlabel('Date')
+        plt.ylabel('Perecentage')
+        plt.legend()
+        # plt.show()
+        plt.savefig('./graphs/bbpercent.png')
+        plt.close()
+        print('bb% built')
         '''
         Build DF and Chart for indicator 3: Stochastic indicator/oscillator
         '''
 
-        # self.stochastic_indicator(prices, 14)
+        si = self.stochastic_indicator(prices, 14)
+        si = si[si.index>self.start_date]
 
+        plt.figure(figsize=(10, 8))
+        plt.xticks(rotation=40)
+        plt.plot(si, color='orange', label='Stochastic Oscillator')
+        plt.title('Stochastic Oscillator')
+        plt.xlabel('Date')
+        plt.ylabel('%K')
+        plt.legend()
+        # plt.show()
+        plt.savefig('./graphs/so.png')
+        plt.close()
+        print('stochastic indicator built')
         '''
         Build DF and Chart for indicator 4: Rate of Change
         '''
-        # self.rate_of_change(prices, 14)
+        roc = self.rate_of_change(prices, 14)
+        roc = roc[roc.index > self.start_date]
+        plt.figure(figsize=(10, 8))
+        plt.xticks(rotation=40)
+        plt.plot(roc, color='red', label='Rate of Change')
+        plt.title('Rate of Change')
+        plt.xlabel('Date')
+        plt.ylabel('Rate of Change')
+        plt.legend()
+        plt.show()
+        # plt.savefig('./graphs/roc.png')
+        # plt.close()
+        # plt.plot(roc, color='green')
+        # plt.savefig('./graphs/roc.png')
         '''
         Build DF and Chart for indicator 5: MACD
         (includes MACD line, signal line and MACD histogram)
@@ -278,6 +321,7 @@ def test_code():
     # Define input parameters
 
     # #Statically getting prices
+    print('you are running test_code')
     start_date = dt.datetime(2008, 1, 1)
     sd_before_30 = start_date - dt.timedelta(days=60)
     end_date = dt.datetime(2009, 12, 31)
@@ -358,4 +402,5 @@ def test_code():
     plt.bar(x= macd_hist.index, height = macd_hist)
     plt.savefig('./graphs/macd_hist.png')
 if __name__ == "__main__":
-    test_code()
+    # test_code()
+    print('nothing should happen')
