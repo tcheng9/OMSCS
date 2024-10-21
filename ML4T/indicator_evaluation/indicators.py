@@ -10,54 +10,125 @@ import pandas as pd
 from util import get_data, plot_data
 import matplotlib.pyplot as plt
 
-pd.set_option('display.max_row', None)
+# pd.set_option('display.max_row', None)
 class Indicators:
     def __init__(self, symbols,  start_date, end_date, period):
 
         self.symbols = symbols
         self.start_date = start_date
+        self.sd_before_period = start_date - dt.timedelta(days = 60)
         self.end_date = end_date
         self.period = period
+        self.stocks = None
         pass
+
+
+    def build_charts(self):
+
+        '''
+        Control date here
+        '''
+        sd_before_period = self.start_date - dt.timedelta(days = 60)
+        # Dynamically getting prices
+        prices = get_data(self.symbols, pd.date_range(sd_before_period, self.end_date))
+        prices = prices['JPM']
+        self.stocks = prices
+
+
+
+        '''
+        Build DF and Chart for indicator 1: SMA
+        '''
+        sma = self.simple_moving_average(prices, 14)
+
+        #Building chart
+        sma = sma[sma.index > self.start_date]
+        normed_sma = sma / sma.iloc[0]
+
+        prices = prices[prices.index > self.start_date]
+        normed_prices = prices/prices.iloc[0]
+        print(normed_prices)
+        plt.figure(figsize=(10, 8))
+        plt.plot(normed_prices, color='orange', label = 'prices')
+        plt.plot(normed_sma, color='blue', label = 'SMA')
+        plt.legend()
+        plt.ylabel('Price')
+        plt.xlabel('Date')
+        plt.title('Simple Moving Average')
+        # plt.figure(figsize=(10, 8))
+        plt.xticks(rotation='40')
+
+        plt.show()
+        print('SMA chart built')
+        '''
+        Build DF and Chart for indicator 2: Bolinger Band Percentage
+        '''
+        # self.bolinger_bands(prices, 14)
+        '''
+        Build DF and Chart for indicator 3: Stochastic indicator/oscillator
+        '''
+
+        # self.stochastic_indicator(prices, 14)
+
+        '''
+        Build DF and Chart for indicator 4: Rate of Change
+        '''
+        # self.rate_of_change(prices, 14)
+        '''
+        Build DF and Chart for indicator 5: MACD
+        (includes MACD line, signal line and MACD histogram)
+        '''
+        # self.ema(prices, 10)
+        '''
+        Indicator 1 - SMA
+        '''
+        # self.macd_line(prices)
+        # self.signal_line(prices)
+        # self.macd_hist(prices)
+        # return prices
+
 
     def get_stocks(self):
 
-        # sd = dt.datetime(2010, 1, 1)
-        # sd_before_30 = sd - dt.timedelta(days=30)
-
-
-        # print(dt.datetime(start_date))
-
-        # #Statically getting prices
-        # start_date = dt.datetime(2008, 1, 1)
-        # sd_before_30 = start_date - dt.timedelta(days=30)
-        # end_date = dt.datetime(2009, 12, 31)
-        # prices = get_data(['JPM'], pd.date_range(sd_before_30, end_date))
-        # prices = prices['JPM']
-
+        sd_before_30 = self.start_date - dt.timedelta(days=60)
         #Dynamically getting prices
-        print(self.symbols, self.start_date, self.end_date)
-        prices = get_data(self.symbols, pd.date_range(self.start_date, self.end_date) )
+        prices = get_data(self.symbols, pd.date_range(sd_before_30, self.end_date) )
         prices = prices['JPM']
 
 
-        print('\n')
-        # # print(prices[prices.index[start_date, end_date]])
-        # print(prices)
-        # print(prices[prices.index > start_date])
-        # sd = dt.datetime(2010, 1, 1), ed = dt.datetime(2011, 12, 31), sv = 100000):
-
-
         self.stocks = prices
-        # #Indicator 1: simple moving average
-        self.simple_moving_average(prices, 14)
-        self.bolinger_bands(prices, 14)
-        self.stochastic_indicator(prices, 14)
-        self.rate_of_change(prices, 14)
-        self.ema(prices, 10)
-        self.macd_line(prices)
-        self.signal_line(prices)
-        self.macd_hist(prices)
+
+        '''
+        Build DF and Chart for indicator 1: SMA
+        '''
+        sma = self.simple_moving_average(prices, 14)
+
+
+        '''
+        Build DF and Chart for indicator 2: Bolinger Band Percentage
+        '''
+        # self.bolinger_bands(prices, 14)
+        '''
+        Build DF and Chart for indicator 3: Stochastic indicator/oscillator
+        '''
+
+        # self.stochastic_indicator(prices, 14)
+
+        '''
+        Build DF and Chart for indicator 4: Rate of Change
+        '''
+        # self.rate_of_change(prices, 14)
+        '''
+        Build DF and Chart for indicator 5: MACD
+        (includes MACD line, signal line and MACD histogram)
+        '''
+        # self.ema(prices, 10)
+        '''
+        Indicator 1 - SMA
+        '''
+        # self.macd_line(prices)
+        # self.signal_line(prices)
+        # self.macd_hist(prices)
         return prices
 
 
@@ -86,27 +157,8 @@ class Indicators:
 
         sma = stocks.copy()
         sma.iloc[0:] = 0
-
-
-        # stocks.iloc[10]
-
-        period = 14
-
-
-        # print(stocks)
-        # #iterative approach -> NOTE: I'M PRETTY SURE THE MATH IS OFF HERE SO CORRECT IF I USE BUT DOUBT I WILL USE
-        # for i in range(0, stocks.shape[0]):
-        #     val = (stocks.iloc[i-period: i+1].sum(axis =0)) / period
-        #     sma.iloc[i] = val
-        # # print(sma.iloc[20:])
-        # # print(sma)
-        #
-        # print('-----------------')
-        #vecotrized approach
-
         sma = stocks.rolling(window = period, min_periods = period).mean()
-        # print(sma)
-        # sma = sma.iloc[20:]
+
 
         return sma
 
@@ -115,32 +167,14 @@ class Indicators:
         #AKA stochastic oscillator
         si = stocks.copy()
         si.iloc[0:] = 0
-        # period = self.period
-
-
-        # #high over past 14 days
-        # high = stocks.iloc[20 - 14:20 + 1].max()
-        #
-        #
-        # #low of over past 14 days
-        # low = stocks.iloc[20 - 14:20 + 1].min()
-        #
-        #iterative approach
-        # for i in range(20, stocks.shape[0]):
-        #     high = stocks.iloc[i-period: i+ 1].max()
-        #     low = stocks.iloc[i-period:i+1].min()
-        #     close = stocks.iloc[i]
-        #     val = ((close-low)/(high-low))* 100
-        #
-        #     si.iloc[i] = val
 
         #vectorized approach
         high_over_period = stocks.rolling(window = period, min_periods = period).max()
         low_over_period = stocks.rolling(window=period, min_periods=period).min()
-        # print(min_over_period.iloc[20:30], high_over_period.iloc[20:30])
+
 
         si = ((stocks-low_over_period) / (high_over_period-low_over_period) ) * 100
-        # print(si)
+
         return si
 
 
@@ -175,7 +209,7 @@ class Indicators:
         ema.iloc[0:] = sma
 
         for i in range(0+period, ema.shape[0]):
-            # ema.iloc[i] = stocks.iloc[i] * multiplier + ema.iloc[i-1] * (1-multiplier)
+
             ema.iloc[i] = (stocks.iloc[i] - ema.iloc[i-1]) * multiplier + ema.iloc[i-1]
 
         return ema
@@ -208,35 +242,19 @@ class Indicators:
 
         signal = sma_macd_line
         multiplier = (2 / (period + 1))
-        # print(signal)
+
         for i in range(period, sma_macd_line.shape[0]):
             ret_signal.iloc[i] = ((macd_line.iloc[i] - signal.iloc[i-1])*multiplier)+signal.iloc[i-1]
-            # signal.iloc[i] = ((macd_line.iloc[i] - signal.iloc[i-1])*multiplier) + signal.iloc[i-1]
-        # print(ret_signal)
+
         return ret_signal
 
     def macd_hist(self, stocks):
         macd_line = self.macd_line(stocks)
         signal_line = self.signal_line(stocks)
         macd_hist = macd_line - signal_line
-        print(macd_hist)
+
         return macd_hist
 
-        # signal = macd_line.rolling(window=9, min_periods=9).mean()
-        #
-        # multiplier = (2 / (9 + 1))
-        # for i in range(9, macd_line.shape[0]):
-        #     signal.iloc[i] = ((macd_line.iloc[i] - macd_line.iloc[i-1]) * multiplier) + macd_line.iloc[i-1]
-
-
-        #alternative
-        # print(macd_line)
-        # signal = self.ema(macd_line[10:], 9)
-        # print(signal)
-
-        # return signal
-        #
-        # pass
 
 
 
@@ -285,7 +303,7 @@ def test_code():
     plt.plot(normed_prices, color = 'green')
     plt.plot(normed_sma, color = 'blue')
 
-    plt.show()
+    plt.savefig('./graphs/sma.png')
 
     '''
     Indicator 2 - BB %
@@ -297,20 +315,20 @@ def test_code():
     plt.figure(figsize = (10,8))
     plt.xticks(rotation = 'vertical')
     plt.plot(bbp, color = 'pink')
-    plt.show()
+    plt.savefig('./graphs/bbpercent.png')
     '''
     Indicator 3 - Stochastic Oscillator/Indicator
     '''
     si = indicator.stochastic_indicator(prices, 14)
     plt.plot(si, color = 'blue')
-    plt.show()
+    plt.savefig('./graphs/si.png')
 
     '''
     Indicator 4 - Rate of Change
     '''
     roc = indicator.rate_of_change(prices, 14)
     plt.plot(roc, color='green')
-    plt.show()
+    plt.savefig('./graphs/roc.png')
 
     '''
     Indicator 5 - MACD
@@ -318,26 +336,26 @@ def test_code():
 
     ema = indicator.ema(prices, 20)
     plt.plot(ema)
-    plt.show()
+    plt.savefig('./graphs/ema.png')
     '''
     5.1 - MACD LINE
     '''
     macd = indicator.macd_line(prices)
     plt.plot(macd, color = 'green')
-    plt.show()
+    plt.savefig('./graphs/macd_line.png')
 
     '''
     5.2 - MACD - SIGNAL Line
     '''
     signal = indicator.signal_line(prices)
     plt.plot(signal, color = 'orange')
-    plt.show()
+    plt.savefig('./graphs/macd_signal.png')
 
     '''
     5.3 - MACD - Histogram
     '''
     macd_hist = indicator.macd_hist(prices)
     plt.bar(x= macd_hist.index, height = macd_hist)
-    plt.show()
+    plt.savefig('./graphs/macd_hist.png')
 if __name__ == "__main__":
     test_code()

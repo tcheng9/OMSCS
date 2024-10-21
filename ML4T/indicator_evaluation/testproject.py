@@ -10,7 +10,7 @@ from util import get_data, plot_data
 import matplotlib.pyplot as plt
 import TheoreticallyOptimalStrategy as tos
 from marketsimcode import compute_portvals, assess_portfolio
-
+import indicators
 
 # pd.set_option('display.max_row', None)
 def build_stocks():
@@ -96,3 +96,13 @@ if __name__ == "__main__":
     # plt.plot(normed_tos_vals, color = "red")
     # #
     # plt.show()
+    # #Statically getting prices
+    start_date = dt.datetime(2008, 1, 1)
+    sd_before_30 = start_date - dt.timedelta(days=60)
+    end_date = dt.datetime(2009, 12, 31)
+    symbols = ['JPM']
+    # prices = get_data(['JPM'], pd.date_range(sd_before_30, end_date))
+    # prices = prices['JPM']
+    indicator = indicators.Indicators(symbols, start_date, end_date, 14)
+    indicator.build_charts()
+    print('here - after buildchart function call')
