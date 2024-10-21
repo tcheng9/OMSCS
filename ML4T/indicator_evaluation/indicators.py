@@ -66,43 +66,21 @@ class Indicators:
         '''
         stock_sd = stocks.copy()
         stock_sd.iloc[0:] = 0
-        #BB postive where sma + 2*sd
-        bb_pos = stocks.copy()
-        bb_pos.iloc[0:] = 0
 
-        ##BB negative where sma - 2 * sd
-        bb_neg = stocks.copy()
-        bb_neg.iloc[0:] = 0
-
-        bbp = stocks.copy()
-        bbp.iloc[0:] = 0
 
         '''
         Calculating BB upper/lower and percentage
         '''
+        rm = stocks.rolling(window = period, min_periods=period).mean()
+        std = stocks.rolling(window=period, min_periods=period).std()
+
+        upper_band = rm + (2*std)
+        lower_band = rm - (2*std)
 
 
-        #getting SD for the entire time period
+        bb_percent = (stocks-lower_band)/(upper_band-lower_band)
+        return bb_percent
 
-        # for i in range(20, stocks.shape[0]-1):
-        #     sma = (stocks.iloc[i - period: i + 1].sum(axis=0)) / period
-        #     std = stocks.iloc[i-period:i+1].std()
-        #     bb_pos.iloc[i] = sma + (2 * (std))
-        #     bb_neg.iloc[i] = sma - (2*(std))
-        sma = self.simple_moving_average(stocks, 14)
-        #vectorized approach
-        # bbp.iloc[i] = ((((price.iloc[i-period+1:i+1])) - sma[i]) ** 2).sum()
-        # print(sma.shape)
-        # print(stocks.shape)
-        for i in range(20, stocks.shape[0]):
-            # # print(stocks.iloc[i-period+1:i])
-
-            bbp.iloc[i] = ((stocks.iloc[i-period+1:i] - sma.iloc[i]) ** 2).sum()
-        #     stocks.iloc[i-period+1:i+1]
-        # print(bbp)
-        # print(sma[0])
-        # print(bbp)
-        return bbp
     def simple_moving_average(self, stocks, period):
 
         sma = stocks.copy()
@@ -296,17 +274,14 @@ def test_code():
     '''
     Indicator 2 - BB %
     '''
-    # bbp = indicator.bolinger_bands(prices, 14)
-    # # print(bbp)
-    # normed_bbp = bbp/bbp.iloc[20]
-    # print(bbp.iloc[20])
-    # print(normed_bbp)
-    # # plt.plot()
-    # plt.plot(normed_bbp.iloc[20:], color = 'purple')
-    # # plt.plot(normed_sma, color = 'blue')
-    # #
-    # plt.show()
+    bbp = indicator.bolinger_bands(prices, 20)
+    bbp = bbp[bbp.index > start_date]
+    # prices[prices.index > start_date]
 
+    # plt.figure(figsize = (10,8))
+    # plt.xticks(rotation = 'vertical')
+    # plt.plot(bbp, color = 'pink')
+    # plt.show()
     '''
     Indicator 3 - Stochastic Oscillator/Indicator
     '''
@@ -329,12 +304,12 @@ def test_code():
     # plt.plot(ema)
     # plt.show()
 
-    macd = indicator.macd_line(prices)
-    plt.plot(macd, color = 'green')
-    plt.show()
-    signal = indicator.signal_line(prices)
-    plt.plot(signal, color = 'orange')
-    plt.show()
+    # macd = indicator.macd_line(prices)
+    # plt.plot(macd, color = 'green')
+    # plt.show()
+    # signal = indicator.signal_line(prices)
+    # plt.plot(signal, color = 'orange')
+    # plt.show()
 
 if __name__ == "__main__":
     test_code()
