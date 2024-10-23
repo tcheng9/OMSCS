@@ -112,9 +112,9 @@ class Indicators:
         plt.xlabel('Date')
         plt.ylabel('Rate of Change')
         plt.legend()
-        plt.show()
-        # plt.savefig('./graphs/roc.png')
-        # plt.close()
+        # plt.show()
+        plt.savefig('./graphs/roc.png')
+        plt.close()
         # plt.plot(roc, color='green')
         # plt.savefig('./graphs/roc.png')
         '''
@@ -123,11 +123,27 @@ class Indicators:
         '''
         # self.ema(prices, 10)
         '''
-        Indicator 1 - SMA
+        Indicator 5 : MACD
         '''
-        # self.macd_line(prices)
-        # self.signal_line(prices)
-        # self.macd_hist(prices)
+        plt.figure(figsize=(10, 8))
+        macd_line = self.macd_line(prices)
+        plt.plot(macd_line, color='green', label = 'MACD line')
+
+
+        signal_line = self.signal_line(prices)
+        plt.plot(signal_line, color='orange', label = 'Signal line')
+
+        macd_hist = self.macd_hist(prices)
+        plt.bar(x=macd_hist.index, height=macd_hist, label = 'MACD histogram')
+
+        plt.ylabel('MACD')
+        plt.xlabel('Date')
+        plt.title('MACD Lines')
+
+        plt.xticks(rotation=40)
+        plt.show()
+
+
         # return prices
 
 
