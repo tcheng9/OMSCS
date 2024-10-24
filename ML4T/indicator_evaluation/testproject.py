@@ -13,8 +13,7 @@ from marketsimcode import compute_portvals, assess_portfolio
 import indicators
 
 # pd.set_option('display.max_row', None)
-def build_stocks():
-    print('placeholder')
+
 
 def author():
     """
@@ -31,8 +30,6 @@ def study_group(self):
 
 if __name__ == "__main__":
 
-
-
     #Calc TOS
     optimal_trades = tos.testPolicy(symbol = "JPM", sd=dt.datetime(2008, 1, 1), ed=dt.datetime(2009,12,31), sv = 100000)
     #formatting trades
@@ -42,10 +39,10 @@ if __name__ == "__main__":
     '''
     tos_vals = compute_portvals(optimal_trades, start_val = 100000, commission =0.0, impact = 0.0 )
     cr_opt, adr_opt, sddr_opt, sr_opt, ev_opt, port_val_opt = assess_portfolio(tos_vals, 252,0)
-    # print(tos_vals)
+
 
     normed_tos_vals = tos_vals / tos_vals.iloc[0]
-    # print(cr_opt, adr_opt, sddr_opt, sr_opt, ev_opt)
+
 
 
     '''
@@ -63,7 +60,7 @@ if __name__ == "__main__":
 
     normed_benchmark_vals = benchmark_vals/benchmark_vals.iloc[0]
 
-    # print(cr_bench, adr_bench, sddr_bench, sr_bench, ev_bench)
+
 
 
     '''
@@ -85,17 +82,37 @@ if __name__ == "__main__":
 
     # cr_bench.round
     stats_df = pd.DataFrame([benchmark_list, opt_list], columns = ['CR', 'ADR', 'SDDR'], index = ['Benchmark', 'Optimal'])
-    stats_df.to_csv('stats.csv', index = True)
+
+    stats_df.to_csv('p6_results.txt', index = True)
     '''
     BUILDING CHART
     '''
+    plt.figure(figsize=(10, 8))
+    plt.plot(normed_benchmark_vals, label = 'Benchmark', color = "purple" )
 
-    # plt.plot(normed_benchmark_vals, color = "purple" )
-    #
-    # # plt.xticks(rotation = 45)
-    # plt.plot(normed_tos_vals, color = "red")
-    # #
-    # plt.show()
+
+    plt.plot(normed_tos_vals, label = 'Optimal Portfolio', color = "red")
+    plt.xticks(rotation='40')
+    plt.title("Theoretical Optimal Portfolio vs. Benchmark")
+    plt.xlabel('Date')
+    plt.ylabel('Portfolio Value (Normalized)')
+
+    plt.legend()
+    plt.savefig('tos.png')
+    plt.close()
+
+
+
+
+
+    '''
+    
+    
+    Part 2 Code for building idicaoteras
+    
+    
+    
+    '''
     # #Statically getting prices
     start_date = dt.datetime(2008, 1, 1)
     sd_before_30 = start_date - dt.timedelta(days=60)
@@ -103,6 +120,6 @@ if __name__ == "__main__":
     symbols = ['JPM']
     # prices = get_data(['JPM'], pd.date_range(sd_before_30, end_date))
     # prices = prices['JPM']
+
     indicator = indicators.Indicators(symbols, start_date, end_date, 14)
     indicator.build_charts()
-    print('here - after buildchart function call')
