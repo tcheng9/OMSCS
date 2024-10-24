@@ -1,16 +1,11 @@
-from turtledemo.forest import start
-
 import pandas as pd
 import datetime as dt
 import math
-
 import numpy as np
-
 import pandas as pd
 from util import get_data, plot_data
 import matplotlib.pyplot as plt
 
-# pd.set_option('display.max_row', None)
 class Indicators:
     def __init__(self, symbols,  start_date, end_date, period):
 
@@ -36,7 +31,6 @@ class Indicators:
         self.stocks = prices
 
 
-
         '''
         Build DF and Chart for indicator 1: SMA
         '''
@@ -55,7 +49,7 @@ class Indicators:
         plt.legend()
         plt.ylabel('Price')
         plt.xlabel('Date')
-        plt.title('Simple Moving Average')
+        plt.title('Simple Moving Average for JPM, Lookback = 14')
         # plt.figure(figsize=(10, 8))
         plt.xticks(rotation='40')
 
@@ -64,7 +58,7 @@ class Indicators:
 
 
         '''
-        Build DF and Chart for indicator 2: Bolinger Band Percentage
+        Build DF and Chart for indicator 2: Bollinger Band Percentage
         '''
 
         bbp = self.bolinger_bands(prices, 14)
@@ -74,10 +68,10 @@ class Indicators:
 
         plt.figure(figsize=(10, 8))
         plt.xticks(rotation=40)
-        plt.plot(bbp, color='green', label = 'BB%')
-        plt.title('Bolinger Bands Percentage')
+        plt.plot(bbp, color='green', label = '%B')
+        plt.title('Bollinger Bands Percentage for JPM, Lookback = 14 ')
         plt.xlabel('Date')
-        plt.ylabel('Perecentage')
+        plt.ylabel('Bollinger Band Percentage')
         plt.legend()
 
         plt.savefig('bbpercent.png')
@@ -94,7 +88,7 @@ class Indicators:
         plt.figure(figsize=(10, 8))
         plt.xticks(rotation=40)
         plt.plot(si, color='orange', label='Stochastic Oscillator')
-        plt.title('Stochastic Oscillator')
+        plt.title('Stochastic Oscillator for JPM, Lookback = 14')
         plt.xlabel('Date')
         plt.ylabel('%K')
         plt.legend()
@@ -111,7 +105,7 @@ class Indicators:
         plt.figure(figsize=(10, 8))
         plt.xticks(rotation=40)
         plt.plot(roc, color='red', label='Rate of Change')
-        plt.title('Rate of Change')
+        plt.title('Rate of Change for JPM, Window = 14')
         plt.xlabel('Date')
         plt.ylabel('Rate of Change')
         plt.legend()
@@ -119,13 +113,10 @@ class Indicators:
         plt.savefig('roc.png')
         plt.close()
 
-        # plt.plot(roc, color='green')
-        # plt.savefig('roc.png')
         '''
         Build DF and Chart for indicator 5: MACD
         (includes MACD line, signal line and MACD histogram)
         '''
-        # self.ema(prices, 10)
         '''
         Indicator 5 : MACD
         '''
@@ -138,63 +129,21 @@ class Indicators:
         plt.plot(signal_line, color='orange', label = 'Signal line')
 
         macd_hist = self.macd_hist(prices)
-        plt.bar(x=macd_hist.index, height=macd_hist, label = 'MACD histogram')
+        plt.bar(x=macd_hist.index, height=macd_hist, label = 'MACD histogram', color = 'red')
 
         plt.ylabel('MACD')
         plt.xlabel('Date')
-        plt.title('MACD Lines')
+        plt.title('MACD Lines, Long Window = 26, Short Window = 12, Signal Window = 9')
 
         plt.xticks(rotation=40)
 
-        #
+        plt.legend()
         plt.savefig('macd.png')
         plt.close()
 
         # return prices
 
 
-    def get_stocks(self):
-
-        sd_before_30 = self.start_date - dt.timedelta(days=60)
-        #Dynamically getting prices
-        prices = get_data(self.symbols, pd.date_range(sd_before_30, self.end_date) )
-        prices = prices['JPM']
-
-
-        self.stocks = prices
-
-        '''
-        Build DF and Chart for indicator 1: SMA
-        '''
-        sma = self.simple_moving_average(prices, 14)
-
-
-        '''
-        Build DF and Chart for indicator 2: Bolinger Band Percentage
-        '''
-        # self.bolinger_bands(prices, 14)
-        '''
-        Build DF and Chart for indicator 3: Stochastic indicator/oscillator
-        '''
-
-        # self.stochastic_indicator(prices, 14)
-
-        '''
-        Build DF and Chart for indicator 4: Rate of Change
-        '''
-        # self.rate_of_change(prices, 14)
-        '''
-        Build DF and Chart for indicator 5: MACD
-        (includes MACD line, signal line and MACD histogram)
-        '''
-        # self.ema(prices, 10)
-        '''
-        Indicator 1 - SMA
-        '''
-        # self.macd_line(prices)
-        # self.signal_line(prices)
-        # self.macd_hist(prices)
-        return prices
 
 
     def bolinger_bands(self, stocks, period):
@@ -254,11 +203,7 @@ class Indicators:
             past = stocks.iloc[i-period]
 
             val = ((today-past)/past) * 100
-
             roc.iloc[i] = val
-
-
-
 
         return roc
 
@@ -321,8 +266,6 @@ class Indicators:
         return macd_hist
 
 
-
-
 def author():
     """
     :return: The GT username of the student
@@ -333,93 +276,3 @@ def author():
 
 def study_group(self):
     return 'tcheng99'
-
-# def test_code():
-#     """
-#     Helper function to test code
-#     """
-#     # this is a helper function you can use to test your code
-#     # note that during autograding his function will not be called.
-#     # Define input parameters
-#
-#     # #Statically getting prices
-#
-#     start_date = dt.datetime(2008, 1, 1)
-#     sd_before_30 = start_date - dt.timedelta(days=60)
-#     end_date = dt.datetime(2009, 12, 31)
-#     symbols = ['JPM']
-#     # prices = get_data(['JPM'], pd.date_range(sd_before_30, end_date))
-#     # prices = prices['JPM']
-#     indicator = Indicators(symbols, sd_before_30, end_date, 14)
-#     prices = indicator.get_stocks()
-#
-#     '''
-#     Indicator 1 - SMA
-#     '''
-#     sma = indicator.simple_moving_average(prices, 14)
-#     sma = sma.iloc[20:]
-#     normed_sma = sma/sma.iloc[0]
-#
-#
-#
-#     prices = prices.iloc[20:]
-#     normed_prices = prices/prices.iloc[0]
-#     #
-#     plt.plot()
-#     plt.plot(normed_prices, color = 'green')
-#     plt.plot(normed_sma, color = 'blue')
-#
-#     plt.savefig('sma.png')
-#
-#     '''
-#     Indicator 2 - BB %
-#     '''
-#     bbp = indicator.bolinger_bands(prices, 20)
-#     bbp = bbp[bbp.index > start_date]
-#     # prices[prices.index > start_date]
-#
-#     plt.figure(figsize = (10,8))
-#     plt.xticks(rotation = 'vertical')
-#     plt.plot(bbp, color = 'pink')
-#     plt.savefig('bbpercent.png')
-#     '''
-#     Indicator 3 - Stochastic Oscillator/Indicator
-#     '''
-#     si = indicator.stochastic_indicator(prices, 14)
-#     plt.plot(si, color = 'blue')
-#     plt.savefig('si.png')
-#
-#     '''
-#     Indicator 4 - Rate of Change
-#     '''
-#     roc = indicator.rate_of_change(prices, 14)
-#     plt.plot(roc, color='green')
-#     plt.savefig('roc.png')
-#
-#     '''
-#     Indicator 5 - MACD
-#     '''
-#
-#     ema = indicator.ema(prices, 20)
-#     plt.plot(ema)
-#     plt.savefig('ema.png')
-#     '''
-#     5.1 - MACD LINE
-#     '''
-#     macd = indicator.macd_line(prices)
-#     plt.plot(macd, color = 'green')
-#     plt.savefig('macd_line.png')
-#
-#     '''
-#     5.2 - MACD - SIGNAL Line
-#     '''
-#     signal = indicator.signal_line(prices)
-#     plt.plot(signal, color = 'orange')
-#     plt.savefig('macd_signal.png')
-#
-#     '''
-#     5.3 - MACD - Histogram
-#     '''
-#     macd_hist = indicator.macd_hist(prices)
-#     plt.bar(x= macd_hist.index, height = macd_hist)
-#     plt.savefig('macd_hist.png')

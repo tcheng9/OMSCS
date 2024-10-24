@@ -79,18 +79,6 @@ def build_holdings(prices, trades, start_val):
     holdings.iloc[0, -1] = start_val
     holdings.iloc[0:, 0 ] = 0
 
-    # #initial setup
-    # holdings.iloc[0:, ]
-        #
-    #
-    # #setting up trades
-    # for i in range(trades.shape[0]):
-    #     holdings.iloc[i,0] = trades.iloc[i]
-    # holdings.iloc[0, -1] = start_val
-    #
-    # #calculating cash
-    # for i in range(holdings.shape[0]):
-    #     holdings.iloc[i, 1] = holdings.iloc[i, 0] * prices.iloc[i] #cash = holdings * price today - cash yesterday
     holdings = holdings.cumsum(axis=0) + trades.cumsum(axis=0)
 
     return holdings
@@ -131,27 +119,9 @@ def compute_portvals(
 ):
     """
     Computes the portfolio values.
-
-    :param orders_file: Path of the order file or the file object
-    :type orders_file: str or file object
-    :param start_val: The starting value of the portfolio
-    :type start_val: int
-    :param commission: The fixed amount in dollars charged for each transaction (both entry and exit)
-    :type commission: float
-    :param impact: The amount the price moves against the trader compared to the historical data at each transaction
-    :type impact: float
-    :return: the result (portvals) as a single-column dataframe, containing the value of the portfolio for each trading day in the first column from start_date to end_date, inclusive.
-    :rtype: pandas.DataFrame
     """
-    # this is the function the autograder will call to test your code
-    # NOTE: orders_file may be a string, or it may be a file object. Your
-    # code should work correctly with either input
 
-    # TODO: Your code here
 
-    # df = pd.read_csv('./orders/orders-01.csv',  parse_dates=True, na_values = ['nan'])
-    # df = pd.read_csv(orders_file, parse_dates=True, na_values=['nan'])
-    # df = df.sort_values(by="Date")
 
 
 
@@ -196,37 +166,6 @@ def assess_portfolio(
     return cr, adr, sddr, sr, ev, port_val
 
 
-# def test_code():
-#     """
-#     Helper function to test code
-#     """
-#     # this is a helper function you can use to test your code
-#     # note that during autograding his function will not be called.
-#     # Define input parameters
-#
-#     of = "./orders/orders-01.csv"
-#     sv = 1000000
-#     df = pd.read_csv(of)
-#
-#     # Process orders
-#     portvals = compute_portvals(orders_file=of, start_val=sv, commission=0.0, impact=0.0)
-#     if isinstance(portvals, pd.DataFrame):
-#         portvals = portvals[portvals.columns[0]]  # just get the first column
-#     else:
-#         "warning, code did not return a DataFrame"
-#
-#     # Get portfolio stats
-#     # Here we just fake the data. you should use your code from previous assignments.
-#     start_date = min(df['Date'])
-#     end_date = max(df['Date'])
-#
-#     cum_ret, avg_daily_ret, std_daily_ret, sharpe_ratio, ev, portvals = assess_portfolio(
-#         portvals,
-#         rfr=0.0,
-#         sf=252.0
-#     )
-
-
 def author():
     """
     :return: The GT username of the student
@@ -238,23 +177,3 @@ def author():
 def study_group(self):
     return 'tcheng99'
 
-
-if __name__ == "__main__":
-    # compute_portvals()
-    # test_code()
-
-    '''
-    initial setup
-    '''
-    # holdings['Cash'] = 0
-    # build holdings table
-
-    # holdings.loc[:, 'AAPL'] = trades.loc[:, 'AAPL']
-
-    # day 0 case:
-    # holdings.iloc[0,-1 ] = start_val
-    #
-
-    # holdings = holdings.cumsum(axis=0) + trades.cumsum(axis=0)
-
-    # # day 1 - end case;
