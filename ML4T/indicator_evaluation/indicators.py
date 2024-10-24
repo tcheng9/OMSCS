@@ -59,10 +59,10 @@ class Indicators:
         # plt.figure(figsize=(10, 8))
         plt.xticks(rotation='40')
 
-        plt.savefig('./graphs/sma.png')
+        plt.savefig('sma.png')
         plt.close()
 
-        print('SMA chart built')
+
         '''
         Build DF and Chart for indicator 2: Bolinger Band Percentage
         '''
@@ -79,11 +79,11 @@ class Indicators:
         plt.xlabel('Date')
         plt.ylabel('Perecentage')
         plt.legend()
-        # plt.show()
-        plt.savefig('./graphs/bbpercent.png')
+
+        plt.savefig('bbpercent.png')
         plt.close()
 
-        print('bb% built')
+
         '''
         Build DF and Chart for indicator 3: Stochastic indicator/oscillator
         '''
@@ -98,11 +98,11 @@ class Indicators:
         plt.xlabel('Date')
         plt.ylabel('%K')
         plt.legend()
-        # plt.show()
-        plt.savefig('./graphs/so.png')
+
+        plt.savefig('so.png')
         plt.close()
 
-        print('stochastic indicator built')
+
         '''
         Build DF and Chart for indicator 4: Rate of Change
         '''
@@ -115,12 +115,12 @@ class Indicators:
         plt.xlabel('Date')
         plt.ylabel('Rate of Change')
         plt.legend()
-        # plt.show()
-        plt.savefig('./graphs/roc.png')
+
+        plt.savefig('roc.png')
         plt.close()
 
         # plt.plot(roc, color='green')
-        # plt.savefig('./graphs/roc.png')
+        # plt.savefig('roc.png')
         '''
         Build DF and Chart for indicator 5: MACD
         (includes MACD line, signal line and MACD histogram)
@@ -145,9 +145,9 @@ class Indicators:
         plt.title('MACD Lines')
 
         plt.xticks(rotation=40)
-        # plt.show()
+
         #
-        plt.savefig('./graphs/macd.png')
+        plt.savefig('macd.png')
         plt.close()
 
         # return prices
@@ -343,7 +343,7 @@ def study_group(self):
 #     # Define input parameters
 #
 #     # #Statically getting prices
-#     print('you are running test_code')
+#
 #     start_date = dt.datetime(2008, 1, 1)
 #     sd_before_30 = start_date - dt.timedelta(days=60)
 #     end_date = dt.datetime(2009, 12, 31)
@@ -359,7 +359,7 @@ def study_group(self):
 #     sma = indicator.simple_moving_average(prices, 14)
 #     sma = sma.iloc[20:]
 #     normed_sma = sma/sma.iloc[0]
-#     # print(normed_sma)
+#
 #
 #
 #     prices = prices.iloc[20:]
@@ -369,7 +369,7 @@ def study_group(self):
 #     plt.plot(normed_prices, color = 'green')
 #     plt.plot(normed_sma, color = 'blue')
 #
-#     plt.savefig('./graphs/sma.png')
+#     plt.savefig('sma.png')
 #
 #     '''
 #     Indicator 2 - BB %
@@ -381,20 +381,20 @@ def study_group(self):
 #     plt.figure(figsize = (10,8))
 #     plt.xticks(rotation = 'vertical')
 #     plt.plot(bbp, color = 'pink')
-#     plt.savefig('./graphs/bbpercent.png')
+#     plt.savefig('bbpercent.png')
 #     '''
 #     Indicator 3 - Stochastic Oscillator/Indicator
 #     '''
 #     si = indicator.stochastic_indicator(prices, 14)
 #     plt.plot(si, color = 'blue')
-#     plt.savefig('./graphs/si.png')
+#     plt.savefig('si.png')
 #
 #     '''
 #     Indicator 4 - Rate of Change
 #     '''
 #     roc = indicator.rate_of_change(prices, 14)
 #     plt.plot(roc, color='green')
-#     plt.savefig('./graphs/roc.png')
+#     plt.savefig('roc.png')
 #
 #     '''
 #     Indicator 5 - MACD
@@ -402,27 +402,24 @@ def study_group(self):
 #
 #     ema = indicator.ema(prices, 20)
 #     plt.plot(ema)
-#     plt.savefig('./graphs/ema.png')
+#     plt.savefig('ema.png')
 #     '''
 #     5.1 - MACD LINE
 #     '''
 #     macd = indicator.macd_line(prices)
 #     plt.plot(macd, color = 'green')
-#     plt.savefig('./graphs/macd_line.png')
+#     plt.savefig('macd_line.png')
 #
 #     '''
 #     5.2 - MACD - SIGNAL Line
 #     '''
 #     signal = indicator.signal_line(prices)
 #     plt.plot(signal, color = 'orange')
-#     plt.savefig('./graphs/macd_signal.png')
+#     plt.savefig('macd_signal.png')
 #
 #     '''
 #     5.3 - MACD - Histogram
 #     '''
 #     macd_hist = indicator.macd_hist(prices)
 #     plt.bar(x= macd_hist.index, height = macd_hist)
-#     plt.savefig('./graphs/macd_hist.png')
-if __name__ == "__main__":
-    # test_code()
-    print('nothing should happen')
+#     plt.savefig('macd_hist.png')

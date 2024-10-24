@@ -13,8 +13,7 @@ from marketsimcode import compute_portvals, assess_portfolio
 import indicators
 
 # pd.set_option('display.max_row', None)
-def build_stocks():
-    print('placeholder')
+
 
 def author():
     """
@@ -42,10 +41,10 @@ if __name__ == "__main__":
     '''
     tos_vals = compute_portvals(optimal_trades, start_val = 100000, commission =0.0, impact = 0.0 )
     cr_opt, adr_opt, sddr_opt, sr_opt, ev_opt, port_val_opt = assess_portfolio(tos_vals, 252,0)
-    # print(tos_vals)
+
 
     normed_tos_vals = tos_vals / tos_vals.iloc[0]
-    # print(cr_opt, adr_opt, sddr_opt, sr_opt, ev_opt)
+
 
 
     '''
@@ -63,7 +62,7 @@ if __name__ == "__main__":
 
     normed_benchmark_vals = benchmark_vals/benchmark_vals.iloc[0]
 
-    # print(cr_bench, adr_bench, sddr_bench, sr_bench, ev_bench)
+
 
 
     '''
@@ -95,7 +94,7 @@ if __name__ == "__main__":
     # plt.xticks(rotation = 45)
     plt.plot(normed_tos_vals, color = "red")
     #
-    plt.savefig('./graphs/tos.png')
+    plt.savefig('tos.png')
 
 
 
@@ -119,4 +118,3 @@ if __name__ == "__main__":
 
     indicator = indicators.Indicators(symbols, start_date, end_date, 14)
     indicator.build_charts()
-    print('here - after buildchart function call')

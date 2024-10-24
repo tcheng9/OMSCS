@@ -64,7 +64,7 @@ def build_trades(opt_trades, prices, commission, impact, start_val):
         #cash = stocks * prices of that day + (cash of today)
         # trades.loc[date, 'Cash'] + (-1 * ((( price + (impact * price)) * shares)+commission)   )
         trades.iloc[i, 1] = ((trades.iloc[i, 0] * prices.iloc[i, 0]) * -1) + trades.iloc[i, 1]
-        # print(-1 * trades.iloc[i, 0] * prices.iloc[i])
+
 
     ##creating an empty trades DF to add info to
 
@@ -100,7 +100,7 @@ def build_values(prices, holdings):
     ###NOTE: try df.cumsum()
     # copy an old one and clean it and use it
     values = holdings.copy(deep=True)
-    # print(values.shape)
+
     values.iloc[0:, :] = 0
 
     # need consider day 0 case
@@ -158,9 +158,9 @@ def compute_portvals(
     prices = build_prices(trades)
 
     adj_trades = build_trades(trades, prices, commission, impact, start_val)
-    # print(adj_trades)
+
     holdings = build_holdings(prices, adj_trades, start_val)
-    # print(holdings)
+
     values = build_values(prices, holdings)
     #
     day_total = build_daytotal(values)
@@ -254,8 +254,7 @@ if __name__ == "__main__":
     # day 0 case:
     # holdings.iloc[0,-1 ] = start_val
     #
-    # # print(holdings)
+
     # holdings = holdings.cumsum(axis=0) + trades.cumsum(axis=0)
-    # # print(holdings.shape)
+
     # # day 1 - end case;
-    # # print(holdings)
