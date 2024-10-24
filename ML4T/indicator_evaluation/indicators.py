@@ -59,8 +59,9 @@ class Indicators:
         # plt.figure(figsize=(10, 8))
         plt.xticks(rotation='40')
 
-        plt.savefig('sma.png')
+        plt.savefig('./graphs/sma.png')
         plt.close()
+
         print('SMA chart built')
         '''
         Build DF and Chart for indicator 2: Bolinger Band Percentage
@@ -81,6 +82,7 @@ class Indicators:
         # plt.show()
         plt.savefig('./graphs/bbpercent.png')
         plt.close()
+
         print('bb% built')
         '''
         Build DF and Chart for indicator 3: Stochastic indicator/oscillator
@@ -99,6 +101,7 @@ class Indicators:
         # plt.show()
         plt.savefig('./graphs/so.png')
         plt.close()
+
         print('stochastic indicator built')
         '''
         Build DF and Chart for indicator 4: Rate of Change
@@ -115,6 +118,7 @@ class Indicators:
         # plt.show()
         plt.savefig('./graphs/roc.png')
         plt.close()
+
         # plt.plot(roc, color='green')
         # plt.savefig('./graphs/roc.png')
         '''
@@ -141,8 +145,10 @@ class Indicators:
         plt.title('MACD Lines')
 
         plt.xticks(rotation=40)
-        plt.show()
-
+        # plt.show()
+        #
+        plt.savefig('./graphs/macd.png')
+        plt.close()
 
         # return prices
 
@@ -328,95 +334,95 @@ def author():
 def study_group(self):
     return 'tcheng99'
 
-def test_code():
-    """
-    Helper function to test code
-    """
-    # this is a helper function you can use to test your code
-    # note that during autograding his function will not be called.
-    # Define input parameters
-
-    # #Statically getting prices
-    print('you are running test_code')
-    start_date = dt.datetime(2008, 1, 1)
-    sd_before_30 = start_date - dt.timedelta(days=60)
-    end_date = dt.datetime(2009, 12, 31)
-    symbols = ['JPM']
-    # prices = get_data(['JPM'], pd.date_range(sd_before_30, end_date))
-    # prices = prices['JPM']
-    indicator = Indicators(symbols, sd_before_30, end_date, 14)
-    prices = indicator.get_stocks()
-
-    '''
-    Indicator 1 - SMA
-    '''
-    sma = indicator.simple_moving_average(prices, 14)
-    sma = sma.iloc[20:]
-    normed_sma = sma/sma.iloc[0]
-    # print(normed_sma)
-
-
-    prices = prices.iloc[20:]
-    normed_prices = prices/prices.iloc[0]
-    #
-    plt.plot()
-    plt.plot(normed_prices, color = 'green')
-    plt.plot(normed_sma, color = 'blue')
-
-    plt.savefig('./graphs/sma.png')
-
-    '''
-    Indicator 2 - BB %
-    '''
-    bbp = indicator.bolinger_bands(prices, 20)
-    bbp = bbp[bbp.index > start_date]
-    # prices[prices.index > start_date]
-
-    plt.figure(figsize = (10,8))
-    plt.xticks(rotation = 'vertical')
-    plt.plot(bbp, color = 'pink')
-    plt.savefig('./graphs/bbpercent.png')
-    '''
-    Indicator 3 - Stochastic Oscillator/Indicator
-    '''
-    si = indicator.stochastic_indicator(prices, 14)
-    plt.plot(si, color = 'blue')
-    plt.savefig('./graphs/si.png')
-
-    '''
-    Indicator 4 - Rate of Change
-    '''
-    roc = indicator.rate_of_change(prices, 14)
-    plt.plot(roc, color='green')
-    plt.savefig('./graphs/roc.png')
-
-    '''
-    Indicator 5 - MACD
-    '''
-
-    ema = indicator.ema(prices, 20)
-    plt.plot(ema)
-    plt.savefig('./graphs/ema.png')
-    '''
-    5.1 - MACD LINE
-    '''
-    macd = indicator.macd_line(prices)
-    plt.plot(macd, color = 'green')
-    plt.savefig('./graphs/macd_line.png')
-
-    '''
-    5.2 - MACD - SIGNAL Line
-    '''
-    signal = indicator.signal_line(prices)
-    plt.plot(signal, color = 'orange')
-    plt.savefig('./graphs/macd_signal.png')
-
-    '''
-    5.3 - MACD - Histogram
-    '''
-    macd_hist = indicator.macd_hist(prices)
-    plt.bar(x= macd_hist.index, height = macd_hist)
-    plt.savefig('./graphs/macd_hist.png')
+# def test_code():
+#     """
+#     Helper function to test code
+#     """
+#     # this is a helper function you can use to test your code
+#     # note that during autograding his function will not be called.
+#     # Define input parameters
+#
+#     # #Statically getting prices
+#     print('you are running test_code')
+#     start_date = dt.datetime(2008, 1, 1)
+#     sd_before_30 = start_date - dt.timedelta(days=60)
+#     end_date = dt.datetime(2009, 12, 31)
+#     symbols = ['JPM']
+#     # prices = get_data(['JPM'], pd.date_range(sd_before_30, end_date))
+#     # prices = prices['JPM']
+#     indicator = Indicators(symbols, sd_before_30, end_date, 14)
+#     prices = indicator.get_stocks()
+#
+#     '''
+#     Indicator 1 - SMA
+#     '''
+#     sma = indicator.simple_moving_average(prices, 14)
+#     sma = sma.iloc[20:]
+#     normed_sma = sma/sma.iloc[0]
+#     # print(normed_sma)
+#
+#
+#     prices = prices.iloc[20:]
+#     normed_prices = prices/prices.iloc[0]
+#     #
+#     plt.plot()
+#     plt.plot(normed_prices, color = 'green')
+#     plt.plot(normed_sma, color = 'blue')
+#
+#     plt.savefig('./graphs/sma.png')
+#
+#     '''
+#     Indicator 2 - BB %
+#     '''
+#     bbp = indicator.bolinger_bands(prices, 20)
+#     bbp = bbp[bbp.index > start_date]
+#     # prices[prices.index > start_date]
+#
+#     plt.figure(figsize = (10,8))
+#     plt.xticks(rotation = 'vertical')
+#     plt.plot(bbp, color = 'pink')
+#     plt.savefig('./graphs/bbpercent.png')
+#     '''
+#     Indicator 3 - Stochastic Oscillator/Indicator
+#     '''
+#     si = indicator.stochastic_indicator(prices, 14)
+#     plt.plot(si, color = 'blue')
+#     plt.savefig('./graphs/si.png')
+#
+#     '''
+#     Indicator 4 - Rate of Change
+#     '''
+#     roc = indicator.rate_of_change(prices, 14)
+#     plt.plot(roc, color='green')
+#     plt.savefig('./graphs/roc.png')
+#
+#     '''
+#     Indicator 5 - MACD
+#     '''
+#
+#     ema = indicator.ema(prices, 20)
+#     plt.plot(ema)
+#     plt.savefig('./graphs/ema.png')
+#     '''
+#     5.1 - MACD LINE
+#     '''
+#     macd = indicator.macd_line(prices)
+#     plt.plot(macd, color = 'green')
+#     plt.savefig('./graphs/macd_line.png')
+#
+#     '''
+#     5.2 - MACD - SIGNAL Line
+#     '''
+#     signal = indicator.signal_line(prices)
+#     plt.plot(signal, color = 'orange')
+#     plt.savefig('./graphs/macd_signal.png')
+#
+#     '''
+#     5.3 - MACD - Histogram
+#     '''
+#     macd_hist = indicator.macd_hist(prices)
+#     plt.bar(x= macd_hist.index, height = macd_hist)
+#     plt.savefig('./graphs/macd_hist.png')
 if __name__ == "__main__":
     # test_code()
     print('nothing should happen')

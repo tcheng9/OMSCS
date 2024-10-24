@@ -90,12 +90,25 @@ if __name__ == "__main__":
     BUILDING CHART
     '''
 
-    # plt.plot(normed_benchmark_vals, color = "purple" )
+    plt.plot(normed_benchmark_vals, color = "purple" )
+
+    # plt.xticks(rotation = 45)
+    plt.plot(normed_tos_vals, color = "red")
     #
-    # # plt.xticks(rotation = 45)
-    # plt.plot(normed_tos_vals, color = "red")
-    # #
-    # plt.show()
+    plt.savefig('./graphs/tos.png')
+
+
+
+
+
+    '''
+    
+    
+    Part 2 Code for building idicaoteras
+    
+    
+    
+    '''
     # #Statically getting prices
     start_date = dt.datetime(2008, 1, 1)
     sd_before_30 = start_date - dt.timedelta(days=60)
@@ -103,6 +116,7 @@ if __name__ == "__main__":
     symbols = ['JPM']
     # prices = get_data(['JPM'], pd.date_range(sd_before_30, end_date))
     # prices = prices['JPM']
+
     indicator = indicators.Indicators(symbols, start_date, end_date, 14)
     indicator.build_charts()
     print('here - after buildchart function call')
