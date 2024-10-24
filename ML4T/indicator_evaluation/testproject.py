@@ -87,7 +87,7 @@ if __name__ == "__main__":
     '''
     BUILDING CHART
     '''
-
+    plt.figure(figsize=(10, 8))
     plt.plot(normed_benchmark_vals, label = 'Benchmark', color = "purple" )
 
 
@@ -96,6 +96,7 @@ if __name__ == "__main__":
     plt.title("Theoretical Optimal Portfolio vs. Benchmark")
     plt.xlabel('Date')
     plt.ylabel('Portfolio Value (Normalized)')
+
     plt.legend()
     plt.savefig('tos.png')
 
