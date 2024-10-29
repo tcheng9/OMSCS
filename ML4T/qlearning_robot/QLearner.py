@@ -94,22 +94,27 @@ class QLearner(object):
         """  		  	   		 	   		  		  		    	 		 		   		 		  
         self.s = s
         self.prev_s = s
-        action = rand.randint(0, self.num_actions - 1)  		  	   		 	   		  		  		    	 		 		   		 		  
-        if self.verbose:  		  	   		 	   		  		  		    	 		 		   		 		  
-            print(f"s = {s}, a = {action}")
+
+        '''
+        Random action check
+        '''
+        rand_check = rand.random()
+
+        if rand_check < self.rar:
+            action = rand.randint(0, self.num_actions-1)
+            self.rar = self.rar * self.radr
+        else:
+            '''
+            Non random action
+            '''
+            max_index = np.argmax(self.q_table[s, :])
+            action = self.q_table[s, max_index]
+            action = int(max_index)
+
+        self.prev_s = s
         self.prev_a = action
-
-        '''
-            SO RIGHT HERE:
-            1. IF RAND.RANDINT < RAR:
-                A. SELECT A RANDOM ACTION
-    
-            2. ELSE:
-                #NON RANDOM ACTION:
-
-        '''
-
-
+        # if self.verbose:
+        #     print(f"s = {s}, a = {action}")
 
         return action  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
@@ -124,24 +129,60 @@ class QLearner(object):
         :return: The selected action  		  	   		 	   		  		  		    	 		 		   		 		  
         :rtype: int  		  	   		 	   		  		  		    	 		 		   		 		  
         """  		  	   		 	   		  		  		    	 		 		   		 		  
-        action = rand.randint(0, self.num_actions - 1)
+
+
+
+
+
+        q_table = self.q_table
+
+        '''
+        Random action check
+        '''
+        rand_check = rand.random()
+
+        if rand_check < self.rar:
+            action = rand.randint(0, self.num_actions - 1)
+            self.rar = self.rar * self.radr
+        else:
+            '''
+            Non random action
+            Implementing update rule
+            '''
+            piece1 = ((1-self.alpha) * q_table[self.prev_s, self.prev_a])
+            best_action_index = np.argmax(q_table[s_prime, :])
+            action = int(best_action_index) #NOTE:action is actually best action
+            piece2 = self.alpha * (r + self.gamma * q_table[s_prime, action])
+            q_table[self.prev_s, self.prev_a] = piece1 + piece2
+
+
+
+
+
+        #output updates and misc
         # if self.verbose:
         #     print(f"s = {s_prime}, a = {action}, r={r}")
-
-        print(self.q_table)
+        self.prev_s = s_prime
+        self.prev_a = action
+        self.q_table = q_table
 
 
 
 
 
         return action
-        # print('here')
 
-    def personal(self):
-        print(self.q_table)
+    # def personal(self, s):
+    #     # print(self.q_table)
+    #     # arr = [[1,2,3,4]]
+    #     arr = np.array([[5, 1,2,3,4], [1,2,3, 5,6]])
+    #     val = np.argmax(arr[1])
+    #     print(arr[int(1.0)])
 
-if __name__ == "__main__":  		  	   		 	   		  		  		    	 		 		   		 		  
-    print("Remember Q from Star Trek? Well, this isn't him")  		  	   		 	   		  		  		    	 		 		   		 		  
-    learner = QLearner()
+if __name__ == "__main__":
+    print("Remember Q from Star Trek? Well, this isn't him")
+    learner = QLearner(verbose = True)
     # learner.query(1, 1)
-    learner.personal()
+    # learner.personal(1)
+    s = 1
+    learner.query(1, .5)
