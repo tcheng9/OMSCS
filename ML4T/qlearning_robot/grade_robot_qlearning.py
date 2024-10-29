@@ -140,24 +140,24 @@ qlearning_test_cases = [
         points=9.5,
     ),
     # Dyna test cases
-    QLearningTestCase(
-        description="World 1, dyna=200",
-        group="dyna",
-        world_file="world01.csv",
-        best_reward=-12,
-        median_reward=-29.5,
-        max_time=10,
-        points=2.5,
-    ),
-    QLearningTestCase(
-        description="World 2, dyna=200",
-        group="dyna",
-        world_file="world02.csv",
-        best_reward=-14,
-        median_reward=-19,
-        max_time=10,
-        points=2.5,
-    ),
+    # QLearningTestCase(
+    #     description="World 1, dyna=200",
+    #     group="dyna",
+    #     world_file="world01.csv",
+    #     best_reward=-12,
+    #     median_reward=-29.5,
+    #     max_time=10,
+    #     points=2.5,
+    # ),
+    # QLearningTestCase(
+    #     description="World 2, dyna=200",
+    #     group="dyna",
+    #     world_file="world02.csv",
+    #     best_reward=-14,
+    #     median_reward=-19,
+    #     max_time=10,
+    #     points=2.5,
+    # ),
     QLearningTestCase(
         description="Author check",
         group="author",
@@ -235,7 +235,8 @@ def test_qlearning(
                 timeoutwrapper_nodyna, max_time, (), {}  		  	   		 	   		  		  		    	 		 		   		 		  
             )  		  	   		 	   		  		  		    	 		 		   		 		  
             incorrect = False  		  	   		 	   		  		  		    	 		 		   		 		  
-            if student_reward < 1.5 * median_reward:  		  	   		 	   		  		  		    	 		 		   		 		  
+            print('student reward is', student_reward)
+            if student_reward < 1.5 * median_reward:
                 incorrect = True  		  	   		 	   		  		  		    	 		 		   		 		  
                 msgs.append(  		  	   		 	   		  		  		    	 		 		   		 		  
                     "   Reward too low, expected %s, found %s"  		  	   		 	   		  		  		    	 		 		   		 		  

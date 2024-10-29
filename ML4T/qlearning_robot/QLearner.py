@@ -178,6 +178,16 @@ class QLearner(object):
     #     arr = np.array([[5, 1,2,3,4], [1,2,3, 5,6]])
     #     val = np.argmax(arr[1])
     #     print(arr[int(1.0)])
+    def author(self,):
+        """
+        :return: The GT username of the student
+        :rtype: str
+        """
+        return "tcheng99"  # replace tb34 with your Georgia Tech username.
+
+
+    def study_group(self,):
+        return "tcheng99"
 
 if __name__ == "__main__":
     print("Remember Q from Star Trek? Well, this isn't him")

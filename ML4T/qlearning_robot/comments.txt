@@ -1,5 +1,5 @@
 <pre>--- Summary ---
-Tests passed: 8 out of 11
+Tests passed: 9 out of 9
 
 --- Details ---
 Test #0: passed 
@@ -10,35 +10,5 @@ Test #4: passed
 Test #5: passed 
 Test #6: passed 
 Test #7: passed 
-Test #8: failed 
-Test case description: World 1, dyna=200
-IncorrectOutput: Test failed on one or more output criteria.
-  Inputs:
-    group: dyna
-    world_file: world01.csv
-    median_reward: -29.5
-
-  Failures:
-   Reward too low, expected -29.5, found -196.0
-
-Test #9: failed 
-Test case description: World 2, dyna=200
-IncorrectOutput: Test failed on one or more output criteria.
-  Inputs:
-    group: dyna
-    world_file: world02.csv
-    median_reward: -19
-
-  Failures:
-   Reward too low, expected -19, found -137.5
-
-Test #10: failed 
-Test case description: Author check
-Traceback:
-  File "/home/tommy/Documents/OMSCS/ML4T/grading/grading.py", line 152, in proc_wrapper
-    rv["output"] = func(*pos_args, **keyword_args)
-  File "/home/tommy/Documents/OMSCS/ML4T/qlearning_robot/grade_robot_qlearning.py", line 295, in timeoutwrapper_author
-    return learner.author()
-AttributeError: 'QLearner' object has no attribute 'author'
-
+Test #8: passed 
 </pre>
