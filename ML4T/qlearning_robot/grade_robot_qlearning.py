@@ -67,15 +67,15 @@ QLearningTestCase = namedtuple(
     ],  		  	   		 	   		  		  		    	 		 		   		 		  
 )  		  	   		 	   		  		  		    	 		 		   		 		  
 qlearning_test_cases = [  		  	   		 	   		  		  		    	 		 		   		 		  
-    QLearningTestCase(  		  	   		 	   		  		  		    	 		 		   		 		  
-        description="World 1",  		  	   		 	   		  		  		    	 		 		   		 		  
-        group="nodyna",  		  	   		 	   		  		  		    	 		 		   		 		  
-        world_file="world01.csv",  		  	   		 	   		  		  		    	 		 		   		 		  
-        best_reward=-17,  		  	   		 	   		  		  		    	 		 		   		 		  
-        median_reward=-29.5,  		  	   		 	   		  		  		    	 		 		   		 		  
-        max_time=2,  		  	   		 	   		  		  		    	 		 		   		 		  
-        points=9.5,  		  	   		 	   		  		  		    	 		 		   		 		  
-    ),  		  	   		 	   		  		  		    	 		 		   		 		  
+    QLearningTestCase(
+        description="World 1",
+        group="nodyna",
+        world_file="world01.csv",
+        best_reward=-17,
+        median_reward=-29.5,
+        max_time=2,
+        points=9.5,
+    ),
     QLearningTestCase(
         description="World 2",
         group="nodyna",

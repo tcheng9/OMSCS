@@ -82,6 +82,9 @@ class QLearner(object):
         self.prev_s = None
         self.prev_a = None
         self.q_table = np.zeros((self.num_states, self.num_actions))
+        self.t_c = np.zeros((self.num_states, self.num_actions))
+        self.r_table = np.zeros((self.num_states, self.num_actions))
+        self.past_states = np.array([])
   		  	   		 	   		  		  		    	 		 		   		 		  
     def querysetstate(self, s):  		  	   		 	   		  		  		    	 		 		   		 		  
         """  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -96,6 +99,18 @@ class QLearner(object):
         self.prev_s = s
 
         '''
+        Non random action
+        '''
+        max_index = np.argmax(self.q_table[s, :])
+        action = self.q_table[s, max_index]
+        action = int(max_index)
+
+
+
+
+
+
+        '''
         Random action check
         '''
         rand_check = rand.random()
@@ -103,16 +118,12 @@ class QLearner(object):
         if rand_check < self.rar:
             action = rand.randint(0, self.num_actions-1)
             self.rar = self.rar * self.radr
-        else:
-            '''
-            Non random action
-            '''
-            max_index = np.argmax(self.q_table[s, :])
-            action = self.q_table[s, max_index]
-            action = int(max_index)
+
+
 
         self.prev_s = s
         self.prev_a = action
+        self.past_states = np.append(self.past_states, s)
         # if self.verbose:
         #     print(f"s = {s}, a = {action}")
 
@@ -128,13 +139,52 @@ class QLearner(object):
         :type r: float  		  	   		 	   		  		  		    	 		 		   		 		  
         :return: The selected action  		  	   		 	   		  		  		    	 		 		   		 		  
         :rtype: int  		  	   		 	   		  		  		    	 		 		   		 		  
-        """  		  	   		 	   		  		  		    	 		 		   		 		  
+        """
 
-
-
-
-
+        '''
+        Non random action
+        Implementing update rule
+        '''
         q_table = self.q_table
+        prev_s = self.prev_s
+        prev_a = self.prev_a
+        alpha = self.alpha
+        gamma = self.gamma
+
+        piece1 = ((1 - alpha) * q_table[prev_s, prev_a])
+        best_action_index = np.argmax(q_table[s_prime, :])
+        action = int(best_action_index)  # NOTE:action is actually best action
+        piece2 = alpha * (r + gamma * q_table[s_prime, action])
+        q_table[prev_s, prev_a] = piece1 + piece2
+
+
+        '''
+        Attempt 1 - updating T_C and R
+        '''
+        # print('here')
+        t_c = self.t_c
+        r_table = self.r_table
+        past_states = self.past_states
+        np.append(past_states, s_prime) #or is it s?
+        t_c[s_prime, best_action_index] += 1
+        r_table[s_prime, best_action_index] = ((1-alpha) * r_table[prev_s, prev_a]) + (alpha * r)
+
+        for i in range(10): #swap 10 to dyna later
+            rand_previous_state = rand.choice(past_states)
+            # print(rand_previous_state)
+            rand_action = rand.randint(0, self.num_actions-1)
+            rand_action = int(rand_action)
+            rand_previous_state = int(rand_previous_state)
+
+            t_c[rand_previous_state, rand_action] += 1
+
+            r = r_table[rand_previous_state, rand_action]
+
+            piece1 = ((1 - alpha) * q_table[rand_previous_state, rand_action])
+            best_action_index = np.argmax(q_table[rand_previous_state, :])
+            action = int(best_action_index)  # NOTE:action is actually best action
+            piece2 = alpha * (r + gamma * q_table[rand_previous_state, action])
+            q_table[rand_previous_state, rand_action] = piece1 + piece2
 
         '''
         Random action check
@@ -144,16 +194,6 @@ class QLearner(object):
         if rand_check < self.rar:
             action = rand.randint(0, self.num_actions - 1)
             self.rar = self.rar * self.radr
-        else:
-            '''
-            Non random action
-            Implementing update rule
-            '''
-            piece1 = ((1-self.alpha) * q_table[self.prev_s, self.prev_a])
-            best_action_index = np.argmax(q_table[s_prime, :])
-            action = int(best_action_index) #NOTE:action is actually best action
-            piece2 = self.alpha * (r + self.gamma * q_table[s_prime, action])
-            q_table[self.prev_s, self.prev_a] = piece1 + piece2
 
 
 
@@ -165,7 +205,7 @@ class QLearner(object):
         self.prev_s = s_prime
         self.prev_a = action
         self.q_table = q_table
-
+        self.t_c = t_c
 
 
 

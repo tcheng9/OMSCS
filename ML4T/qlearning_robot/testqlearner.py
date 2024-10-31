@@ -235,7 +235,7 @@ def test(map, epochs, learner, verbose):
 # run the code to test a learner  		  	   		 	   		  		  		    	 		 		   		 		  
 def test_code():  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
-    verbose = True  # print lots of debug stuff if True  		  	   		 	   		  		  		    	 		 		   		 		  
+    verbose = False  # print lots of debug stuff if True
   		  	   		 	   		  		  		    	 		 		   		 		  
     # read in the map  		  	   		 	   		  		  		    	 		 		   		 		  
     filename = "testworlds/world01.csv"  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -253,21 +253,21 @@ def test_code():
     rand.seed(5)  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
     ######## run non-dyna test ########  		  	   		 	   		  		  		    	 		 		   		 		  
-    learner = ql.QLearner(  		  	   		 	   		  		  		    	 		 		   		 		  
-        num_states=100,  		  	   		 	   		  		  		    	 		 		   		 		  
-        num_actions=4,  		  	   		 	   		  		  		    	 		 		   		 		  
-        alpha=0.2,  		  	   		 	   		  		  		    	 		 		   		 		  
-        gamma=0.9,  		  	   		 	   		  		  		    	 		 		   		 		  
-        rar=0.98,  		  	   		 	   		  		  		    	 		 		   		 		  
-        radr=0.999,  		  	   		 	   		  		  		    	 		 		   		 		  
-        dyna=0,  		  	   		 	   		  		  		    	 		 		   		 		  
-        verbose=False,  		  	   		 	   		  		  		    	 		 		   		 		  
-    )  # initialize the learner  		  	   		 	   		  		  		    	 		 		   		 		  
-    epochs = 500  		  	   		 	   		  		  		    	 		 		   		 		  
-    total_reward = test(data, epochs, learner, verbose)  		  	   		 	   		  		  		    	 		 		   		 		  
-    print(f"{epochs}, median total_reward {total_reward}")  		  	   		 	   		  		  		    	 		 		   		 		  
-    print()  		  	   		 	   		  		  		    	 		 		   		 		  
-    non_dyna_score = total_reward  		  	   		 	   		  		  		    	 		 		   		 		  
+    # learner = ql.QLearner(
+    #     num_states=100,
+    #     num_actions=4,
+    #     alpha=0.2,
+    #     gamma=0.9,
+    #     rar=0.98,
+    #     radr=0.999,
+    #     dyna=0,
+    #     verbose=False,
+    # )  # initialize the learner
+    # epochs = 500
+    # total_reward = test(data, epochs, learner, verbose)
+    # print(f"{epochs}, median total_reward {total_reward}")
+    # print()
+    # non_dyna_score = total_reward
   		  	   		 	   		  		  		    	 		 		   		 		  
     ######## run dyna test ########  		  	   		 	   		  		  		    	 		 		   		 		  
     learner = ql.QLearner(  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -277,19 +277,18 @@ def test_code():
         gamma=0.9,  		  	   		 	   		  		  		    	 		 		   		 		  
         rar=0.5,  		  	   		 	   		  		  		    	 		 		   		 		  
         radr=0.99,  		  	   		 	   		  		  		    	 		 		   		 		  
-        dyna=200,  		  	   		 	   		  		  		    	 		 		   		 		  
+        dyna=1,
         verbose=False,  		  	   		 	   		  		  		    	 		 		   		 		  
     )  # initialize the learner  		  	   		 	   		  		  		    	 		 		   		 		  
-    epochs = 50  		  	   		 	   		  		  		    	 		 		   		 		  
+    epochs = 1
     data = originalmap.copy()  		  	   		 	   		  		  		    	 		 		   		 		  
     total_reward = test(data, epochs, learner, verbose)  		  	   		 	   		  		  		    	 		 		   		 		  
-    print(f"{epochs}, median total_reward {total_reward}")  		  	   		 	   		  		  		    	 		 		   		 		  
+    # print(f"{epochs}, median total_reward {total_reward}")
     dyna_score = total_reward  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
-    print()  		  	   		 	   		  		  		    	 		 		   		 		  
-    print()  		  	   		 	   		  		  		    	 		 		   		 		  
+
     print(f"results for {filename}")  		  	   		 	   		  		  		    	 		 		   		 		  
-    print(f"non_dyna_score: {non_dyna_score}")  		  	   		 	   		  		  		    	 		 		   		 		  
+    # print(f"non_dyna_score: {non_dyna_score}")
     print(f"dyna_score    : {dyna_score}")  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
