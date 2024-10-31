@@ -280,7 +280,7 @@ def test_code():
         dyna=1,
         verbose=False,  		  	   		 	   		  		  		    	 		 		   		 		  
     )  # initialize the learner  		  	   		 	   		  		  		    	 		 		   		 		  
-    epochs = 1
+    epochs = 50
     data = originalmap.copy()  		  	   		 	   		  		  		    	 		 		   		 		  
     total_reward = test(data, epochs, learner, verbose)  		  	   		 	   		  		  		    	 		 		   		 		  
     # print(f"{epochs}, median total_reward {total_reward}")

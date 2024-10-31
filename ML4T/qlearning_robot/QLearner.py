@@ -83,6 +83,7 @@ class QLearner(object):
         self.prev_a = None
         self.q_table = np.zeros((self.num_states, self.num_actions))
         self.t_c = np.zeros((self.num_states, self.num_actions))
+        self.t_probs = np.zeros((self.num_states, self.num_actions))
         self.r_table = np.zeros((self.num_states, self.num_actions))
         self.past_states = np.array([])
   		  	   		 	   		  		  		    	 		 		   		 		  
@@ -150,7 +151,7 @@ class QLearner(object):
         prev_a = self.prev_a
         alpha = self.alpha
         gamma = self.gamma
-
+        t_probs = self.t_probs
         piece1 = ((1 - alpha) * q_table[prev_s, prev_a])
         best_action_index = np.argmax(q_table[s_prime, :])
         action = int(best_action_index)  # NOTE:action is actually best action
@@ -167,8 +168,10 @@ class QLearner(object):
         past_states = self.past_states
         np.append(past_states, s_prime) #or is it s?
         t_c[s_prime, best_action_index] += 1
+        t_probs[s_prime, best_action_index] = t_c[prev_s, prev_a]/np.sum(t_c)
+        # print(t_c)
         r_table[s_prime, best_action_index] = ((1-alpha) * r_table[prev_s, prev_a]) + (alpha * r)
-
+        #
         for i in range(10): #swap 10 to dyna later
             rand_previous_state = rand.choice(past_states)
             # print(rand_previous_state)
@@ -177,7 +180,7 @@ class QLearner(object):
             rand_previous_state = int(rand_previous_state)
 
             t_c[rand_previous_state, rand_action] += 1
-
+            t_probs[s_prime, best_action_index] =  t_c[rand_previous_state, rand_action] / np.sum(t_c)
             r = r_table[rand_previous_state, rand_action]
 
             piece1 = ((1 - alpha) * q_table[rand_previous_state, rand_action])
@@ -185,7 +188,7 @@ class QLearner(object):
             action = int(best_action_index)  # NOTE:action is actually best action
             piece2 = alpha * (r + gamma * q_table[rand_previous_state, action])
             q_table[rand_previous_state, rand_action] = piece1 + piece2
-
+        # return t_c
         '''
         Random action check
         '''
@@ -206,6 +209,9 @@ class QLearner(object):
         self.prev_a = action
         self.q_table = q_table
         self.t_c = t_c
+        self.t_probs = t_probs
+
+
 
 
 
