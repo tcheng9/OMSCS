@@ -31,10 +31,17 @@ import datetime as dt
 import random  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
 import pandas as pd  		  	   		 	   		  		  		    	 		 		   		 		  
-import util as ut  		  	   		 	   		  		  		    	 		 		   		 		  
+import util as ut
+import BagLearner as bl
+import DTLearner as dtl
+import RTLearner as rtl
+import marketsimcode
+import indicators as ind
+
+
   		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
-class StrategyLearner(object):  		  	   		 	   		  		  		    	 		 		   		 		  
+class ManualStrategy(object):
     """  		  	   		 	   		  		  		    	 		 		   		 		  
     A strategy learner that can learn a trading policy using the same indicators used in ManualStrategy.  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
@@ -58,10 +65,12 @@ class StrategyLearner(object):
     # this method should create a QLearner, and train it for trading  		  	   		 	   		  		  		    	 		 		   		 		  
     def add_evidence(  		  	   		 	   		  		  		    	 		 		   		 		  
         self,  		  	   		 	   		  		  		    	 		 		   		 		  
-        symbol="IBM",  		  	   		 	   		  		  		    	 		 		   		 		  
+        symbol="JPM",
         sd=dt.datetime(2008, 1, 1),  		  	   		 	   		  		  		    	 		 		   		 		  
-        ed=dt.datetime(2009, 1, 1),  		  	   		 	   		  		  		    	 		 		   		 		  
-        sv=10000,  		  	   		 	   		  		  		    	 		 		   		 		  
+        ed=dt.datetime(2009, 12, 31),
+        sv=100000,
+        commission = 9.95,
+        impact = 0.005
     ):  		  	   		 	   		  		  		    	 		 		   		 		  
         """  		  	   		 	   		  		  		    	 		 		   		 		  
         Trains your strategy learner over a given time frame.  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -97,12 +106,14 @@ class StrategyLearner(object):
             print(volume)  		  	   		 	   		  		  		    	 		 		   		 		  
   		  	   		 	   		  		  		    	 		 		   		 		  
     # this method should use the existing policy and test it against new data  		  	   		 	   		  		  		    	 		 		   		 		  
-    def testPolicy(  		  	   		 	   		  		  		    	 		 		   		 		  
-        self,  		  	   		 	   		  		  		    	 		 		   		 		  
-        symbol="IBM",  		  	   		 	   		  		  		    	 		 		   		 		  
-        sd=dt.datetime(2009, 1, 1),  		  	   		 	   		  		  		    	 		 		   		 		  
-        ed=dt.datetime(2010, 1, 1),  		  	   		 	   		  		  		    	 		 		   		 		  
-        sv=10000,  		  	   		 	   		  		  		    	 		 		   		 		  
+    def testPolicy(
+        self,
+        symbol="JPM",
+        sd=dt.datetime(2008, 1, 1),
+        ed=dt.datetime(2009, 12, 31),
+        sv=100000,
+        commission=9.95,
+        impact=0.005
     ):  		  	   		 	   		  		  		    	 		 		   		 		  
         """  		  	   		 	   		  		  		    	 		 		   		 		  
         Tests your learner using data outside of the training data  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -141,8 +152,10 @@ class StrategyLearner(object):
             print(trades)  		  	   		 	   		  		  		    	 		 		   		 		  
         if self.verbose:  		  	   		 	   		  		  		    	 		 		   		 		  
             print(prices_all)  		  	   		 	   		  		  		    	 		 		   		 		  
-        return trades  		  	   		 	   		  		  		    	 		 		   		 		  
-  		  	   		 	   		  		  		    	 		 		   		 		  
+        return trades
+
+    def author(self):
+        return 'tcheng99'
   		  	   		 	   		  		  		    	 		 		   		 		  
 if __name__ == "__main__":  		  	   		 	   		  		  		    	 		 		   		 		  
     print("One does not simply think up a strategy")  		  	   		 	   		  		  		    	 		 		   		 		  
