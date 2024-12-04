@@ -170,10 +170,10 @@ class ManualStrategy(object):
             period = 7,
         )
 
-        sma = indicators.simple_moving_average(prices, 10)
-        print('SMA')
-        print(sma)
-        print('--------------------')
+        # sma = indicators.simple_moving_average(prices.iloc[100:200], 10)
+        # print('SMA')
+        # print(sma)
+        # print('--------------------')
         #
         # b_percent = indicators.bollinger_bands(prices, 10)
         # print('B%')
@@ -208,9 +208,13 @@ class ManualStrategy(object):
         '''
         Applying indicators to daily to create a rule based algorithm
         '''
-        for i in range(prices.shape[0]-1):
-            indicator.simple
-
+        print('here')
+        print(prices.shape[0]-1)
+        # for i in range(prices.shape[0]-1):
+        for i in range(0, 30):
+            x = indicators.simple_moving_average(prices[0:i+1], 14)
+            print(x)
+            # print(prices[0:i+1])
         # if self.verbose:
         #     print(type(trades))  # it better be a DataFrame!
         # if self.verbose:
