@@ -22,9 +22,9 @@ GT honor code violation.
 
 -----do not edit anything above this line---  		  	   		 	   		  		  		    	 		 		   		 		  
 
-Student Name: Tucker Balch (replace with your name)  		  	   		 	   		  		  		    	 		 		   		 		  
-GT User ID: tb34 (replace with your User ID)  		  	   		 	   		  		  		    	 		 		   		 		  
-GT ID: 900897987 (replace with your GT ID)  		  	   		 	   		  		  		    	 		 		   		 		  
+Student Name: Tommy Cheng (replace with your name)  		  	   		 	   		  		  		    	 		 		   		 		  
+GT User ID: tcheng99 (replace with your User ID)  		  	   		 	   		  		  		    	 		 		   		 		  
+GT ID: 903967530 (replace with your GT ID)  		  	   		 	   		  		  		    	 		 		   		 		  
 """
 
 import datetime as dt
@@ -32,11 +32,13 @@ import random
 
 import pandas as pd
 import util as ut
-# import BagLearner as bl
+import BagLearner as bl
 import DTLearner as dtl
 import RTLearner as rtl
+
 import marketsimcode
-import indicators as ind
+import indicators as inds
+pd.set_option('display.max_rows', 500)
 
 
 class ManualStrategy(object):
@@ -66,8 +68,8 @@ class ManualStrategy(object):
     def add_evidence(
             self,
             symbol="JPM",
-            sd=dt.datetime(2008, 1, 1),
-            ed=dt.datetime(2009, 12, 31),
+            sd=dt.datetime(2009, 1, 1, 0, 0),
+            ed=dt.datetime(2010, 1, 1, 0, 0),
             sv=100000,
             commission=9.95,
             impact=0.005
@@ -87,34 +89,43 @@ class ManualStrategy(object):
 
         # add your code to do learning here
 
-        # example usage of the old backward compatible util function
-        syms = [symbol]
-        dates = pd.date_range(sd, ed)
-        prices_all = ut.get_data(syms, dates)  # automatically adds SPY
-        prices = prices_all[syms]  # only portfolio symbols
-        prices_SPY = prices_all["SPY"]  # only SPY, for comparison later
-        if self.verbose:
-            print(prices)
+        # # example usage of the old backward compatible util function
+        # syms = [symbol]
+        # dates = pd.date_range(sd, ed)
+        # prices_all = ut.get_data(syms, dates)  # automatically adds SPY
+        # prices = prices_all[syms]  # only portfolio symbols
+        # prices_SPY = prices_all["SPY"]  # only SPY, for comparison later
+        #
+        # '''
+        # Indiators
+        # '''
+        # ind = indicators.Indicators(
+        #     symbols="JPM",
+        #     start_date=dt.datetime(2008, 1, 1),
+        #     end_date=dt.datetime(2009, 12, 31),
+        #     period = 14)
+        # bbp = ind.bollinger_bands(prices, 14)
+        # if self.verbose:
+        #     print(bbp)
+        #
+        #     # example use with new colname
+        # volume_all = ut.get_data(
+        #     syms, dates, colname="Volume"
+        # )  # automatically adds SPY
+        # volume = volume_all[syms]  # only portfolio symbols
+        # volume_SPY = volume_all["SPY"]  # only SPY, for comparison later
+        # if self.verbose:
+        #     print(volume)
 
-            # example use with new colname
-        volume_all = ut.get_data(
-            syms, dates, colname="Volume"
-        )  # automatically adds SPY
-        volume = volume_all[syms]  # only portfolio symbols
-        volume_SPY = volume_all["SPY"]  # only SPY, for comparison later
-        if self.verbose:
-            print(volume)
-
+        pass
             # this method should use the existing policy and test it against new data
 
     def testPolicy(
             self,
-            symbol="JPM",
-            sd=dt.datetime(2008, 1, 1),
-            ed=dt.datetime(2009, 12, 31),
-            sv=100000,
-            commission=9.95,
-            impact=0.005
+            symbol="IBM",
+            sd=dt.datetime(2009, 1, 1, 0, 0),
+            ed=dt.datetime(2010, 1, 1, 0, 0),
+            sv=100000
     ):
         """
         Tests your learner using data outside of the training data
@@ -139,20 +150,83 @@ class ManualStrategy(object):
         dates = pd.date_range(sd, ed)
         prices_all = ut.get_data([symbol],
                                  dates)  # automatically adds SPY
+        prices_SPY = prices_all['SPY']
+        prices = prices_all[[symbol,]]
+
+        # print(prices_SPY)
+        # print(prices)
+
         trades = prices_all[[symbol, ]]  # only portfolio symbols
         trades_SPY = prices_all["SPY"]  # only SPY, for comparison later
         trades.values[:, :] = 0  # set them all to nothing
 
-        if self.verbose:
-            print(type(trades))  # it better be a DataFrame!
-        if self.verbose:
-            print(trades)
-        if self.verbose:
-            print(prices_all)
+        '''
+        indicator funcitons
+        '''
+        indicators = inds.Indicators(
+            symbols=['IBM'],
+            start_date=dt.datetime(2009, 1, 1, 0, 0),
+            end_date=dt.datetime(2010, 1, 1, 0, 0),
+            period = 7,
+        )
+
+        sma = indicators.simple_moving_average(prices, 10)
+        print('SMA')
+        print(sma)
+        print('--------------------')
+        #
+        # b_percent = indicators.bollinger_bands(prices, 10)
+        # print('B%')
+        # print(b_percent)
+        # print('--------------------')
+        #
+        # so = indicators.stochastic_indicator(prices, 10)
+        # print('SO')
+        # print(so)
+        # print('--------------------')
+        #
+        # roc = indicators.rate_of_change(prices, 10)
+        # print('ROC')
+        # print(roc)
+        # print('--------------------')
+        #
+        # macd = indicators.macd_hist(prices)
+        # print('MACD')
+        # print(macd)
+        # print('--------------------')
+
+        # indicators = indicators.Indicators(
+        #     symbols = ['IBM'],
+        #     sd=dt.datetime(2009, 1, 1, 0, 0),
+        #     ed=dt.datetime(2010, 1, 1, 0, 0),
+        #     period = 7,
+        # )
+        # # sma = indicators.Indicators.simple_moving_average(prices, 10)
+        # print(sma)
+
+
+        '''
+        Applying indicators to daily to create a rule based algorithm
+        '''
+        for i in range(prices.shape[0]-1):
+            indicator.simple
+
+        # if self.verbose:
+        #     print(type(trades))  # it better be a DataFrame!
+        # if self.verbose:
+        #     print(trades)
+        # if self.verbose:
+        #     print(prices_all)
         return trades
 
     def author(self):
         return 'tcheng99'
+
+
+    def study_group(self):
+        return 'tcheng99'
+
+
 if __name__ == "__main__":
     strategy = ManualStrategy(verbose = True)
-    strategy.add_evidence()
+    strategy.testPolicy()

@@ -61,7 +61,7 @@ class Indicators:
         Build DF and Chart for indicator 2: Bollinger Band Percentage
         '''
 
-        bbp = self.bolinger_bands(prices, 14)
+        bbp = self.bollinger_bands(prices, 14)
         bbp = bbp[bbp.index > self.start_date]
 
         # prices[prices.index > start_date]
@@ -146,7 +146,7 @@ class Indicators:
 
 
 
-    def bolinger_bands(self, stocks, period):
+    def bollinger_bands(self, stocks, period):
         '''
         Setup
         '''
