@@ -170,50 +170,65 @@ class ManualStrategy(object):
             period = 7,
         )
 
-        # sma = indicators.simple_moving_average(prices.iloc[100:200], 10)
-        # print('SMA')
-        # print(sma)
-        # print('--------------------')
-        #
-        # b_percent = indicators.bollinger_bands(prices, 10)
-        # print('B%')
-        # print(b_percent)
-        # print('--------------------')
-        #
-        # so = indicators.stochastic_indicator(prices, 10)
-        # print('SO')
-        # print(so)
-        # print('--------------------')
-        #
-        # roc = indicators.rate_of_change(prices, 10)
-        # print('ROC')
-        # print(roc)
-        # print('--------------------')
-        #
-        # macd = indicators.macd_hist(prices)
-        # print('MACD')
-        # print(macd)
-        # print('--------------------')
+        '''
+        Calculating the specific indicator for a provided set of stock prices
+        '''
+        sma = indicators.simple_moving_average(prices, 14)
+        b_percent = indicators.bollinger_bands(prices, 14)
+        so = indicators.stochastic_indicator(prices, 14)
+        roc = indicators.rate_of_change(prices, 14)
+        macd = indicators.macd_hist(prices)
 
-        # indicators = indicators.Indicators(
-        #     symbols = ['IBM'],
-        #     sd=dt.datetime(2009, 1, 1, 0, 0),
-        #     ed=dt.datetime(2010, 1, 1, 0, 0),
-        #     period = 7,
-        # )
-        # # sma = indicators.Indicators.simple_moving_average(prices, 10)
-        # print(sma)
+        '''
+        Getting buy/out/sell signal from a single indicator
+        '''
+        # sma_signal = self.sma_pred(sma)
 
 
         '''
         Applying indicators to daily to create a rule based algorithm
         '''
-        print('here')
-        print(prices.shape[0]-1)
+        # print('here')
+        # print(prices.shape[0]-1)
         # for i in range(prices.shape[0]-1):
-        for i in range(0, 30):
-            x = indicators.simple_moving_average(prices[0:i+1], 14)
-            print(x)
+        for i in range(1, 50):
+            '''
+            SMA signal prediction
+            '''
+
+            sma = indicators.simple_moving_average(prices[0:i+1], 14)
+            sma_signal = self.sma_pred(sma)
+
+
+            '''
+            B% signal
+            '''
+            b_percent = indicators.bollinger_bands(prices[0:i+1], 14)
+            b_signal = self.b_pred(b_percent)
+            '''
+            SO signal
+            '''
+
+            so = indicators.stochastic_indicator(prices[0:i+1], 14)
+            so_signal = self.so_pred(so)
+            '''
+            ROC signal
+            '''
+
+            roc = indicators.rate_of_change(prices[0:i+1], 14)
+            roc_signal = self.roc_pred(roc)
+            '''
+            MACD signal
+            '''
+            macd = indicators.macd_hist(prices[0:i+1])
+            macd_signal = self.macd_pred(macd)
+
+
+            '''
+            B% signal prediction
+            '''
+
+            # print(x)
             # print(prices[0:i+1])
         # if self.verbose:
         #     print(type(trades))  # it better be a DataFrame!
@@ -223,9 +238,80 @@ class ManualStrategy(object):
         #     print(prices_all)
         return trades
 
+    '''
+    Indicator signals:
+        -1 : short
+        0 : out (?) / do nothing
+        1 : buy long
+    '''
+
+    def sma_pred(self, metric):
+        # print(metric)
+        if metric.iloc[-1, 0] < metric.iloc[-2, 0]:
+            #if today's price < yesterday's price -> decreasing
+            #if DECREASING -> short
+            return -1
+        elif metric.iloc[-1, 0] > metric.iloc[-2, 0]:
+            # if today's price < yesterday's price -> decreasing
+            return 1
+        else:
+
+            '''
+            QUESTION: DO I GO BACK TO 0 OR JUST HOLD?
+            '''
+            # print('stayed the same')
+            return 0
+
+        # pass
+    def b_pred(self, metric):
+        print(metric)
+        #you only have to look at today's B%. If the increase is
+        if metric.iloc[-1, 0] > .8:
+            #buy since > .8
+            return 1
+        elif metric.iloc[-1, 0] < .2:
+            #sell signal since < .2
+            return -1
+        else:
+            #exit/do nothing since signal is between .2 < signal < .8
+            return 0
+
+    def roc_pred(self, metric):
+        # print(metric)
+        if metric.iloc[-1, 0] < 0:
+            #price is decreasing at a certain rate THEREFORE short
+            return -1
+        elif metric.iloc[-1, 0] > 0:
+            #price is increasing at a certain rate -> buy long
+            return 1
+        else:
+            #price is exactly the same -> do nothing
+            return 0
+
+    def so_pred(self, metric):
+        # print(metric)
+        if metric.iloc[-1, 0] < 20:
+            return -1
+        elif metric.iloc[-1, 0] > 80:
+            return 1
+        else:
+            return 0
+
+    def macd_pred(self, metric):
+        # print(metric)
+        if metric.iloc[-1, 0] < 0:
+            # price is decreasing at a certain rate THEREFORE short
+            return -1
+        elif metric.iloc[-1, 0] > 0:
+            # price is increasing at a certain rate -> buy long
+            return 1
+        else:
+            # price is exactly the same -> do nothing
+            return 0
+
+
     def author(self):
         return 'tcheng99'
-
 
     def study_group(self):
         return 'tcheng99'
