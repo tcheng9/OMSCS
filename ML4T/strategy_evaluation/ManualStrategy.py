@@ -224,9 +224,8 @@ class ManualStrategy(object):
             macd_signal = self.macd_pred(macd)
 
 
-            '''
-            B% signal prediction
-            '''
+            print(sma_signal, '|', b_signal, '|', so_signal, '|', roc_signal, '|', macd_signal)
+            print('--------')
 
             # print(x)
             # print(prices[0:i+1])
@@ -264,7 +263,7 @@ class ManualStrategy(object):
 
         # pass
     def b_pred(self, metric):
-        print(metric)
+        # print(metric)
         #you only have to look at today's B%. If the increase is
         if metric.iloc[-1, 0] > .8:
             #buy since > .8
