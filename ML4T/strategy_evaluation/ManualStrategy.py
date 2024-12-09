@@ -159,7 +159,7 @@ class ManualStrategy(object):
         trades = prices_all[[symbol, ]]  # only portfolio symbols
         trades_SPY = prices_all["SPY"]  # only SPY, for comparison later
         trades.values[:, :] = 0  # set them all to nothing
-
+        current_holdings = 0
         '''
         indicator funcitons
         '''
@@ -223,12 +223,56 @@ class ManualStrategy(object):
             macd = indicators.macd_hist(prices[0:i+1])
             macd_signal = self.macd_pred(macd)
 
+            #build a freq table for signals to determine buy/hold/sell signal
+            freq = self.det_signal(sma_signal, b_signal, so_signal, roc_signal, macd_signal)
 
-            print(sma_signal, '|', b_signal, '|', so_signal, '|', roc_signal, '|', macd_signal)
-            print('--------')
+            mode_signal = 0
+            for key, value in freq.items():
+                if value >= 3:
+                    mode_signal = key
+                #consider 2 / 2 /1 case -> no majority
+            # print(mode_signal)
+
+
+            '''
+            Converting signal into volume trades
+            
+            '''
+            # print(trades.shape)
+            if mode_signal == -1:
+                # print('sell')
+
+                if current_holdings == 1000:
+                    trades.iloc[i, ] = -2000
+                    current_holdings -= 2000
+                elif current_holdings == 0:
+                    trades.iloc[i, ] = -1000
+                    current_holdings -= 1000
+                else:
+                    trades.iloc[i, ] = 0
+            elif mode_signal == 1:
+                # print('buy')
+                if current_holdings == 1000:
+                    trades.iloc[i, ] = 0
+                elif current_holdings == 0:
+                    trades.iloc[i, ] = 1000
+                    current_holdings += 1000
+                else:
+                    trades.iloc[i, ] += 2000
+                    current_holdings += 2000
+            else:
+                # print('hold')
+                # if current_holdings == 1000:
+                #     pass
+                # elif current_holdings == 0:
+                #     pass
+                # else:
+                #     pass
+
+                trades.iloc[i, ] = 0
 
             # print(x)
-            # print(prices[0:i+1])
+
         # if self.verbose:
         #     print(type(trades))  # it better be a DataFrame!
         # if self.verbose:
@@ -307,6 +351,18 @@ class ManualStrategy(object):
         else:
             # price is exactly the same -> do nothing
             return 0
+
+    def det_signal(self, sig1, sig2, sig3, sig4, sig5):
+        signals = {}
+
+        signals[sig1] = 1 + signals.get(sig1, 0)
+        signals[sig2] = 1 + signals.get(sig2, 0)
+        signals[sig3] = 1 + signals.get(sig3, 0)
+        signals[sig4] = 1 + signals.get(sig4, 0)
+        signals[sig5] = 1 + signals.get(sig5, 0)
+
+        print(signals)
+        return signals
 
 
     def author(self):
