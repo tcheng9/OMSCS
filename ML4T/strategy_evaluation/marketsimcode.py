@@ -58,8 +58,8 @@ def build_trades(opt_trades, prices, commission, impact, start_val):
 
     # trades.iloc[0, 1] = start_val
 
-    trades['JPM'] = opt_trades
-
+    # trades['IBM'] = opt_trades
+    trades.iloc[:, 0] = opt_trades
     for i in range(trades.shape[0]):
         #cash = stocks * prices of that day + (cash of today)
         # trades.loc[date, 'Cash'] + (-1 * ((( price + (impact * price)) * shares)+commission)   )
@@ -128,7 +128,7 @@ def compute_portvals(
     prices = build_prices(trades)
 
     adj_trades = build_trades(trades, prices, commission, impact, start_val)
-
+    print(adj_trades)
     holdings = build_holdings(prices, adj_trades, start_val)
 
     values = build_values(prices, holdings)

@@ -37,7 +37,9 @@ if __name__ == "__main__":
     '''
     BUILDING OPTIMAL TRADES PORTOFILIO VALUES AND STATS
     '''
+
     tos_vals = compute_portvals(optimal_trades, start_val = 100000, commission =0.0, impact = 0.0 )
+
     cr_opt, adr_opt, sddr_opt, sr_opt, ev_opt, port_val_opt = assess_portfolio(tos_vals, 252,0)
 
 

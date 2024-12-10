@@ -154,11 +154,12 @@ class ManualStrategy(object):
         prices = prices_all[[symbol,]]
 
         # print(prices_SPY)
-        # print(prices)
+        print(prices.shape)
 
         trades = prices_all[[symbol, ]]  # only portfolio symbols
         trades_SPY = prices_all["SPY"]  # only SPY, for comparison later
         trades.values[:, :] = 0  # set them all to nothing
+        trades = trades.copy()
         current_holdings = 0
         '''
         indicator funcitons
@@ -180,6 +181,12 @@ class ManualStrategy(object):
         macd = indicators.macd_hist(prices)
 
         '''
+        Setting up market sim for later
+        '''
+        marketsim = marketsimcode
+
+
+        '''
         Getting buy/out/sell signal from a single indicator
         '''
         # sma_signal = self.sma_pred(sma)
@@ -191,7 +198,7 @@ class ManualStrategy(object):
         # print('here')
         # print(prices.shape[0]-1)
         # for i in range(prices.shape[0]-1):
-        for i in range(1, 50):
+        for i in range(1, prices.shape[0]-1):
             '''
             SMA signal prediction
             '''
@@ -232,8 +239,8 @@ class ManualStrategy(object):
                     mode_signal = key
                 #consider 2 / 2 /1 case -> no majority
             # print(mode_signal)
-
-
+            trades.iloc[i,0] = 0
+            trades.iloc[i,] = 0
             '''
             Converting signal into volume trades
             
@@ -272,7 +279,12 @@ class ManualStrategy(object):
                 trades.iloc[i, ] = 0
 
             # print(x)
-
+        # print(trades)
+        day_total = marketsim.compute_portvals(trades, start_val = 100000, commission = 0.0, impact = 0.0)
+        # print(day_total)
+        cr, adr, sddr, sr, ev, port_val = marketsim.assess_portfolio(day_total, 252, 0)
+        print(cr, adr, sddr, sr, ev)
+        # print(cr, adr, sddr, sr, ev)
         # if self.verbose:
         #     print(type(trades))  # it better be a DataFrame!
         # if self.verbose:
@@ -361,7 +373,7 @@ class ManualStrategy(object):
         signals[sig4] = 1 + signals.get(sig4, 0)
         signals[sig5] = 1 + signals.get(sig5, 0)
 
-        print(signals)
+        # print(signals)
         return signals
 
 
