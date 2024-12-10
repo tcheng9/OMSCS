@@ -24,7 +24,7 @@ GT honor code violation.
 """
 
 import numpy as np
-
+from scipy import stats
 
 class DTLearner(object):
     """
@@ -74,8 +74,8 @@ class DTLearner(object):
 
             i = self.pick_best_feature(data_x, data_y)
 
-            split_val = np.median(data_x[:, i])
-
+            # split_val = np.median(data_x[:, i])
+            split_val = stats.mode((data_x[:, i]))[0][0]
             left_split_x = data_x[data_x[:, i] <= split_val]
             left_split_y = data_y[data_x[:, i] <= split_val]
 
@@ -112,7 +112,7 @@ class DTLearner(object):
         tree = self.dtAlgo(data_x, data_y)
         self.model = tree
 
-
+        print(tree)
         return tree
         # return -1
 
@@ -165,63 +165,63 @@ class DTLearner(object):
 
 
 
-# if __name__ == "__main__":
-#
-# #     #case 1 - general case
-#     # x_train = np.array([[1, 3, 4], [5, 3, 1], [2, 3, 1]])
-#     # y_train = np.array([[5], [5], [7]])
-#
-#     #base case 1 - 1 row
-#     # x_train = np.array([[1,2,3],])
-#     # y_train = np.array([[2],])
-#
-#     #base case 2 - all y is same
-#     # x_train = np.array([[1, 3, 4], [5, 3, 1], [2, 3, 1]])
-#     # y_train = np.array([[5], [5], [5]])
-#
-#
-#     # class test case
-#     x_train = np.array([
-#         [.885,.330, 9.1],
-#         [.725, .39, 10.9],
-#         [.560, .5, 9.4],
-#         [.735, .570, 9.8],
-#         [.610, .630, 8.4],
-#         [.260, .630, 11.8],
-#         [.5, .68, 10.5],
-#         [.320, .780, 10]
-#
-#     ])
-#
-#     y_train = np.array([4, 5, 6, 5, 3,8,7,6])
-#     # ## infinite recursion test case
-#     # # x_train = np.array([
-#     # #     [.885,.330, 9.1],
-#     # #     [.725, .39, 10],
-#     # #     [.560, .5, 10],
-#     # #     [.735, .570,10],
-#     # #
-#     # #
-#     # # ])
-#     #
-#     #
-#     # # y_train = np.array([[4],[5], [6], [5]])
-#     #
-#     x_test = np.array([
-#         [.7,.45, 10],
-#         [.6, .75, 9],
-#         [.3, .5, 9.5],
-#         [.7, .45, 10],
-#         [.6, .75, 9],
-#         [.3, .5, 9.5],
-#     ])
-#
-#     learner = DTLearner()
-#     tree = learner.add_evidence(x_train, y_train)
-#
-#
-#     res = learner.query(x_test)
-#
-#     #
-#     #
-#     #
+if __name__ == "__main__":
+
+#     #case 1 - general case
+    # x_train = np.array([[1, 3, 4], [5, 3, 1], [2, 3, 1]])
+    # y_train = np.array([[5], [5], [7]])
+
+    #base case 1 - 1 row
+    # x_train = np.array([[1,2,3],])
+    # y_train = np.array([[2],])
+
+    #base case 2 - all y is same
+    # x_train = np.array([[1, 3, 4], [5, 3, 1], [2, 3, 1]])
+    # y_train = np.array([[5], [5], [5]])
+
+
+    # class test case
+    x_train = np.array([
+        [.885,.330, 9.1],
+        [.725, .39, 10.9],
+        [.560, .5, 9.4],
+        [.735, .570, 9.8],
+        [.610, .630, 8.4],
+        [.260, .630, 11.8],
+        [.5, .68, 10.5],
+        [.320, .780, 10]
+
+    ])
+
+    y_train = np.array([4, 5, 6, 5, 3,8,7,6])
+    # ## infinite recursion test case
+    # # x_train = np.array([
+    # #     [.885,.330, 9.1],
+    # #     [.725, .39, 10],
+    # #     [.560, .5, 10],
+    # #     [.735, .570,10],
+    # #
+    # #
+    # # ])
+    #
+    #
+    # # y_train = np.array([[4],[5], [6], [5]])
+    #
+    x_test = np.array([
+        [.7,.45, 10],
+        [.6, .75, 9],
+        [.3, .5, 9.5],
+        [.7, .45, 10],
+        [.6, .75, 9],
+        [.3, .5, 9.5],
+    ])
+
+    learner = DTLearner()
+    tree = learner.add_evidence(x_train, y_train)
+
+
+    res = learner.query(x_test)
+    print('here')
+    #
+    #
+    #
