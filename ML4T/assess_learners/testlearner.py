@@ -87,7 +87,8 @@ if __name__ == "__main__":
     # separate out training and testing data
     train_x = data[:train_rows, 0:-1]
     train_y = data[:train_rows, -1]
-
+    print(train_x.shape)
+    print(train_y.shape)
 
 
     test_x = data[train_rows:, 0:-1]
