@@ -34,8 +34,9 @@ import DTLearner as dtl
 import BagLearner as bagl
 import pandas as pd
 import util as ut
-
-
+import indicators as inds
+import numpy as np
+pd.set_option('display.max_rows', 500)
 class StrategyLearner(object):
     """  		  	   		 	   		  		  		    	 		 		   		 		  
     A strategy learner that can learn a trading policy using the same indicators used in ManualStrategy.  		  	   		 	   		  		  		    	 		 		   		 		  
@@ -56,6 +57,8 @@ class StrategyLearner(object):
         self.verbose = verbose
         self.impact = impact
         self.commission = commission
+        self.model = None
+
 
     # this method should create a QLearner, and train it for trading
     def add_evidence(
@@ -97,6 +100,140 @@ class StrategyLearner(object):
         volume_SPY = volume_all["SPY"]  # only SPY, for comparison later
         if self.verbose:
             print(volume)
+
+        '''''''''''''''''''''''''''''''''''
+        #####################################
+        MY CODE STARTS HERE
+        #####################################
+        '''''''''''''''''''''''''''''''''''
+
+
+
+
+        '''
+        Building dataset
+        '''
+        # print(prices)
+        data = prices.copy()
+        data['SMA'] = 0
+        data['B%'] = 0
+        data['SO'] = 0
+        data['ROC'] = 0
+        data['MACD'] = 0
+        # print(data)
+
+        x_len = data.shape[0] - 1
+
+        #
+        x_len_seventy = int(x_len*.7)
+        x_len_thirty = int(x_len*.3)
+        print(data.shape)
+        # print(data[175)])
+
+
+        indicators = inds.Indicators(
+            symbols=['IBM'],
+            start_date=dt.datetime(2009, 1, 1, 0, 0),
+            end_date=dt.datetime(2010, 1, 1, 0, 0),
+            period=7,
+        )
+        '''
+        Calculating the specific indicator for a provided set of stock prices
+        '''
+        '''
+        Building X_vector
+        '''
+        sma = indicators.simple_moving_average(prices, 14)
+        b_percent = indicators.bollinger_bands(prices, 14)
+        so = indicators.stochastic_indicator(prices, 14)
+        roc = indicators.rate_of_change(prices, 14)
+        macd = indicators.macd_hist(prices)
+
+
+        # print(data.columns)
+        data = data.drop(data.columns[0], axis = 1)
+
+        data['SMA'] = sma
+        data['B%'] = b_percent
+        data['SO'] = so
+        data['ROC'] = roc
+        data['MACD'] = macd
+
+        '''
+        Building y_vector
+        '''
+        n = 5
+        #vectorized approach somehow
+        # ret = (prices[t+n] / prices[t]) - 1.0
+
+        ret = prices.copy()
+        ret.iloc[:, 0] = 0
+        ret = ret[ret.columns[0]]
+        y = pd.array([0] * (prices.shape[0]-1))
+        # print(ret)
+        for i in range(ret.shape[0]-n):
+            ret.iloc[i] = (prices.iloc[i+n] / prices.iloc[i]) - 1.0
+        # print(ret)
+        ybuy = .01
+        ysell = -.01
+        for i in range(ret.shape[0]-n):
+            # print(i)
+            if ret.iloc[i] > ybuy:
+                y[i] = 1
+            elif ret.iloc[i] < ysell:
+                y[i] = -1
+            else:
+                y[i] = 0
+
+
+        '''
+        Spltting data into train/test
+        
+        Question: do I need to randomly resample for bagger?
+        Question: wouldn't this cause issues with linear time constraint? don't train future to predict past?
+        '''
+        # #split data once dataset is created
+        x_train = data.iloc[:x_len_seventy, :]
+        x_test = data.iloc[x_len_seventy:, :]
+        # #
+        y_train = y[:x_len_seventy]
+        y_test = y[x_len_thirty:]
+
+        # print(x_train.mean())
+        x_train = x_train.fillna(x_train.mean())
+        x_test = x_test.fillna(x_test.mean())
+
+        '''
+        Implementing ML model 
+        '''
+        model = bagl.BagLearner(
+            learner=dtl.DTLearner,
+            kwargs={'leaf_size': 5},
+            bags=1,
+            boost=False,
+            verbose=False
+        )
+
+        print('x train is')
+        print(x_train)
+        print('------------')
+        #
+        print('y train is')
+        print(y_train)
+        print('------------')
+
+
+        x_train = x_train[['SMA']]
+        print(x_train.iloc[0:10])
+        print(y_train[0:10])
+
+        x_train = x_train.iloc[0:10]
+        y_train = y_train[0:10]
+        print('shpes are')
+        print(x_train.shape)
+        print(y_train.shape)
+        model.add_evidence(x_train, y_train)
+        # res = model.query(x_test)
 
     # this method should use the existing policy and test it against new data
     def testPolicy(
@@ -151,3 +288,10 @@ class StrategyLearner(object):
 
 if __name__ == "__main__":
     print("One does not simply think up a strategy")
+    learner = StrategyLearner()
+    learner.add_evidence(
+        symbol="IBM",
+        sd=dt.datetime(2008, 1, 1),
+        ed=dt.datetime(2009, 1, 1),
+        sv=10000,
+    )
