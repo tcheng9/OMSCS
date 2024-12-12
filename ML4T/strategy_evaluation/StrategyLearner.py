@@ -213,26 +213,28 @@ class StrategyLearner(object):
             boost=False,
             verbose=False
         )
+        model = dtl.DTLearner(leaf_size = 1)
+        # print('x train is')
+        # print(x_train)
+        # print('------------')
+        # #
+        # print('y train is')
+        # print(y_train)
+        # print('------------')
 
-        print('x train is')
-        print(x_train)
-        print('------------')
+
+        # x_train = x_train[['SMA']]
+        # print(x_train.iloc[0:10])
+        # print(y_train[0:10])
         #
-        print('y train is')
-        print(y_train)
-        print('------------')
-
-
-        x_train = x_train[['SMA']]
-        print(x_train.iloc[0:10])
-        print(y_train[0:10])
-
-        x_train = x_train.iloc[0:10]
-        y_train = y_train[0:10]
-        print('shpes are')
+        # x_train = x_train.iloc[0:1]
+        # y_train = y_train[0:1]
+        # print('shpes are')
         print(x_train.shape)
         print(y_train.shape)
-        model.add_evidence(x_train, y_train)
+
+
+        model.add_evidence(x_train,y_train)
         # res = model.query(x_test)
 
     # this method should use the existing policy and test it against new data
