@@ -84,7 +84,8 @@ class RTLearner(object):
             # if left_split_x.shape[0] == 0:
             #     return np.array([[-1, right_split_y.mean(), -1 , -1]])
             if right_split_x.shape[0] == 0:
-                return np.array([[-1, left_split_y.mean(), -1, -1]])
+                # return np.array([[-1, left_split_y.mean(), -1, -1]])
+                return np.array([[-1, stats.mode(left_split_y)[0][0], -1, -1]])
             #
             left_tree = self.dtAlgo(left_split_x, left_split_y)
 
@@ -117,7 +118,7 @@ class RTLearner(object):
 
         tree = self.dtAlgo(data_x, data_y)
         self.model = tree
-
+        print(tree)
 
         return tree
         # return -1
@@ -197,7 +198,7 @@ if __name__ == "__main__":
 
     ])
 
-    y_train = np.array([4, 5, 6, 5, 3,8,7,6])
+    y_train = np.array([1, 1, 1, 0, 0,-1,-1, -1])
     # ## infinite recursion test case
     # # x_train = np.array([
     # #     [.885,.330, 9.1],
@@ -222,4 +223,4 @@ if __name__ == "__main__":
 
 
     res = learner.query(x_test)
-    print('here')
+    print(res)

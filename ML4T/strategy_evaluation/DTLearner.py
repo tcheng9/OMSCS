@@ -61,7 +61,7 @@ class DTLearner(object):
         return best_index
 
     def dtAlgo(self,data_x, data_y):
-
+        print('here')
         if data_x.shape[0] <= self.leaf_size:  # "1" SHOULD ACTUALLY BE LEAF SIZE I THINK
             # need to handele leaf size
 
@@ -74,8 +74,10 @@ class DTLearner(object):
 
             i = self.pick_best_feature(data_x, data_y)
 
-            # split_val = np.median(data_x[:, i])
-            split_val = stats.mode((data_x[:, i]))[0][0]
+            split_val = np.median(data_x[:, i])
+
+            # split_val = stats.mode((data_x[:, i]))[0][0]
+            print(split_val)
             left_split_x = data_x[data_x[:, i] <= split_val]
             left_split_y = data_y[data_x[:, i] <= split_val]
 
@@ -85,7 +87,8 @@ class DTLearner(object):
             # if left_split_x.shape[0] == 0:
             #     return np.array([[-1, right_split_y.mean(), -1 , -1]])
             if right_split_x.shape[0] == 0:
-                return np.array([[-1, left_split_y.mean(), -1, -1]])
+                # return np.array([[-1, left_split_y.mean(), -1, -1]])
+                return np.array([[-1, stats.mode((left_split_y))[0][0], -1, -1]])
 
             left_tree = self.dtAlgo(left_split_x, left_split_y)
 
@@ -193,7 +196,7 @@ if __name__ == "__main__":
 
     ])
 
-    y_train = np.array([4, 5, 6, 5, 3,8,7,6])
+    y_train = np.array([1,1,1,0,0,-1,-1,-1,-1])
     # ## infinite recursion test case
     # # x_train = np.array([
     # #     [.885,.330, 9.1],
@@ -216,10 +219,50 @@ if __name__ == "__main__":
         [.3, .5, 9.5],
     ])
 
-    learner = DTLearner()
+    '''
+    p8 veersion
+    '''
+# 2008-01-16  110.120188  0.559117
+# 2008-01-17  110.120188  0.559117
+# 2008-01-18  110.120188  0.559117
+# 2008-01-22   92.910000  0.505818
+# 2008-01-23   93.002857  0.978122
+# 2008-01-24   93.134286  0.992156
+# 2008-01-25   93.357143  0.746369
+# 2008-01-28   93.680714  0.747927
+# 2008-01-29   94.239286  0.801220
+# 2008-01-30   94.720714  0.730926
+
+
+    # [-1, -1, -1, 1, 1, 1, 1, 1, -1, 1, 1, 1, 1, 1, 0, 0, 1, 1, -1, -1]
+
+    x_train = np.array([
+        [110.120188 , 0.559117],
+        [110.120188 , 0.559117],
+        [110.120188,  0.559117],
+        [92.910000 , 0.505818],
+        [93.002857,  0.978122],
+        [93.134286  ,0.992156],
+        [93.357143 , 0.746369],
+        [93.680714,  0.747927],
+        [94.239286,  0.801220],
+        [94.720714,  0.730926],
+        [110.120188 , 0.559117],
+        [110.120188 , 0.559117],
+        [110.120188,  0.559117],
+        [92.910000 , 0.505818],
+        [93.002857,  0.978122],
+        [93.134286  ,0.992156],
+        [93.357143 , 0.746369],
+        [93.680714,  0.747927],
+        [94.239286,  0.801220],
+        [94.720714,  0.730926],
+    ])
+    y_train = np.array([-1, -1, -1, 1, 0, 1, 1, 1, 0,1, -1, -1, -1, 1, 0, 1, 1, 1, 0,1])
+    learner = DTLearner(leaf_size = 3)
     tree = learner.add_evidence(x_train, y_train)
 
-
+    print(x_train)
     res = learner.query(x_test)
     print('here')
     #

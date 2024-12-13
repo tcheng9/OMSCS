@@ -202,18 +202,20 @@ class StrategyLearner(object):
         # print(x_train.mean())
         x_train = x_train.fillna(x_train.mean())
         x_test = x_test.fillna(x_test.mean())
-
+        print(x_train.shape)
+        print(y_train.shape)
         '''
         Implementing ML model 
         '''
         model = bagl.BagLearner(
-            learner=dtl.DTLearner,
+            learner=rtl.RTLearner,
             kwargs={'leaf_size': 5},
-            bags=1,
+            bags=20,
             boost=False,
             verbose=False
         )
-        model = dtl.DTLearner(leaf_size = 1)
+        # # model = dtl.DTLearner(leaf_size = 5)
+        # model = rtl.RTLearner(leaf_size=5)
         # print('x train is')
         # print(x_train)
         # print('------------')
@@ -223,19 +225,51 @@ class StrategyLearner(object):
         # print('------------')
 
 
-        # x_train = x_train[['SMA']]
+        # x_train = x_train[['SMA', 'B%']]
+
         # print(x_train.iloc[0:10])
         # print(y_train[0:10])
         #
         # x_train = x_train.iloc[0:1]
         # y_train = y_train[0:1]
         # print('shpes are')
-        print(x_train.shape)
-        print(y_train.shape)
-
-
+        # print(x_train.shape)
+        # print(y_train.shape)
+        # print(y_train[0:20])
+        # print('before model call')
+        # x_train = np.array([
+        #     [110.120188, 0.559117],
+        #     [110.120188, 0.559117],
+        #     [110.120188, 0.559117],
+        #     [92.910000, 0.505818],
+        #     [93.002857, 0.978122],
+        #     [93.134286, 0.992156],
+        #     [93.357143, 0.746369],
+        #     [93.680714, 0.747927],
+        #     [94.239286, 0.801220],
+        #     [94.720714, 0.730926],
+        #     [110.120188, 0.559117],
+        #     [110.120188, 0.559117],
+        #     [110.120188, 0.559117],
+        #     [92.910000, 0.505818],
+        #     [93.002857, 0.978122],
+        #     [93.134286, 0.992156],
+        #     [93.357143, 0.746369],
+        #     [93.680714, 0.747927],
+        #     [94.239286, 0.801220],
+        #     [94.720714, 0.730926],
+        # ])
+        # y_train = np.array([-1, -1, -1, 1, 0, 1, 1, 1, 0, 1, -1, -1, -1, 1, 0, 1, 1, 1, 0, 1])
+        # x_train = x_train.iloc[0:100]
+        # y_train = y_train[0:100]
+        # print(x_train.shape)
+        # print(y_train.shape)
+        # print(x_train.to_numpy())
+        x_train = x_train.to_numpy()
         model.add_evidence(x_train,y_train)
-        # res = model.query(x_test)
+
+        res = model.query(x_test.to_numpy())
+        print(res)
 
     # this method should use the existing policy and test it against new data
     def testPolicy(
